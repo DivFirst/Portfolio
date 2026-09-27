@@ -116,62 +116,160 @@ export const portfolioData: PortfolioData = {
   },
 
   life: {
-    summary: "Curious builder, continuous learner, and believer in creating tools that empower human creativity.",
+    summary: "Product Manager with an engineering foundation from IIT Ropar and strategic grounding from XLRI, specializing in scalable enterprise FinTech and AI-assisted platform systems.",
     quote: "We shape our tools, and thereafter our tools shape us.",
-    origin: "Grew up fascinated by dismantling computers, sketching fantasy maps, and reading sci-fi novels until sunrise.",
+    origin: "A nomadic childhood shaped by my father's career transfers across India—growing up between Ghaziabad, Delhi, Gorakhpur, Muzaffarpur, Jamnagar, and Ranchi. Moving constantly taught me rapid adaptability, deep empathy for different cultures, and an innate curiosity for how complex systems and communities interact.",
+    stats: [
+      {
+        label: "Cities Lived In",
+        value: "6+",
+        subtext: "Nomadic upbringing across India"
+      },
+      {
+        label: "Alma Maters",
+        value: "IIT & XLRI",
+        subtext: "Engineering + Strategy grounding"
+      },
+      {
+        label: "Competitive Edge",
+        value: "99.6 %ile",
+        subtext: "CAT Quant & 99.92%ile XAT DM"
+      },
+      {
+        label: "Experience",
+        value: "4+ Yrs",
+        subtext: "FinTech, Platforms & AI Enablement"
+      }
+    ],
     values: [
       {
-        title: "Curiosity Over Comfort",
-        description: "Constantly diving into unfamiliar domains—whether it's 3D shader math, generative art, or mechanical keyboards.",
+        title: "Adaptability & Empathy",
+        description: "Moving across 6 states forged an instinctive ability to thrive in ambiguous, dynamic environments and connect with diverse stakeholders.",
         icon: "Compass"
       },
       {
-        title: "Craft & Detail",
-        description: "The difference between good software and memorable software lives in the micro-interactions, tactile feel, and empathy.",
-        icon: "Hammer"
+        title: "Systems Thinking",
+        description: "Bridging deep IIT engineering principles with XLRI business strategy to architect resilient, scalable platform solutions.",
+        icon: "Cpu"
       },
       {
-        title: "Playful Exploration",
-        description: "Serious engineering doesn't need to be dry. Playfulness is the quickest engine of genuine innovation.",
+        title: "First Person Responsibility",
+        description: "True product leadership is about extreme ownership—taking accountability from early concept to production telemetry and customer delight.",
+        icon: "ShieldCheck"
+      },
+      {
+        title: "Continuous Exploration",
+        description: "Relentlessly exploring emerging frontiers—from mechanical robotics and CAD to ML personalization and autonomous GenAI workflows.",
         icon: "Sparkles"
-      },
-      {
-        title: "Open Knowledge",
-        description: "Sharing learning in public, mentoring aspiring developers, and writing honest reflections along the journey.",
-        icon: "BookOpen"
       }
     ],
     milestones: [
       {
-        year: "Early Spark",
-        title: "First Lines of Code",
-        description: "Built custom text-based RPGs and customized web forums with HTML, CSS, and rudimentary JavaScript.",
-        tag: "Origins"
+        year: "2000 – 2016",
+        title: "Nomadic Roots & Academic Spark",
+        subtitle: "Class X ICSE — 92.80% | 33rd All-India & Abroad Merit Rank",
+        location: "Ghaziabad → Delhi → Gorakhpur → Muzaffarpur → Jamnagar → Ranchi",
+        description: "Traversed six cities across India due to father's transfers, developing resilience, quick cultural adaptation, and a love for science and technology. Completed ICSE Class X at Bishop Westcott Boys' School, Ranchi, securing the 33rd merit rank nationwide.",
+        tag: "Foundations",
+        icon: "MapPin",
+        highlights: [
+          "Lived across 6 distinct regions of India, adapting to varied schools and communities",
+          "Ranked 33rd All-India & Abroad in ICSE Class X (1.68L+ candidates)"
+        ]
       },
       {
-        year: "2019",
-        title: "Graduation & First Startup",
-        description: "Earned a B.S. in Computer Science and joined an early-stage fintech team building real-time transaction pipelines.",
-        tag: "Career Launch"
+        year: "2016 – 2018",
+        title: "Senior School & Cracking JEE",
+        subtitle: "Class XII CBSE (88.60%) | JEE Advanced AIR 5,515",
+        location: "Ranchi, Jharkhand",
+        description: "Completed senior secondary education in the Science stream at Jawahar Vidya Mandir (JVM), Shyamali, Ranchi. Concurrently prepared for and conquered the Joint Entrance Examination, securing AIR 5,515 in JEE Advanced and 98.41 percentile in JEE Mains.",
+        tag: "Milestone",
+        icon: "Award",
+        highlights: [
+          "AIR 5,515 in JEE Advanced (Top 2.4% out of 2.31L+ candidates)",
+          "98.41 percentile in JEE Mains (10.4L+ applicants)"
+        ]
       },
       {
-        year: "2022",
-        title: "Lead Engineer & Public Speaker",
-        description: "Promoted to tech lead for design systems and spoke at developer meetups about WebGL and micro-frontends.",
-        tag: "Leadership"
+        year: "2018 – 2022",
+        title: "IIT Ropar — Engineering & Innovation",
+        subtitle: "B.Tech in Mechanical Engineering | CGPA 8.01 / 10.00",
+        location: "Rupnagar, Punjab",
+        description: "Deepened engineering problem-solving across robotics, product design, and sustainable technologies. Certified as SolidWorks Professional (CSWP). Patented 'uBreathe Life' plant-based air purifier with Urban Munnar Effect (+60% CADR). Captained the intra-college badminton team and served as Tech Fest Event Head.",
+        tag: "Alma Mater",
+        icon: "GraduationCap",
+        highlights: [
+          "National 1st Runner-Up in National HY Contest (Hydrogen refueling station model for IOCL)",
+          "Top 41 Teams nationwide in Flipkart GRID 2.0 Robotics Challenge",
+          "Co-developed uBreathe Life air purifier (Patent Pending) with +60% CADR enhancement",
+          "Certified SolidWorks Professional (CSWP) & Student Mentor (ISMP)"
+        ]
       },
       {
-        year: "Present",
-        title: "Creative Technologist",
-        description: "Blending web software architecture with interactive 3D graphics, generative interfaces, and creative writing.",
-        tag: "Current Era"
+        year: "2022 – 2024",
+        title: "ICICI Bank — Growth Product Management",
+        subtitle: "Manager - 1 / Growth PM | Internet Banking & iMobile Pay",
+        location: "Mumbai, Maharashtra",
+        description: "Took full ownership as First Person Responsible (FPR) for the Offer Zone platform across web and mobile. Orchestrated data-driven growth experiments and machine learning personalization models, driving substantial uplifts in traffic and transaction volume.",
+        tag: "Career",
+        icon: "TrendingUp",
+        highlights: [
+          "Drove a 20% net increase in user traffic (+100,000 monthly visitors) to Offer Zone",
+          "Partnered with DSAG to deploy K-means ML personalization, boosting interactions by 40% and CTR by 5%",
+          "Reduced production error rates by 70%–85% through automated health monitoring and prompt optimization",
+          "Led marquee campaigns for IPL 2023, New Year, and Apple App Store (75+ partner offers/month)"
+        ]
+      },
+      {
+        year: "2024 – 2026",
+        title: "XLRI Delhi-NCR — Strategic Mastery & PGDM",
+        subtitle: "PGDM in Business Management | Marketing & Strategy Focus",
+        location: "Delhi-NCR",
+        description: "Pursued management education after scoring 99.60 percentile in CAT and 98.65 percentile in XAT (99.92 percentile in Decision Making). Led campus teams to podium finishes in marquee national case competitions and completed a high-impact summer product internship at Centrum Broking.",
+        tag: "Postgraduation",
+        icon: "Briefcase",
+        highlights: [
+          "Scored 99.60%ile in CAT (Rank 1,152/2.88L+) & 99.92%ile in XAT Decision Making",
+          "Product Management Intern @ Centrum Broking: drafted GenAI roadmap and evaluated MCP trading architectures",
+          "Campus Finalist in Airtel iCreate (Top 5% out of 4,000+ teams) & National Top 6 in DataVIZ at IIM Bangalore",
+          "Completed Coursera Digital Product Management Specialization (55+ hrs, Univ. of Virginia)"
+        ]
+      },
+      {
+        year: "2026 – Present",
+        title: "Kotak Private — Scaling Wealth Platforms",
+        subtitle: "Senior Product Manager / Senior Manager (M4)",
+        location: "Mumbai, Maharashtra",
+        description: "Leading wealth management platform modernization within Support Services - Applications - CTB. Spearheading core system journeys, international wealth platform customization for Dubai (DIFC), and architecting AI-driven automation workflows.",
+        tag: "Current Role",
+        icon: "ShieldAlert",
+        highlights: [
+          "Architected AI code synthesis ingestion engine slashing turnaround by 95% (2 hrs to 5 mins) with 99.4% accuracy",
+          "Spearheaded Dubai (DIFC) Wealth Management System customization with Infosys, boosting sprint velocity by 26%",
+          "Engineered 36 automated Playwright regression scripts, compressing testing cycles by 78% (8 hrs to 1 hr)",
+          "Executed comprehensive QA framework across 700+ test cases to secure mission-critical trade execution"
+        ]
+      },
+      {
+        year: "Now & Beyond",
+        title: "The Horizon — AI-Enabled Platform Frontier",
+        subtitle: "Building at the Intersection of Systems, Strategy & GenAI",
+        location: "Mumbai, India",
+        description: "Continuously pushing the envelope in product architecture. Exploring autonomous agentic frameworks, Model Context Protocol (MCP) integrations, and intelligent developer tooling to create the next generation of intuitive, high-leverage software.",
+        tag: "Vision",
+        icon: "Sparkles",
+        highlights: [
+          "Building scalable platform systems with deep focus on developer experience and user adoption",
+          "Prototyping autonomous multi-agent workflows and local AI tooling",
+          "Mentoring aspiring product managers and engineers navigating tech transitions"
+        ]
       }
     ],
     funFacts: [
-      "Collects vintage mechanical cameras from the 1970s and shoots 35mm film.",
-      "Can solve a Rubik's cube in under 45 seconds.",
-      "Has brewed pour-over coffee across 14 different countries.",
-      "Secretly dreams of building an indie cozy video game."
+      "Intra-college badminton team captain at IIT Ropar; represented the institute at the URJA Sports Fest.",
+      "Devoted fantasy lore enthusiast and audiobook collector—regularly re-listens to Tolkien's The Lord of the Rings.",
+      "Scored a near-perfect 99.92 percentile in XAT Decision Making, reflecting a natural passion for complex game-theoretic dilemmas.",
+      "Hands-on mechanical maker: designed and rapid-prototyped a 3D-printed manual transmission gearbox."
     ]
   },
 

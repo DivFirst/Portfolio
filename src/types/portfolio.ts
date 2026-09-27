@@ -41,8 +41,18 @@ export interface IslandMeta {
 export interface LifeMilestone {
   year: string;
   title: string;
+  subtitle?: string;
+  location?: string;
   description: string;
   tag: string;
+  highlights?: string[];
+  icon?: string;
+}
+
+export interface LifeStat {
+  label: string;
+  value: string;
+  subtext?: string;
 }
 
 export interface LifeValue {
@@ -55,6 +65,7 @@ export interface MyLifeData {
   summary: string;
   quote: string;
   origin: string;
+  stats?: LifeStat[];
   values: LifeValue[];
   milestones: LifeMilestone[];
   funFacts: string[];

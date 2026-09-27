@@ -4,7 +4,6 @@ import { Text, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import { IslandMeta } from '../../../types/portfolio';
 import { sound } from '../../../utils/soundEffects';
-import { ConstructionBarricade } from '../ConstructionBarricade';
 
 interface FlyingBookIslandProps {
   meta: IslandMeta;
@@ -633,13 +632,20 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
             anchorY="middle"
             letterSpacing={0.18}
           >
-            ORIGINS & VALUES
+            JOURNEY & ROOTS
           </Text>
         </group>
       </group>
 
-      {/* Traffic Cones, White/Red Barricade Ribbon & Coming Soon Sign */}
-      <ConstructionBarricade yOffset={2.5} isFloatingIsland />
+      {/* Radiant Completion Aura for Active Island */}
+      <Sparkles
+        count={28}
+        scale={[6, 3, 6]}
+        size={2.8}
+        speed={0.4}
+        opacity={0.6}
+        color="#fbbf24"
+      />
     </group>
   );
 };
