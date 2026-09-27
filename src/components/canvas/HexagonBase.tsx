@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { IslandMeta } from '../../types/portfolio';
 import { sound } from '../../utils/soundEffects';
+import { ConstructionBarricade } from './ConstructionBarricade';
 
 interface HexagonBaseProps {
   meta: IslandMeta;
@@ -131,6 +132,7 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
       {/* 5. Floating Interactive Props placed on top */}
       <group position={[0, height * 0.2, 0]}>
         {children}
+        <ConstructionBarricade yOffset={2.5} />
       </group>
     </group>
   );

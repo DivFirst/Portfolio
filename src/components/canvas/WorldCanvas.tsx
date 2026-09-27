@@ -6,28 +6,30 @@ import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
 import { IslandMeta } from '../../types/portfolio';
 import { portfolioData } from '../../data/portfolioData';
 import { HexagonBase } from './HexagonBase';
-import { CentralBeacon } from './CentralBeacon';
+import { FlyingRocket } from './FlyingRocket';
 import { FloatingClouds } from './FloatingClouds';
-import { MyLifeIsland } from './islands/MyLifeIsland';
+import { FlyingBookIsland } from './islands/FlyingBookIsland';
 import { ProfessionalIsland } from './islands/ProfessionalIsland';
 import { ProjectsIsland } from './islands/ProjectsIsland';
 import { HobbyIsland } from './islands/HobbyIsland';
 import { BookstagramIsland } from './islands/BookstagramIsland';
-import { TravelIsland } from './islands/TravelIsland';
 
 interface WorldCanvasProps {
   selectedIsland: IslandMeta | null;
   onSelectIsland: (island: IslandMeta | null) => void;
+  resetKey?: number;
 }
 
 const DEFAULT_CAMERA_POS: [number, number, number] = [22, 26, 22];
 const DEFAULT_TARGET: [number, number, number] = [0, 0, 0];
 
-// Smooth camera controller that lerps between overview and island focus
+// Smooth camera controller that lerps between overview and island focus without fighting user interactions
 const CameraController: React.FC<{
   selectedIsland: IslandMeta | null;
   controlsRef: React.RefObject<OrbitControlsType | null>;
-}> = ({ selectedIsland, controlsRef }) => {
+  resetKey?: number;
+  isTransitioningRef: React.MutableRefObject<boolean>;
+}> = ({ selectedIsland, controlsRef, resetKey, isTransitioningRef }) => {
   const { camera } = useThree();
   const targetPos = useRef(new THREE.Vector3(...DEFAULT_CAMERA_POS));
   const lookTarget = useRef(new THREE.Vector3(...DEFAULT_TARGET));
@@ -40,15 +42,40 @@ const CameraController: React.FC<{
       targetPos.current.set(...DEFAULT_CAMERA_POS);
       lookTarget.current.set(...DEFAULT_TARGET);
     }
-  }, [selectedIsland]);
+    isTransitioningRef.current = true;
+  }, [selectedIsland, resetKey, isTransitioningRef]);
 
   useFrame((_, delta) => {
-    // Smooth damp towards target
-    camera.position.lerp(targetPos.current, Math.min(1, delta * 3.2));
+    if (isTransitioningRef.current) {
+      // Smooth damped interpolation towards destination
+      const lerpFactor = Math.min(1, delta * 3.0);
+      camera.position.lerp(targetPos.current, lerpFactor);
 
-    if (controlsRef.current) {
-      controlsRef.current.target.lerp(lookTarget.current, Math.min(1, delta * 3.2));
-      controlsRef.current.update();
+      if (controlsRef.current) {
+        controlsRef.current.target.lerp(lookTarget.current, lerpFactor);
+        controlsRef.current.update();
+      }
+
+      // Check if camera has reached close enough to destination
+      const posDist = camera.position.distanceTo(targetPos.current);
+      const targetDist = controlsRef.current
+        ? controlsRef.current.target.distanceTo(lookTarget.current)
+        : 0;
+
+      if (posDist < 0.08 && targetDist < 0.08) {
+        camera.position.copy(targetPos.current);
+        if (controlsRef.current) {
+          controlsRef.current.target.copy(lookTarget.current);
+          controlsRef.current.update();
+        }
+        isTransitioningRef.current = false;
+      }
+    } else {
+      // Not transitioning: user is orbiting or idle.
+      // OrbitControls computes smooth inertia damping
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
     }
   });
 
@@ -58,8 +85,15 @@ const CameraController: React.FC<{
 export const WorldCanvas: React.FC<WorldCanvasProps> = ({
   selectedIsland,
   onSelectIsland,
+  resetKey = 0,
 }) => {
   const controlsRef = useRef<OrbitControlsType | null>(null);
+  const isTransitioningRef = useRef(false);
+
+  const handleControlStart = () => {
+    // Instantly yield 100% control to user drag / scroll so it never fights or reverts
+    isTransitioningRef.current = false;
+  };
 
   const islands = portfolioData.islands;
 
@@ -102,17 +136,18 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
         <Stars radius={60} depth={30} count={1200} factor={4} saturation={0.5} fade speed={1} />
         <Sparkles count={90} scale={35} size={2.5} speed={0.4} opacity={0.4} color="#818cf8" />
 
-        {/* Central Beacon */}
-        <CentralBeacon onResetView={() => onSelectIsland(null)} />
+        {/* Central Flying Rocket (Navigates to selected island) */}
+        <FlyingRocket
+          selectedIsland={selectedIsland}
+          onResetView={() => onSelectIsland(null)}
+        />
 
-        {/* 1. My Life */}
-        <HexagonBase
+        {/* 1. My Life (3D Flying Leatherbound Book) */}
+        <FlyingBookIsland
           meta={islands.life}
           isSelected={selectedIsland?.id === 'life'}
           onSelect={onSelectIsland}
-        >
-          <MyLifeIsland />
-        </HexagonBase>
+        />
 
         {/* 2. Professional */}
         <HexagonBase
@@ -150,29 +185,28 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           <BookstagramIsland />
         </HexagonBase>
 
-        {/* 6. Travel */}
-        <HexagonBase
-          meta={islands.travel}
-          isSelected={selectedIsland?.id === 'travel'}
-          onSelect={onSelectIsland}
-        >
-          <TravelIsland />
-        </HexagonBase>
-
         {/* Camera Lerp Controller */}
-        <CameraController selectedIsland={selectedIsland} controlsRef={controlsRef} />
+        <CameraController
+          selectedIsland={selectedIsland}
+          controlsRef={controlsRef}
+          resetKey={resetKey}
+          isTransitioningRef={isTransitioningRef}
+        />
 
-        {/* Orbit Controls (constrained to maintain ~60° isometric perspective) */}
+        {/* Orbit Controls (smooth, responsive rotation & zoom) */}
         <OrbitControls
           ref={controlsRef}
+          onStart={handleControlStart}
           enablePan={false}
           enableZoom={true}
-          minDistance={10}
-          maxDistance={50}
-          minPolarAngle={Math.PI / 4.8} // ~37° angle
-          maxPolarAngle={Math.PI / 2.3} // ~78° angle (keeps world visible from above)
-          dampingFactor={0.08}
-          rotateSpeed={0.6}
+          enableDamping={true}
+          dampingFactor={0.06}
+          rotateSpeed={0.85}
+          zoomSpeed={1.2}
+          minDistance={8}
+          maxDistance={55}
+          minPolarAngle={Math.PI / 6} // ~30° angle
+          maxPolarAngle={Math.PI / 2.15} // ~83.7° angle (above horizon)
         />
       </Canvas>
     </div>

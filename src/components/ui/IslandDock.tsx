@@ -46,7 +46,7 @@ export const IslandDock: React.FC<IslandDockProps> = ({
         <span>•</span>
         <span>🔍 Scroll to zoom</span>
         <span>•</span>
-        <span>⌨️ Keys 1-6</span>
+        <span>⌨️ Keys 1-{islandsList.length}</span>
       </div>
 
       {/* Main Island Dock */}

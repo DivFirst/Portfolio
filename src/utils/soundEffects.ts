@@ -6,11 +6,17 @@ class SoundEngine {
   private bgmGain: GainNode | null = null;
   private bgmInterval: number | null = null;
   private isBgmPlaying: boolean = false;
+  private userExplicitlyStoppedBgm: boolean = false;
 
   private initCtx() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       this.ctx = new AudioCtx();
+    }
+    if (!this.bgmGain && this.ctx) {
+      this.bgmGain = this.ctx.createGain();
+      this.bgmGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
+      this.bgmGain.connect(this.ctx.destination);
     }
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
@@ -21,12 +27,18 @@ class SoundEngine {
     return this.isMuted;
   }
 
+  public isBgm(): boolean {
+    return this.isBgmPlaying;
+  }
+
+  public hasUserStoppedBgm(): boolean {
+    return this.userExplicitlyStoppedBgm;
+  }
+
   public toggleMute(): boolean {
     this.isMuted = !this.isMuted;
-    if (this.isMuted && this.bgmGain && this.ctx) {
-      this.bgmGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.1);
-    } else if (!this.isMuted && this.bgmGain && this.ctx && this.isBgmPlaying) {
-      this.bgmGain.gain.setTargetAtTime(0.08, this.ctx.currentTime, 0.2);
+    if (this.bgmGain && this.ctx) {
+      this.bgmGain.gain.setTargetAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime, 0.08);
     }
     return this.isMuted;
   }
@@ -144,35 +156,31 @@ class SoundEngine {
   }
 
   // Ambient gentle generative lofi pad
-  public toggleAmbientMusic(start?: boolean): boolean {
+  public startAmbientMusic(): boolean {
     this.initCtx();
-    if (!this.ctx) return false;
+    if (!this.ctx || !this.bgmGain) return false;
 
-    if (start === false || this.isBgmPlaying) {
-      if (this.bgmInterval) {
-        clearInterval(this.bgmInterval);
-        this.bgmInterval = null;
-      }
-      this.isBgmPlaying = false;
-      return false;
-    }
+    this.userExplicitlyStoppedBgm = false;
+    if (this.isBgmPlaying) return true;
 
     this.isBgmPlaying = true;
+    this.bgmGain.gain.setTargetAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime, 0.1);
+
     const chords = [
-      [261.63, 329.63, 392.00, 493.88], // Cmaj7
-      [220.00, 261.63, 329.63, 392.00], // Am7
-      [174.61, 220.00, 261.63, 329.63], // Fmaj7
-      [196.00, 246.94, 293.66, 392.00], // G7
+      [261.63, 329.63, 392.00, 493.88], // Cmaj7 (C4, E4, G4, B4)
+      [220.00, 261.63, 329.63, 392.00], // Am7 (A3, C4, E4, G4)
+      [174.61, 220.00, 261.63, 329.63], // Fmaj7 (F3, A3, C4, E4)
+      [196.00, 246.94, 293.66, 392.00], // G7 (G3, B3, D4, G4)
     ];
     let chordIdx = 0;
 
     const playChord = () => {
-      if (!this.ctx || this.isMuted || !this.isBgmPlaying) return;
+      if (!this.ctx || !this.bgmGain || this.isMuted || !this.isBgmPlaying) return;
       const currentChord = chords[chordIdx % chords.length];
       chordIdx++;
 
       currentChord.forEach((freq) => {
-        if (!this.ctx) return;
+        if (!this.ctx || !this.bgmGain) return;
         const osc = this.ctx.createOscillator();
         const filter = this.ctx.createBiquadFilter();
         const gain = this.ctx.createGain();
@@ -181,16 +189,16 @@ class SoundEngine {
         osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
 
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(600, this.ctx.currentTime);
+        filter.frequency.setValueAtTime(550, this.ctx.currentTime);
 
-        const duration = 3.6;
+        const duration = 3.8;
         gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.015, this.ctx.currentTime + 1.2);
+        gain.gain.linearRampToValueAtTime(0.016, this.ctx.currentTime + 1.2);
         gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
 
         osc.connect(filter);
         filter.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.bgmGain);
 
         osc.start();
         osc.stop(this.ctx.currentTime + duration);
@@ -200,6 +208,31 @@ class SoundEngine {
     playChord();
     this.bgmInterval = window.setInterval(playChord, 3600);
     return true;
+  }
+
+  public stopAmbientMusic(): boolean {
+    if (this.bgmInterval) {
+      clearInterval(this.bgmInterval);
+      this.bgmInterval = null;
+    }
+    this.isBgmPlaying = false;
+    this.userExplicitlyStoppedBgm = true;
+
+    // Quick smooth fade out of any actively ringing chord notes
+    if (this.bgmGain && this.ctx) {
+      this.bgmGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
+    }
+    return false;
+  }
+
+  public toggleAmbientMusic(start?: boolean): boolean {
+    if (start === true) {
+      return this.startAmbientMusic();
+    }
+    if (start === false) {
+      return this.stopAmbientMusic();
+    }
+    return this.isBgmPlaying ? this.stopAmbientMusic() : this.startAmbientMusic();
   }
 }
 

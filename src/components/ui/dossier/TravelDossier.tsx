@@ -4,6 +4,7 @@ import { portfolioData } from '../../../data/portfolioData';
 
 export const TravelDossier: React.FC = () => {
   const { travel } = portfolioData;
+  if (!travel) return null;
 
   return (
     <div className="space-y-6 text-slate-200">

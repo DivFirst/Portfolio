@@ -7,7 +7,6 @@ import { ProfessionalDossier } from './dossier/ProfessionalDossier';
 import { ProjectsDossier } from './dossier/ProjectsDossier';
 import { HobbyDossier } from './dossier/HobbyDossier';
 import { BookstagramDossier } from './dossier/BookstagramDossier';
-import { TravelDossier } from './dossier/TravelDossier';
 import { MiniGameStage } from './MiniGameStage';
 
 interface IslandDossierModalProps {
@@ -160,7 +159,6 @@ export const IslandDossierModal: React.FC<IslandDossierModalProps> = ({
               {island.id === 'projects' && <ProjectsDossier />}
               {island.id === 'hobby' && <HobbyDossier />}
               {island.id === 'bookstagram' && <BookstagramDossier />}
-              {island.id === 'travel' && <TravelDossier />}
             </>
           ) : (
             <MiniGameStage island={island} />

@@ -1,4 +1,4 @@
-export type IslandId = 'life' | 'professional' | 'projects' | 'hobby' | 'bookstagram' | 'travel';
+export type IslandId = 'life' | 'professional' | 'projects' | 'hobby' | 'bookstagram';
 
 export interface SocialLink {
   label: string;
@@ -10,6 +10,7 @@ export interface ProfileData {
   name: string;
   tagline: string;
   title: string;
+  bio?: string;
   location: string;
   status: string;
   avatarUrl: string;
@@ -175,5 +176,5 @@ export interface PortfolioData {
   projects: ProjectsData;
   hobby: HobbyData;
   bookstagram: BookstagramData;
-  travel: TravelData;
+  travel?: TravelData;
 }

@@ -2,19 +2,18 @@ import { PortfolioData } from '../types/portfolio';
 
 export const portfolioData: PortfolioData = {
   profile: {
-    name: "Alex Rivera",
-    title: "Full-Stack Engineer & Creative Technologist",
-    tagline: "Crafting playful digital experiences, scalable systems, and visual worlds.",
-    location: "San Francisco, CA / Remote",
-    status: "Exploring high-impact opportunities",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
-    resumeUrl: "#",
+    name: "Divyanshu Garg",
+    title: "Product Manager | B2B & Platform Strategist | AI Enablement",
+    tagline: "Building scalable platform products & exploring GenAI workflows.",
+    bio: "Product Manager with an engineering foundation from IIT Ropar and strategic grounding from XLRI, specializing in scalable enterprise FinTech and AI-assisted platform systems. Adept at translating complex technical architectures into high-impact products that drive user adoption and operational efficiency.",
+    location: "Mumbai, India",
+    status: "Building scalable platform products & exploring GenAI workflows",
+    avatarUrl: "https://lh3.googleusercontent.com/d/1Fa3r1kFeYwrd0Wqoy7THDFHaU1vrsRJN",
+    resumeUrl: "https://drive.google.com/file/d/14vjMSekZyCbwovDT5DyhKMMmWKzBm-L4/view?usp=sharing",
     socials: [
-      { label: "GitHub", url: "https://github.com", icon: "Github" },
-      { label: "LinkedIn", url: "https://linkedin.com", icon: "Linkedin" },
-      { label: "Instagram", url: "https://instagram.com", icon: "Instagram" },
-      { label: "Twitter / X", url: "https://twitter.com", icon: "Twitter" },
-      { label: "Email", url: "mailto:alex@example.com", icon: "Mail" }
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/divgarg03/", icon: "Linkedin" },
+      { label: "GitHub", url: "https://github.com/DivFirst", icon: "Github" },
+      { label: "Email", url: "mailto:divgarg03@gmail.com", icon: "Mail" }
     ]
   },
 
@@ -47,9 +46,9 @@ export const portfolioData: PortfolioData = {
       accentColor: "#3b82f6", // Royal Blue
       lightColor: "#dbeafe",
       iconName: "Briefcase",
-      coordinates: [11, 0, -6.3],
-      cameraTarget: [11, 0.5, -6.3],
-      cameraPosition: [17.5, 7.5, 0.7],
+      coordinates: [11.9, 0, -3.9],
+      cameraTarget: [11.9, 0.5, -3.9],
+      cameraPosition: [18.4, 7.5, 3.1],
       minigame: {
         title: "Sprint Commander",
         description: "Squash priority bugs, brew artisanal espresso, and ship high-velocity deployments under the crunch!",
@@ -66,9 +65,9 @@ export const portfolioData: PortfolioData = {
       accentColor: "#10b981", // Emerald
       lightColor: "#d1fae5",
       iconName: "Terminal",
-      coordinates: [11, 0, 6.3],
-      cameraTarget: [11, 0.5, 6.3],
-      cameraPosition: [17.5, 7.5, 13.3],
+      coordinates: [7.3, 0, 10.1],
+      cameraTarget: [7.3, 0.5, 10.1],
+      cameraPosition: [13.8, 7.5, 17.1],
       minigame: {
         title: "Pipeline Overdrive",
         description: "Route encrypted data packets through microservices and launch serverless rockets into production!",
@@ -79,15 +78,15 @@ export const portfolioData: PortfolioData = {
     hobby: {
       id: "hobby",
       index: 4,
-      name: "Hobby",
+      name: "Hobbies",
       subtitle: "Music, Visual Arts & Digital Play",
       badge: "Creative Grove",
       accentColor: "#ec4899", // Vivid Pink
       lightColor: "#fce7f3",
       iconName: "Gamepad2",
-      coordinates: [0, 0, 12.5],
-      cameraTarget: [0, 0.5, 12.5],
-      cameraPosition: [6.5, 7.5, 19.5],
+      coordinates: [-7.3, 0, 10.1],
+      cameraTarget: [-7.3, 0.5, 10.1],
+      cameraPosition: [-0.8, 7.5, 17.1],
       minigame: {
         title: "Polyphony Beats",
         description: "Tap synth chords and groove with lo-fi rhythmic frequencies under neon streetlamps.",
@@ -104,33 +103,14 @@ export const portfolioData: PortfolioData = {
       accentColor: "#8b5cf6", // Mystic Violet
       lightColor: "#ede9fe",
       iconName: "BookOpen",
-      coordinates: [-11, 0, 6.3],
-      cameraTarget: [-11, 0.5, 6.3],
-      cameraPosition: [-4.5, 7.5, 13.3],
+      coordinates: [-11.9, 0, -3.9],
+      cameraTarget: [-11.9, 0.5, -3.9],
+      cameraPosition: [-5.4, 7.5, 3.1],
       minigame: {
         title: "Tower of Alexandria",
         description: "Stack falling hardcover books with balance and timing to build an infinitely tall literary citadel.",
         genre: "Physics Balance",
         difficulty: "Relaxing"
-      }
-    },
-    travel: {
-      id: "travel",
-      index: 6,
-      name: "Travel",
-      subtitle: "Passport Stamps & Global Expeditions",
-      badge: "Summit Basecamp",
-      accentColor: "#06b6d4", // Sky Cyan
-      lightColor: "#cffafe",
-      iconName: "Compass",
-      coordinates: [-11, 0, -6.3],
-      cameraTarget: [-11, 0.5, -6.3],
-      cameraPosition: [-4.5, 7.5, 0.7],
-      minigame: {
-        title: "Skyborne Wayfarer",
-        description: "Glide a paper glider over misty peaks, dodging thunderclouds and collecting golden passport stamps.",
-        genre: "Endless Glider",
-        difficulty: "Normal"
       }
     }
   },
