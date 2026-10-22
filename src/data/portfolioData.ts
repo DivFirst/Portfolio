@@ -9,7 +9,7 @@ export const portfolioData: PortfolioData = {
     location: "Mumbai, India",
     status: "Building scalable platform products & exploring GenAI workflows",
     avatarUrl: "/me.jpg", // local copy (public/me.jpg): 400x400, ~21 KB
-    resumeUrl: "https://drive.google.com/file/d/14vjMSekZyCbwovDT5DyhKMMmWKzBm-L4/view?usp=sharing",
+    resumeUrl: "https://drive.google.com/file/d/1TVY6LS8TpDv1xyjGPLnntFcYQJdX83H3/view?usp=sharing",
     socials: [
       { label: "LinkedIn", url: "https://www.linkedin.com/in/divgarg03/", icon: "Linkedin" },
       { label: "GitHub", url: "https://github.com/DivFirst", icon: "Github" },
