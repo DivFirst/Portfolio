@@ -81,7 +81,7 @@ export const MyLifeDossier: React.FC = () => {
             "{life.quote}"
           </p>
           <span className="text-xs text-amber-400/80 font-mono mt-1.5 block tracking-wide">
-            — {profile.name}'s Guiding Philosophy
+            — {life.quoteAuthor ? `${life.quoteAuthor} · ` : ''}{profile.name}'s Guiding Philosophy
           </span>
         </div>
       </div>

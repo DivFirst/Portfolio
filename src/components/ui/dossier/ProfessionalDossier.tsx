@@ -65,7 +65,7 @@ export const ProfessionalDossier: React.FC = () => {
                 {exp.highlights.map((h, hIdx) => (
                   <li key={hIdx} className="text-xs text-slate-300 flex items-start gap-2 leading-relaxed">
                     <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
-                    <span>{h}</span>
+                    <span>{h.text}</span>
                   </li>
                 ))}
               </ul>

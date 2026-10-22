@@ -1,11 +1,10 @@
-import { Music, Camera, Gamepad2, Coffee, Sparkles } from 'lucide-react';
+import { Music, Trophy, Swords, Sparkles } from 'lucide-react';
 import { portfolioData } from '../../../data/portfolioData';
 
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
   Music,
-  Camera,
-  Gamepad2,
-  Coffee,
+  Trophy,
+  Swords,
 };
 
 export const HobbyDossier: React.FC = () => {
@@ -17,9 +16,11 @@ export const HobbyDossier: React.FC = () => {
         <p className="text-xs text-pink-200/90 leading-relaxed">
           {hobby.summary}
         </p>
-        <span className="text-[11px] font-mono text-pink-400 shrink-0 italic">
-          "{hobby.creativeQuote}"
-        </span>
+        {hobby.creativeQuote && (
+          <span className="text-[11px] font-mono text-pink-400 shrink-0 italic">
+            "{hobby.creativeQuote}"
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -47,6 +47,17 @@ export interface LifeMilestone {
   tag: string;
   highlights?: string[];
   icon?: string;
+  moreInfo?: MoreInfo;
+}
+
+/** A city from the childhood map; `memory` is the text for its "?" pin. */
+export interface LifeCity {
+  name: string;
+  state: string;
+  ages: string;
+  isHome?: boolean;
+  memory?: string;
+  photo?: string;
 }
 
 export interface LifeStat {
@@ -64,11 +75,27 @@ export interface LifeValue {
 export interface MyLifeData {
   summary: string;
   quote: string;
+  quoteAuthor?: string;
   origin: string;
   stats?: LifeStat[];
   values: LifeValue[];
+  cities?: LifeCity[];
   milestones: LifeMilestone[];
   funFacts: string[];
+}
+
+/** The story behind an item, shown when a visitor clicks its "?" hotspot. */
+export interface MoreInfo {
+  problem?: string;
+  action: string;
+  result?: string;
+  link?: string;
+  photo?: string;
+}
+
+export interface ExperienceHighlight {
+  text: string;
+  moreInfo?: MoreInfo;
 }
 
 export interface ExperienceItem {
@@ -77,7 +104,7 @@ export interface ExperienceItem {
   period: string;
   location?: string;
   type: string;
-  highlights: string[];
+  highlights: ExperienceHighlight[];
   technologies: string[];
 }
 
@@ -99,6 +126,10 @@ export interface ProfessionalData {
 
 export interface ProjectItem {
   id: string;
+  kind?: 'case-competition' | 'engineering-competition' | 'engineering-project' | 'internship' | 'case-study' | 'live-project';
+  year?: string;
+  role?: string;
+  moreInfo?: MoreInfo;
   title: string;
   tagline: string;
   description: string;
@@ -126,28 +157,31 @@ export interface HobbyItem {
   currentObsession: string;
   stats: { label: string; value: string }[];
   tags: string[];
+  moreInfo?: MoreInfo;
 }
 
 export interface HobbyData {
   summary: string;
   hobbies: HobbyItem[];
-  creativeQuote: string;
+  creativeQuote?: string;
 }
 
 export interface BookItem {
   title: string;
   author: string;
-  rating: number; // 1-5
+  rating?: number | string; // out of 5, exactly as Divyanshu rated it (e.g. 4.25 or "3.5–4")
   coverColor: string;
   genre: string;
-  review: string;
+  review?: string; // also the text for the book's "?" box
   favoriteQuote?: string;
   badge?: string;
 }
 
 export interface BookstagramData {
   summary: string;
-  yearlyGoal: {
+  account?: { name: string; handle: string; url: string };
+  booksRead?: number;
+  yearlyGoal?: {
     read: number;
     target: number;
     year: number;
@@ -156,7 +190,7 @@ export interface BookstagramData {
     title: string;
     author: string;
     progress: number; // 0-100%
-  };
+  }[];
   books: BookItem[];
   genres: string[];
 }
@@ -164,18 +198,20 @@ export interface BookstagramData {
 export interface TravelDestination {
   city: string;
   country: string;
-  year: string;
+  year?: string;
   flag: string;
-  highlight: string;
-  vibe: string;
+  stops?: string[];
+  highlight?: string; // the memory shown on the trip's passport stamp / "?" box
+  vibe?: string;
   tags: string[];
+  photosUrl?: string; // public Google Photos share link
 }
 
 export interface TravelData {
   summary: string;
-  countriesVisited: number;
-  citiesExplored: number;
-  nextWishlist: string[];
+  countriesVisited?: number;
+  citiesExplored?: number;
+  nextWishlist?: string[];
   destinations: TravelDestination[];
 }
 
