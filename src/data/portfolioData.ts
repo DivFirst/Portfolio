@@ -977,8 +977,8 @@ export const portfolioData: PortfolioData = {
         city: "Kasol",
         country: "India",
         flag: "🇮🇳",
-        tags: ["Himachal Pradesh"]
-        // photosUrl: album link given is private (needs a Google Photos share link)
+        tags: ["Himachal Pradesh"],
+        photosUrl: "https://photos.app.goo.gl/fkCdLpBP8zE7Gj819"
       },
       {
         city: "Goa",
@@ -991,8 +991,8 @@ export const portfolioData: PortfolioData = {
         city: "Srisailam & Hampi",
         country: "India",
         flag: "🇮🇳",
-        tags: ["Andhra Pradesh", "Karnataka"]
-        // photosUrl: album link given is private (needs a Google Photos share link)
+        tags: ["Andhra Pradesh", "Karnataka"],
+        photosUrl: "https://photos.app.goo.gl/i5jSKkZj3Ygq91vS9"
       },
       {
         city: "Meghalaya",
