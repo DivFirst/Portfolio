@@ -107,6 +107,7 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
             meta.id === 'projects' ? '#113536' :
             meta.id === 'hobby' ? '#4a2545' :
             meta.id === 'bookstagram' ? '#35274e' :
+            meta.id === 'travel' ? '#173a40' :
             '#234346'
           }
           roughness={0.7}

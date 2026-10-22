@@ -13,6 +13,7 @@ import { ProfessionalIsland } from './islands/ProfessionalIsland';
 import { ProjectsIsland } from './islands/ProjectsIsland';
 import { HobbyIsland } from './islands/HobbyIsland';
 import { BookstagramIsland } from './islands/BookstagramIsland';
+import { TravelIsland } from './islands/TravelIsland';
 
 interface WorldCanvasProps {
   selectedIsland: IslandMeta | null;
@@ -183,6 +184,15 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           onSelect={onSelectIsland}
         >
           <BookstagramIsland />
+        </HexagonBase>
+
+        {/* 6. Travel */}
+        <HexagonBase
+          meta={islands.travel}
+          isSelected={selectedIsland?.id === 'travel'}
+          onSelect={onSelectIsland}
+        >
+          <TravelIsland />
         </HexagonBase>
 
         {/* Camera Lerp Controller */}

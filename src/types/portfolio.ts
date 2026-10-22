@@ -1,4 +1,4 @@
-export type IslandId = 'life' | 'professional' | 'projects' | 'hobby' | 'bookstagram';
+export type IslandId = 'life' | 'professional' | 'projects' | 'hobby' | 'bookstagram' | 'travel';
 
 export interface SocialLink {
   label: string;

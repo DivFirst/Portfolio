@@ -8,7 +8,7 @@ export const portfolioData: PortfolioData = {
     bio: "Product Manager with an engineering foundation from IIT Ropar and strategic grounding from XLRI, specializing in scalable enterprise FinTech and AI-assisted platform systems. Adept at translating complex technical architectures into high-impact products that drive user adoption and operational efficiency.",
     location: "Mumbai, India",
     status: "Building scalable platform products & exploring GenAI workflows",
-    avatarUrl: "https://lh3.googleusercontent.com/d/1Fa3r1kFeYwrd0Wqoy7THDFHaU1vrsRJN",
+    avatarUrl: "/me.jpg", // local copy (public/me.jpg): 400x400, ~21 KB
     resumeUrl: "https://drive.google.com/file/d/14vjMSekZyCbwovDT5DyhKMMmWKzBm-L4/view?usp=sharing",
     socials: [
       { label: "LinkedIn", url: "https://www.linkedin.com/in/divgarg03/", icon: "Linkedin" },
@@ -46,9 +46,9 @@ export const portfolioData: PortfolioData = {
       accentColor: "#3b82f6", // Royal Blue
       lightColor: "#dbeafe",
       iconName: "Briefcase",
-      coordinates: [11.9, 0, -3.9],
-      cameraTarget: [11.9, 0.5, -3.9],
-      cameraPosition: [18.4, 7.5, 3.1],
+      coordinates: [10.8, 0, -6.25],
+      cameraTarget: [10.8, 0.5, -6.25],
+      cameraPosition: [17.3, 7.5, 0.75],
       minigame: {
         title: "Sprint Commander",
         description: "Squash priority bugs, brew artisanal espresso, and ship high-velocity deployments under the crunch!",
@@ -65,9 +65,9 @@ export const portfolioData: PortfolioData = {
       accentColor: "#10b981", // Emerald
       lightColor: "#d1fae5",
       iconName: "Terminal",
-      coordinates: [7.3, 0, 10.1],
-      cameraTarget: [7.3, 0.5, 10.1],
-      cameraPosition: [13.8, 7.5, 17.1],
+      coordinates: [10.8, 0, 6.25],
+      cameraTarget: [10.8, 0.5, 6.25],
+      cameraPosition: [17.3, 7.5, 13.25],
       minigame: {
         title: "Pipeline Overdrive",
         description: "Route encrypted data packets through microservices and launch serverless rockets into production!",
@@ -84,9 +84,9 @@ export const portfolioData: PortfolioData = {
       accentColor: "#ec4899", // Vivid Pink
       lightColor: "#fce7f3",
       iconName: "Gamepad2",
-      coordinates: [-7.3, 0, 10.1],
-      cameraTarget: [-7.3, 0.5, 10.1],
-      cameraPosition: [-0.8, 7.5, 17.1],
+      coordinates: [0, 0, 12.5],
+      cameraTarget: [0, 0.5, 12.5],
+      cameraPosition: [6.5, 7.5, 19.5],
       minigame: {
         title: "Polyphony Beats",
         description: "Tap synth chords and groove with lo-fi rhythmic frequencies under neon streetlamps.",
@@ -103,14 +103,33 @@ export const portfolioData: PortfolioData = {
       accentColor: "#8b5cf6", // Mystic Violet
       lightColor: "#ede9fe",
       iconName: "BookOpen",
-      coordinates: [-11.9, 0, -3.9],
-      cameraTarget: [-11.9, 0.5, -3.9],
-      cameraPosition: [-5.4, 7.5, 3.1],
+      coordinates: [-10.8, 0, 6.25],
+      cameraTarget: [-10.8, 0.5, 6.25],
+      cameraPosition: [-4.3, 7.5, 13.25],
       minigame: {
         title: "Tower of Alexandria",
         description: "Stack falling hardcover books with balance and timing to build an infinitely tall literary citadel.",
         genre: "Physics Balance",
         difficulty: "Relaxing"
+      }
+    },
+    travel: {
+      id: "travel",
+      index: 6,
+      name: "Travel",
+      subtitle: "Vietnam & Trips Across India",
+      badge: "Wayfarer Camp",
+      accentColor: "#06b6d4", // Cyan
+      lightColor: "#cffafe",
+      iconName: "Compass",
+      coordinates: [-10.8, 0, -6.25],
+      cameraTarget: [-10.8, 0.5, -6.25],
+      cameraPosition: [-4.3, 7.5, 0.75],
+      minigame: {
+        title: "Skyborne Wayfarer",
+        description: "Glide a paper plane through mountain clouds, collecting golden passport stamps and dodging turbulence.",
+        genre: "Endless Flyer",
+        difficulty: "Normal"
       }
     }
   },
