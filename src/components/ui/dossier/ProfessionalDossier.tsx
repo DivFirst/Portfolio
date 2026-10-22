@@ -51,10 +51,12 @@ export const ProfessionalDossier: React.FC = () => {
                     <Calendar className="w-3 h-3 text-blue-400" />
                     {exp.period}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-slate-500" />
-                    {exp.location}
-                  </span>
+                  {exp.location && (
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-500" />
+                      {exp.location}
+                    </span>
+                  )}
                 </div>
               </div>
 

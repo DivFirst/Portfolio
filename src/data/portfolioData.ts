@@ -137,7 +137,7 @@ export const portfolioData: PortfolioData = {
       },
       {
         label: "Experience",
-        value: "4+ Yrs",
+        value: "~3 Yrs",
         subtext: "FinTech, Platforms & AI Enablement"
       }
     ],
@@ -216,7 +216,7 @@ export const portfolioData: PortfolioData = {
         highlights: [
           "Drove a 20% net increase in user traffic (+100,000 monthly visitors) to Offer Zone",
           "Partnered with DSAG to deploy K-means ML personalization, boosting interactions by 40% and CTR by 5%",
-          "Reduced production error rates by 70%–85% through automated health monitoring and prompt optimization",
+          "Eliminated 85% of production errors through automated health checks and better chatbot intent classification",
           "Led marquee campaigns for IPL 2023, New Year, and Apple App Store (75+ partner offers/month)"
         ]
       },
@@ -274,68 +274,85 @@ export const portfolioData: PortfolioData = {
   },
 
   professional: {
-    headline: "Senior Software Engineer specializing in Modern Web, Distributed Systems & 3D Interactive Interfaces.",
-    summary: "Over 6 years of experience shipping high-traffic client applications, robust APIs, and delighting users with intuitive interactive experiences.",
-    yearsOfExperience: "6+ Years",
+    // Source of truth: "D:\Everything about me\Resume\Latest\Divyanshu Garg Resume.pdf"
+    headline: "Data-driven Product Manager with ~3 years of experience across wealth management & retail banking.",
+    summary: "Combines an engineering foundation from IIT Ropar with strategic execution from XLRI to scale mission-critical platforms. Proven track record of cutting ingestion latency by 95% via AI-assisted extraction and leveraging machine-learning personalisation to drive double-digit engagement growth.",
+    yearsOfExperience: "~3 Years",
     experiences: [
       {
-        company: "Aether Dynamics",
-        role: "Senior Full-Stack Engineer",
-        period: "2023 - Present",
-        location: "San Francisco, CA (Hybrid)",
+        company: "Kotak Private",
+        role: "Sr. Product Manager",
+        period: "June 2026 - Present",
+        location: "Mumbai, India",
         type: "Full-Time",
         highlights: [
-          "Architected real-time collaboration canvas serving 150k+ daily active users with 99.98% uptime.",
-          "Spearheaded adoption of WebGL/Three.js rendering for spatial visualization, boosting engagement by 42%.",
-          "Reduced client bundle size by 38% and achieved sub-800ms First Contentful Paint across all global edge nodes."
+          "Cut ingestion turnaround by 95% (2 hrs to 5 mins) with 99.4% accuracy across 21 provider formats by architecting a rule-based extraction engine using AI code synthesis, eliminating manual data entry.",
+          "Delivered 37 feature customisations for Kotak Private's Dubai (DIFC) WMS by authoring 60+ user stories and process flows with Infosys, lifting sprint velocity by 26% & resolving all functional ambiguity pre-UAT.",
+          "Prevented critical launch breakdowns in DIFC WMS by executing an end-to-end QA framework of 700+ test cases (500+ UI, 200+ process), resolving 100+ high-priority defects across trade execution workflows.",
+          "Compressed regression cycles by 78% (8 hrs to 1 hr) across DIFC WMS by writing 36 automated Playwright test scripts triggered via one-click batch files, enabling instant delta-impact smoke testing across 36 system journeys."
         ],
-        technologies: ["React", "TypeScript", "Three.js", "Node.js", "PostgreSQL", "Docker", "AWS"]
+        technologies: ["AI Code Synthesis", "Rule-Based Extraction", "Playwright", "QA Frameworks", "User Stories"]
       },
       {
-        company: "Nexus Labs",
-        role: "Software Engineer II",
-        period: "2021 - 2023",
-        location: "New York, NY (Remote)",
+        company: "ICICI Bank",
+        role: "Product Manager",
+        period: "June 2022 - June 2024",
+        location: "Mumbai, India",
         type: "Full-Time",
         highlights: [
-          "Developed core microservices for high-throughput financial data streaming processing 20k events/sec.",
-          "Mentored 4 junior engineers and organized weekly internal engineering tech talks.",
-          "Implemented comprehensive end-to-end testing suite decreasing regression bug escape rate by 60%."
+          "Orchestrated a 40% increase in user interactions and a 5% CTR improvement by collaborating with data science teams to deploy K-means-driven personalised content delivery.",
+          "Elevated engagement levels by 30% while reducing bounce rates by 12% through comparative analysis of seven competitors and restructuring information architecture.",
+          "Accelerated mobile adoption by raising app installs by 10% and in-app activity by 30% through launch of interactive UI elements and focused app store optimisation.",
+          "Eliminated 85% of production errors by introducing automated system health checks and enhancing chatbot intent classification to automate 80% of routine support flows.",
+          "Strengthened retention by 10% and increased page views by 15% by delivering custom campaign experiences across four large-scale initiatives, including IPL 2023 and New Year 2023."
         ],
-        technologies: ["TypeScript", "Next.js", "GraphQL", "Redis", "Kafka", "Kubernetes", "Jest"]
+        technologies: ["K-means Personalisation", "Intent Classification", "Information Architecture", "App Store Optimisation"]
       },
       {
-        company: "Catalyst Interactive",
-        role: "Frontend Developer",
-        period: "2019 - 2021",
-        location: "Austin, TX",
-        type: "Full-Time",
+        company: "Centrum Broking",
+        role: "Product Management Intern",
+        period: "April 2025 - June 2025",
+        // location: not on resume (ask Divyanshu)
+        type: "Internship",
         highlights: [
-          "Built responsive UI design system with 60+ accessible components used across 5 enterprise apps.",
-          "Collaborated closely with UX designers to prototype interactive animated marketing experiences."
+          "Championed a cross-functional GenAI enablement roadmap resulting in leadership approval for 10+ automation initiatives following structured discovery and ROI assessment.",
+          "Assessed revenue disruption potential of LLM-powered trading platforms worth USD 5M by performing a technical evaluation of Zerodha Kite MCP and benchmarking 10+ rival MCP solutions."
         ],
-        technologies: ["React", "Tailwind CSS", "Storybook", "Figma", "Webpack", "REST APIs"]
+        technologies: ["GenAI", "LLMs", "Zerodha Kite MCP", "ROI Assessment"]
       }
     ],
     coreCompetencies: [
       {
-        category: "Frontend & Creative Tech",
-        skills: ["React", "TypeScript", "Three.js / R3F", "Tailwind CSS", "Next.js", "Canvas / WebGL", "State Management"]
+        category: "Product Strategy & Execution",
+        skills: ["Product Vision & Roadmap", "Feature Prioritisation", "Requirement Definition (PRDs/User Stories)", "Agile & Scrum", "Sprint Planning", "Release Management", "Go-to-Market (GTM) Strategy", "Cross-Functional Leadership"]
       },
       {
-        category: "Backend & Cloud Systems",
-        skills: ["Node.js", "Python", "PostgreSQL", "Redis", "GraphQL", "Docker", "AWS / Cloudflare"]
+        category: "Data Analytics & Growth",
+        skills: ["Data Analysis (SQL, Excel)", "Funnel & Cohort Analysis", "A/B Testing & Experimentation", "Personalisation Engines", "Product Metrics & KPIs", "App Store Optimisation (ASO)"]
       },
       {
-        category: "Architecture & Practices",
-        skills: ["System Design", "CI/CD Pipelines", "Performance Optimization", "Web Accessibility (a11y)", "Agile Leadership"]
+        category: "User Research & Product Design",
+        skills: ["User Research (Qual & Quant)", "User Journey Mapping", "Wireframing & Prototyping", "Information Architecture", "Design Thinking", "Usability Testing"]
+      },
+      {
+        category: "Technical & AI Enablement",
+        skills: ["System Architecture & Integration", "AI/ML Product Integration (LLMs, GenAI, Intent Classification)", "Automated Testing & QA Frameworks", "Technical Feasibility & ROI Evaluation"]
+      },
+      {
+        category: "Tools & Platforms",
+        skills: ["Azure DevOps", "Jira", "Figma", "Balsamiq", "Tableau", "Power BI", "Google Analytics", "SQL", "Playwright", "ChatGPT", "Claude", "Gemini", "Notion", "Aha!"]
       }
     ],
     education: [
       {
-        degree: "B.S. in Computer Science",
-        institution: "University of California",
-        year: "Class of 2019"
+        degree: "PGDM - BM, Marketing & Strategy",
+        institution: "XLRI Delhi-NCR",
+        year: "June 2024 - Feb 2026"
+      },
+      {
+        degree: "B.Tech., Mechanical Engineering",
+        institution: "IIT Ropar",
+        year: "June 2018 - May 2022"
       }
     ]
   },
