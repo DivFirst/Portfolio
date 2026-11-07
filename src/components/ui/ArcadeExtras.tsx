@@ -93,8 +93,8 @@ export function ContinueScreen({ open, onClose }: { open: boolean; onClose: () =
           <ArcadeButton variant="secondary" href={linkedInUrl} target="_blank" rel="noopener noreferrer">LinkedIn ▶</ArcadeButton>
           <ArcadeButton variant="primary" href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">▶ Resume</ArcadeButton>
         </div>
-        <p className="mt-5 text-[14px] text-arcade-muted">
-          Or write to <a href={emailUrl}>{emailAddress}</a>
+        <p className="mt-3 text-[14px] text-arcade-muted">
+          Or write to <a href={emailUrl} className="inline-flex min-h-[44px] items-center">{emailAddress}</a>
         </p>
       </div>
     </ArcadeModal>

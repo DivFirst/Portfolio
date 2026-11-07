@@ -35,6 +35,9 @@ export const RideController: React.FC<RideControllerProps> = ({ ride, origin, go
     rideScroll.el = scroll.el;
     scroll.el.scrollTop = 0;
     scroll.el.setAttribute('aria-label', 'World ride: scroll to play');
+    // The map's OrbitControls attach to this element too and set touch-action: none,
+    // which blocks phone swipes; the .arcade-ride-scroll CSS rule turns vertical swiping back on.
+    scroll.el.classList.add('arcade-ride-scroll');
     return () => { if (rideScroll.el === scroll.el) rideScroll.el = null; };
   }, [scroll.el]);
 

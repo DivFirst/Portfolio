@@ -89,7 +89,8 @@ export const HeroCard: React.FC<HeroCardProps> = ({ isIslandFocused }) => {
           <span className="text-arcade-cyan" aria-hidden="true">● </span>Available for high-impact roles
         </p>
 
-        <p className="mt-3 text-[15px] leading-[1.6] text-arcade-text">{profile.bio || profile.tagline}</p>
+        {/* Phones: the bio is left out so the buttons fit above the stage bar (it's the summary in Recruiter Mode) */}
+        <p className="mt-3 text-[15px] leading-[1.6] text-arcade-text max-[759px]:hidden">{profile.bio || profile.tagline}</p>
 
         <div className="mt-5 flex flex-wrap gap-3">
           <ArcadeButton variant="coin" href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" sound="coin">
@@ -98,7 +99,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ isIslandFocused }) => {
           <ArcadeButton variant="ghost" href={email}>Email</ArcadeButton>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px]">
+        <div className="arcade-p1-links mt-2 flex flex-wrap items-center gap-x-5 text-[14px]">
           {otherLinks.map((s) => (
             <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
           ))}

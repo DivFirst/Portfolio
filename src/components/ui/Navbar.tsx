@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView, on
       right={
         <>
           <a href="/cv" className="arcade-toggle" aria-label="Recruiter Mode: my CV on one page" title="Recruiter Mode">
-            <span aria-hidden="true">📄 <span className="hidden sm:inline">Recruiter </span>CV</span>
+            <span aria-hidden="true">📄 <span className="hidden lg:inline">Recruiter </span>CV</span>
           </a>
           {/* Trophy Room + CONTINUE? (desktop; on smaller screens they sit in the stage bar) */}
           <button type="button" className="arcade-toggle hidden lg:inline-flex lg:items-center" onClick={onOpenTrophies}>
