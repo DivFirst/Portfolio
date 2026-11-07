@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Sparkles } from '@react-three/drei';
+import { OrbitControls, ScrollControls, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
 import { IslandMeta } from '../../types/portfolio';
@@ -16,10 +16,16 @@ import { BookstagramIsland } from './islands/BookstagramIsland';
 import { TravelIsland } from './islands/TravelIsland';
 import { RetroSky, SKY_COLOR } from './RetroSky';
 import { useReducedMotion } from '../arcade';
+import { worldRides, type Vec3 } from '../../data/worldRides';
+import { RideController } from '../world/RideController';
 
 interface WorldCanvasProps {
-  selectedIsland: IslandMeta | null;
-  onSelectIsland: (island: IslandMeta | null) => void;
+  /** island whose world is open (null = map) */
+  activeIsland: IslandMeta | null;
+  /** clicking an island enters its world */
+  onEnterIsland: (island: IslandMeta) => void;
+  /** e.g. the rocket's "back" click */
+  onLeave: () => void;
   resetKey?: number;
   /** Loading milestones for the boot screen: 'created' = WebGL scene set up, 'ready' = first frames drawn */
   onLoadStage?: (stage: 'created' | 'ready') => void;
@@ -43,60 +49,51 @@ const FirstFramesWatcher: React.FC<{ onReady?: () => void }> = ({ onReady }) => 
 
 const DEFAULT_CAMERA_POS: [number, number, number] = [22, 26, 22];
 const DEFAULT_TARGET: [number, number, number] = [0, 0, 0];
+/** How far an island rises when it's selected (HexagonBase lifts by 0.6) */
+const SELECTED_LIFT = 0.6;
 
-// Smooth camera controller that lerps between overview and island focus without fighting user interactions
+type CameraGoal = { position: THREE.Vector3; target: THREE.Vector3 };
+
+/**
+ * Map mode: glides to the overview, then hands control to the visitor (orbit / zoom).
+ * World mode: follows the ride's camera goal every frame (the fly-in is the same glide).
+ * Reduced motion: cuts instead of gliding.
+ */
 const CameraController: React.FC<{
-  selectedIsland: IslandMeta | null;
+  inWorld: boolean;
+  goal: React.MutableRefObject<CameraGoal>;
   controlsRef: React.RefObject<OrbitControlsType | null>;
   resetKey?: number;
   isTransitioningRef: React.MutableRefObject<boolean>;
-}> = ({ selectedIsland, controlsRef, resetKey, isTransitioningRef }) => {
+  reducedMotion: boolean;
+}> = ({ inWorld, goal, controlsRef, resetKey, isTransitioningRef, reducedMotion }) => {
   const { camera } = useThree();
-  const targetPos = useRef(new THREE.Vector3(...DEFAULT_CAMERA_POS));
-  const lookTarget = useRef(new THREE.Vector3(...DEFAULT_TARGET));
+  const mapPos = useRef(new THREE.Vector3(...DEFAULT_CAMERA_POS));
+  const mapTarget = useRef(new THREE.Vector3(...DEFAULT_TARGET));
 
   useEffect(() => {
-    if (selectedIsland) {
-      targetPos.current.set(...selectedIsland.cameraPosition);
-      lookTarget.current.set(...selectedIsland.cameraTarget);
-    } else {
-      targetPos.current.set(...DEFAULT_CAMERA_POS);
-      lookTarget.current.set(...DEFAULT_TARGET);
-    }
     isTransitioningRef.current = true;
-  }, [selectedIsland, resetKey, isTransitioningRef]);
+  }, [inWorld, resetKey, isTransitioningRef]);
 
   useFrame((_, delta) => {
-    if (isTransitioningRef.current) {
-      // Smooth damped interpolation towards destination
-      const lerpFactor = Math.min(1, delta * 3.0);
-      camera.position.lerp(targetPos.current, lerpFactor);
+    const controls = controlsRef.current;
+    const toPos = inWorld ? goal.current.position : mapPos.current;
+    const toTarget = inWorld ? goal.current.target : mapTarget.current;
 
-      if (controlsRef.current) {
-        controlsRef.current.target.lerp(lookTarget.current, lerpFactor);
-        controlsRef.current.update();
+    if (inWorld || isTransitioningRef.current) {
+      const k = reducedMotion ? 1 : Math.min(1, delta * (inWorld ? 4 : 3));
+      camera.position.lerp(toPos, k);
+      if (controls) {
+        controls.target.lerp(toTarget, k);
+        controls.update();
+      } else {
+        camera.lookAt(toTarget);
       }
-
-      // Check if camera has reached close enough to destination
-      const posDist = camera.position.distanceTo(targetPos.current);
-      const targetDist = controlsRef.current
-        ? controlsRef.current.target.distanceTo(lookTarget.current)
-        : 0;
-
-      if (posDist < 0.08 && targetDist < 0.08) {
-        camera.position.copy(targetPos.current);
-        if (controlsRef.current) {
-          controlsRef.current.target.copy(lookTarget.current);
-          controlsRef.current.update();
-        }
-        isTransitioningRef.current = false;
+      if (!inWorld && camera.position.distanceTo(toPos) < 0.08 && (!controls || controls.target.distanceTo(toTarget) < 0.08)) {
+        isTransitioningRef.current = false; // back on the map: the visitor can orbit again
       }
-    } else {
-      // Not transitioning: user is orbiting or idle.
-      // OrbitControls computes smooth inertia damping
-      if (controlsRef.current) {
-        controlsRef.current.update();
-      }
+    } else if (controls) {
+      controls.update(); // orbit damping
     }
   });
 
@@ -104,11 +101,19 @@ const CameraController: React.FC<{
 };
 
 export const WorldCanvas: React.FC<WorldCanvasProps> = ({
-  selectedIsland,
-  onSelectIsland,
+  activeIsland,
+  onEnterIsland,
+  onLeave,
   resetKey = 0,
   onLoadStage,
 }) => {
+  const selectedIsland = activeIsland;
+  const onSelectIsland = (island: IslandMeta | null) => { if (island) onEnterIsland(island); else onLeave(); };
+  const ride = activeIsland ? worldRides[activeIsland.id] : null;
+  const rideOrigin: Vec3 | null = activeIsland
+    ? [activeIsland.coordinates[0], activeIsland.coordinates[1] + SELECTED_LIFT, activeIsland.coordinates[2]]
+    : null;
+  const cameraGoal = useRef<CameraGoal>({ position: new THREE.Vector3(), target: new THREE.Vector3() });
   // Device "reduce motion" setting or Recruiter Mode: stop idle animations in the world.
   const reducedMotion = useReducedMotion();
   const controlsRef = useRef<OrbitControlsType | null>(null);
@@ -122,7 +127,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
   const islands = portfolioData.islands;
 
   return (
-    <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
+    <div className={ride ? 'w-full h-full relative' : 'w-full h-full relative cursor-grab active:cursor-grabbing'}>
       <Canvas
         shadows
         camera={{
@@ -167,7 +172,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
 
         {/* Central Flying Rocket (Navigates to selected island) */}
         <FlyingRocket
-          selectedIsland={selectedIsland}
+          selectedIsland={ride ? null : selectedIsland}
           onResetView={() => onSelectIsland(null)}
         />
 
@@ -177,6 +182,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           isSelected={selectedIsland?.id === 'life'}
           onSelect={onSelectIsland}
           reducedMotion={reducedMotion}
+          hideSign={!!ride}
         />
 
         {/* 2. Professional */}
@@ -185,6 +191,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           isSelected={selectedIsland?.id === 'professional'}
           onSelect={onSelectIsland}
           reducedMotion={reducedMotion}
+          hideSign={!!ride}
         >
           <ProfessionalIsland />
         </HexagonBase>
@@ -195,6 +202,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           isSelected={selectedIsland?.id === 'projects'}
           onSelect={onSelectIsland}
           reducedMotion={reducedMotion}
+          hideSign={!!ride}
         >
           <ProjectsIsland />
         </HexagonBase>
@@ -205,6 +213,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           isSelected={selectedIsland?.id === 'hobby'}
           onSelect={onSelectIsland}
           reducedMotion={reducedMotion}
+          hideSign={!!ride}
         >
           <HobbyIsland />
         </HexagonBase>
@@ -215,6 +224,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           isSelected={selectedIsland?.id === 'bookstagram'}
           onSelect={onSelectIsland}
           reducedMotion={reducedMotion}
+          hideSign={!!ride}
         >
           <BookstagramIsland />
         </HexagonBase>
@@ -225,21 +235,37 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           isSelected={selectedIsland?.id === 'travel'}
           onSelect={onSelectIsland}
           reducedMotion={reducedMotion}
+          hideSign={!!ride}
         >
           <TravelIsland />
         </HexagonBase>
 
         {/* Camera Lerp Controller */}
         <CameraController
-          selectedIsland={selectedIsland}
+          inWorld={!!ride}
+          goal={cameraGoal}
           controlsRef={controlsRef}
           resetKey={resetKey}
           isTransitioningRef={isTransitioningRef}
+          reducedMotion={reducedMotion}
         />
+
+        {/* World mode: a native scroll area over the canvas drives the ride (wheel, trackpad, touch) */}
+        {ride && rideOrigin && (
+          <ScrollControls
+            key={ride.slug}
+            pages={ride.pages ?? ride.chapters.length + 1}
+            damping={reducedMotion ? 0.0001 : 0.18}
+            style={{ zIndex: '1' } as React.CSSProperties}
+          >
+            <RideController ride={ride} origin={rideOrigin} goal={cameraGoal.current} reducedMotion={reducedMotion} />
+          </ScrollControls>
+        )}
 
         {/* Orbit Controls (smooth, responsive rotation & zoom) */}
         <OrbitControls
           ref={controlsRef}
+          enabled={!ride}
           onStart={handleControlStart}
           enablePan={false}
           enableZoom={true}

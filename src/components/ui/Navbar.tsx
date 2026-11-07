@@ -38,14 +38,16 @@ export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView }) 
       coinsLabel="case competitions"
       right={
         <>
-          <button
-            type="button"
-            className="arcade-toggle hidden md:inline-flex md:items-center"
-            onClick={() => { sound.playWhoosh(); onResetView(); }}
-            title="Esc"
-          >
-            {isIslandFocused ? '◀ Back to map' : 'Reset view'}
-          </button>
+          {!isIslandFocused && (
+            <button
+              type="button"
+              className="arcade-toggle hidden md:inline-flex md:items-center"
+              onClick={() => { sound.playWhoosh(); onResetView(); }}
+              title="Esc"
+            >
+              Reset view
+            </button>
+          )}
           <button
             type="button"
             className="arcade-toggle"

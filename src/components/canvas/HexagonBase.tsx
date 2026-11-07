@@ -13,6 +13,8 @@ interface HexagonBaseProps {
   onSelect: (meta: IslandMeta) => void;
   children?: React.ReactNode;
   reducedMotion?: boolean;
+  /** hide the arcade sign (inside a world) */
+  hideSign?: boolean;
 }
 
 export const HexagonBase: React.FC<HexagonBaseProps> = ({
@@ -21,6 +23,7 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
   onSelect,
   children,
   reducedMotion = false,
+  hideSign = false,
 }) => {
   const world = arcadeWorlds[meta.id];
   const neon = accentHex[world.accent];
@@ -146,7 +149,7 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
       {/* 6. Props on top + the arcade sign with the world's name */}
       <group position={[0, height * 0.2, 0]}>
         {children}
-        <WorldSign number={world.number} name={world.name} color={neon} reducedMotion={reducedMotion} active={hovered || isSelected} />
+        {!hideSign && <WorldSign number={world.number} name={world.name} color={neon} reducedMotion={reducedMotion} active={hovered} />}
       </group>
     </group>
   );

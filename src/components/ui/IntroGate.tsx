@@ -58,11 +58,12 @@ function useLoadPercent(stage: LoadStage) {
 
 type Phase = 'mode' | 'boot' | 'quick' | 'done';
 
-function IntroFlow({ loadStage, onDone }: { loadStage: LoadStage; onDone: (mode: ArcadeMode) => void }) {
+function IntroFlow({ loadStage, onDone, skipModeSelect = false }: { loadStage: LoadStage; onDone: (mode: ArcadeMode) => void; skipModeSelect?: boolean }) {
   const { setCrtOn, setForceReducedMotion } = useArcade();
   const [savedMode] = useState(readSavedMode);
   const [mode, setMode] = useState<ArcadeMode>(savedMode ?? 'fun');
-  const [phase, setPhase] = useState<Phase>(savedMode ? 'quick' : 'mode');
+  // Opened on a world link (site.com/#career): skip the mode question, go straight to the boot screen.
+  const [phase, setPhase] = useState<Phase>(savedMode ? 'quick' : skipModeSelect ? 'boot' : 'mode');
   const percent = useLoadPercent(loadStage);
   const { profile } = portfolioData;
 
@@ -109,7 +110,7 @@ function IntroFlow({ loadStage, onDone }: { loadStage: LoadStage; onDone: (mode:
 }
 
 /** Must sit inside <ArcadeProvider> (App provides it for the intro and the HUD). */
-export function IntroGate(props: { loadStage: LoadStage; onDone: (mode: ArcadeMode) => void }) {
+export function IntroGate(props: { loadStage: LoadStage; onDone: (mode: ArcadeMode) => void; skipModeSelect?: boolean }) {
   const [done, setDone] = useState(false);
   if (done) return null;
   return <IntroFlow {...props} onDone={(m) => { setDone(true); props.onDone(m); }} />;

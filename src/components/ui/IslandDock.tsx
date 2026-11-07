@@ -9,6 +9,8 @@ import { sound } from '../../utils/soundEffects';
 interface IslandDockProps {
   selectedIsland: IslandMeta | null;
   onSelectIsland: (island: IslandMeta | null) => void;
+  /** Inside a world the bar is hidden, but keys 1–6 still switch worlds */
+  hidden?: boolean;
 }
 
 /**
@@ -16,7 +18,7 @@ interface IslandDockProps {
  * Desktop: one row of six. Phones and tablets: 3 × 2 grid, so nothing scrolls sideways.
  * Buttons are neutral until hovered/selected, then take their world's accent (DESIGN.md §2).
  */
-export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelectIsland }) => {
+export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelectIsland, hidden = false }) => {
   const { play } = useArcade();
   const islandsList = Object.values(portfolioData.islands).sort((a, b) => a.index - b.index);
 
@@ -37,6 +39,7 @@ export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelect
   }, [islandsList, onSelectIsland]);
 
   const selectedWorld = selectedIsland ? arcadeWorlds[selectedIsland.id] : null;
+  if (hidden) return null;
 
   return (
     <nav className="arcade-stage-bar" aria-label="Stage select">

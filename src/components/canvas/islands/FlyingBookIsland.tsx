@@ -12,6 +12,7 @@ interface FlyingBookIslandProps {
   isSelected: boolean;
   onSelect: (meta: IslandMeta) => void;
   reducedMotion?: boolean;
+  hideSign?: boolean;
 }
 
 export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
@@ -19,6 +20,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
   isSelected,
   onSelect,
   reducedMotion = false,
+  hideSign = false,
 }) => {
   const world = arcadeWorlds[meta.id];
   const neon = accentHex[world.accent];
@@ -568,7 +570,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
       </group>
 
       {/* Arcade sign with the world's name (replaces the old "My Life" title) */}
-      <WorldSign number={world.number} name={world.name} color={neon} y={3.0} reducedMotion={reducedMotion} active={hovered || isSelected} />
+      {!hideSign && <WorldSign number={world.number} name={world.name} color={neon} y={3.0} reducedMotion={reducedMotion} active={hovered} />}
 
       {/* Radiant Completion Aura for Active Island */}
       <Sparkles

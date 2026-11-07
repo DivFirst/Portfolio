@@ -15,6 +15,8 @@ interface HotspotProps {
   boxAccent?: Accent;
   children: ReactNode;
   className?: string;
+  /** Which side of the "?" the info box opens on (desktop; phones always centre it) */
+  placement?: 'right' | 'left';
 }
 
 /**
@@ -22,7 +24,7 @@ interface HotspotProps {
  * Closes with ✕, Esc or a click outside (DESIGN.md §4).
  * Position it by placing it inside a `relative` container.
  */
-export function Hotspot({ label, title, accent = 'cyan', boxAccent = 'yellow', children, className }: HotspotProps) {
+export function Hotspot({ label, title, accent = 'cyan', boxAccent = 'yellow', children, className, placement = 'right' }: HotspotProps) {
   const { play } = useArcade();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -31,14 +33,16 @@ export function Hotspot({ label, title, accent = 'cyan', boxAccent = 'yellow', c
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    // Capture phase + preventDefault: Esc closes this box only, other Esc shortcuts
+    // (like "back to map") check e.defaultPrevented and stay put.
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.preventDefault(); close(); } };
     const onPointer = (e: PointerEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) close();
     };
-    window.addEventListener('keydown', onKey);
+    window.addEventListener('keydown', onKey, true);
     document.addEventListener('pointerdown', onPointer);
     return () => {
-      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('keydown', onKey, true);
       document.removeEventListener('pointerdown', onPointer);
     };
   }, [open]); // close() is re-created each render; listeners are reset whenever `open` changes
@@ -57,7 +61,7 @@ export function Hotspot({ label, title, accent = 'cyan', boxAccent = 'yellow', c
       {open && (
         <>
           <div className="arcade-hotspot-backdrop" onPointerDown={close} />
-          <div className="arcade-hotspot-popover animate-arcade-pop" role="dialog" aria-label={title}>
+          <div className={clsx('arcade-hotspot-popover animate-arcade-pop', placement === 'left' && 'is-left')} role="dialog" aria-label={title}>
             <PixelPanel title={title} accent={boxAccent} onClose={close}>{children}</PixelPanel>
           </div>
         </>
