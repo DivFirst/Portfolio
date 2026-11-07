@@ -19,7 +19,7 @@ export function Badge({ icon, title, detail, locked = false, className }: BadgeP
         {locked && <span className="sr-only">Locked: </span>}
         {title}
       </div>
-      {detail && <div className="text-[13px] leading-snug text-arcade-muted">{detail}</div>}
+      {detail && <div className="text-[14px] leading-snug text-arcade-muted">{detail}</div>}
     </div>
   );
 }

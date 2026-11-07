@@ -458,6 +458,34 @@ body {
   .arcade-infobox p + p { margin-top: 8px; }
 }
 
+/* ---- Pop-up windows: Trophy Room, CONTINUE?, cheat code ---- */
+@layer components {
+  .arcade-modal-backdrop {
+    position: fixed; inset: 0; z-index: 60; display: grid; place-items: center;
+    padding: 16px; background: rgba(11, 11, 26, 0.82); overflow-y: auto;
+  }
+  .arcade-modal { width: min(560px, 100%); max-height: calc(100dvh - 32px); display: flex; flex-direction: column; }
+  .arcade-modal-wide { width: min(920px, 100%); }
+  .arcade-modal:focus { outline: none; }
+  .arcade-modal-body { padding: 16px; overflow-y: auto; overscroll-behavior: contain; }
+  @media (min-width: 760px) { .arcade-modal-body { padding: 24px; } }
+  .arcade-modal-close { min-width: 44px; min-height: 44px; margin: -10px -12px -10px 0; }
+
+  .arcade-trophy-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (min-width: 560px) { .arcade-trophy-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 860px) { .arcade-trophy-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; } }
+  .arcade-trophy-grid .arcade-badge { height: calc(100% - 8px); }
+  .arcade-trophy-grid .arcade-display { line-height: 1.6; overflow-wrap: anywhere; }
+
+  .arcade-continue-count { min-height: 132px; display: grid; place-items: center; margin: 8px 0 12px; }
+  .arcade-continue-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+  .arcade-continue-buttons .arcade-btn { min-width: 150px; min-height: 56px; font-size: 12px; }
+  @media (max-width: 479px) { .arcade-continue-buttons .arcade-btn { width: 100%; } }
+
+  /* HUD buttons for Trophy Room / Contact on the stage bar (phones & tablets) */
+  .arcade-stage-actions { display: flex; gap: 8px; }
+}
+
 /* ---- Loading bar (segmented, like the stat bar) ---- */
 @layer components {
   .arcade-loading-head {

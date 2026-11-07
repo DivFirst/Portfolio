@@ -7,6 +7,8 @@ import { sound } from '../../utils/soundEffects';
 interface NavbarProps {
   isIslandFocused: boolean;
   onResetView: () => void;
+  onOpenTrophies: () => void;
+  onOpenContact: () => void;
 }
 
 /**
@@ -15,7 +17,7 @@ interface NavbarProps {
  * Phones show 1UP · ❤❤❤ · 🪙 N + music and sound (the "◀ map" button lives in the stage bar).
  * Sound effects are muted by default; music is off until the visitor turns it on.
  */
-export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView }) => {
+export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView, onOpenTrophies, onOpenContact }) => {
   const { profile } = portfolioData;
   const { play } = useArcade();
   const [musicOn, setMusicOn] = useState(sound.isBgm());
@@ -38,6 +40,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView }) 
       coinsLabel="case competitions"
       right={
         <>
+          {/* Trophy Room + CONTINUE? (desktop; on smaller screens they sit in the stage bar) */}
+          <button type="button" className="arcade-toggle hidden lg:inline-flex lg:items-center" onClick={onOpenTrophies}>
+            🏆 Trophies
+          </button>
+          <button type="button" className="arcade-toggle hidden lg:inline-flex lg:items-center" onClick={onOpenContact}>
+            ✉️ Contact
+          </button>
           {!isIslandFocused && (
             <button
               type="button"

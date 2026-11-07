@@ -16,3 +16,4 @@ export { playArcadeSfx, type ArcadeSfx } from './arcadeSound';
 export { useInView } from './useInView';
 export { BootScreen } from './BootScreen';
 export { LoadingBar } from './LoadingBar';
+export { ArcadeModal } from './ArcadeModal';

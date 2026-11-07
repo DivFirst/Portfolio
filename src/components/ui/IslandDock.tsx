@@ -11,6 +11,8 @@ interface IslandDockProps {
   onSelectIsland: (island: IslandMeta | null) => void;
   /** Inside a world the bar is hidden, but keys 1–6 still switch worlds */
   hidden?: boolean;
+  onOpenTrophies?: () => void;
+  onOpenContact?: () => void;
 }
 
 /**
@@ -18,7 +20,7 @@ interface IslandDockProps {
  * Desktop: one row of six. Phones and tablets: 3 × 2 grid, so nothing scrolls sideways.
  * Buttons are neutral until hovered/selected, then take their world's accent (DESIGN.md §2).
  */
-export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelectIsland, hidden = false }) => {
+export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelectIsland, hidden = false, onOpenTrophies, onOpenContact }) => {
   const { play } = useArcade();
   const islandsList = Object.values(portfolioData.islands).sort((a, b) => a.index - b.index);
 
@@ -26,6 +28,7 @@ export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelect
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (document.querySelector('[aria-modal="true"]')) return; // a pop-up is open
       const target = (e.target as HTMLElement | null)?.closest('input, textarea, select, [contenteditable="true"]');
       if (target) return;
       const num = parseInt(e.key, 10);
@@ -56,7 +59,18 @@ export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelect
             ◀ Map
           </button>
         ) : (
-          <span className="hidden text-[14px] text-arcade-muted md:inline">Drag to rotate · scroll to zoom · keys 1–6</span>
+          <>
+            <span className="hidden text-[14px] text-arcade-muted lg:inline">Drag to rotate · scroll to zoom · keys 1–6</span>
+            {/* phones & tablets: Trophy Room + CONTINUE? live here (desktop has them in the top bar) */}
+            <span className="arcade-stage-actions lg:hidden">
+              <button type="button" className="arcade-toggle min-w-[44px]" aria-label="Trophy room" onClick={onOpenTrophies}>
+                🏆<span className="hidden min-[420px]:inline"> Trophies</span>
+              </button>
+              <button type="button" className="arcade-toggle min-w-[44px]" aria-label="Contact" onClick={onOpenContact}>
+                ✉️<span className="hidden min-[420px]:inline"> Contact</span>
+              </button>
+            </span>
+          </>
         )}
       </div>
 

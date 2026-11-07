@@ -12,6 +12,7 @@ import { useWorldRoute } from './components/world/useWorldRoute';
 import { WorldHud } from './components/world/WorldHud';
 import { HotspotLayer } from './components/world/HotspotLayer';
 import { resetRide } from './components/world/rideStore';
+import { TrophyRoom, ContinueScreen, KonamiCelebration, useKonamiCode } from './components/ui/ArcadeExtras';
 
 // The 3D world (three.js, ~1 MB) is its own download, so the intro screens paint
 // right away and the world loads behind them. Started at startup, not on first render.
@@ -29,6 +30,10 @@ export function App() {
   const [resetKey, setResetKey] = useState(0);
   const [loadStage, setLoadStage] = useState<LoadStage>(0);
   const [started, setStarted] = useState(false);
+  // Pop-up windows: Trophy Room, CONTINUE? contact screen, Konami cheat code
+  const [popup, setPopup] = useState<'trophies' | 'contact' | 'konami' | null>(null);
+  const closePopup = useCallback(() => setPopup(null), []);
+  useKonamiCode(started, () => setPopup('konami'));
 
   useEffect(() => {
     let alive = true;
@@ -59,11 +64,11 @@ export function App() {
   useEffect(() => {
     if (!started) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !e.defaultPrevented) handleResetView();
+      if (e.key === 'Escape' && !e.defaultPrevented && !popup) handleResetView();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [started, handleResetView]);
+  }, [started, handleResetView, popup]);
 
   const accent = world ? arcadeWorlds[world].accent : 'cyan';
 
@@ -88,16 +93,30 @@ export function App() {
         {/* HUD only after PRESS START, so 1–6 / Esc shortcuts can't fire behind the intro */}
         {started && (
           <>
-            <Navbar isIslandFocused={!!world} onResetView={handleResetView} />
+            <Navbar
+              isIslandFocused={!!world}
+              onResetView={handleResetView}
+              onOpenTrophies={() => setPopup('trophies')}
+              onOpenContact={() => setPopup('contact')}
+            />
             {/* Map mode: Player 1 card + stage select. World mode: world HUD + hotspots. */}
             {!world && <HeroCard isIslandFocused={false} />}
-            <IslandDock selectedIsland={activeIsland} onSelectIsland={handleSelectIsland} hidden={!!world} />
+            <IslandDock
+              selectedIsland={activeIsland}
+              onSelectIsland={handleSelectIsland}
+              hidden={!!world || !!popup}
+              onOpenTrophies={() => setPopup('trophies')}
+              onOpenContact={() => setPopup('contact')}
+            />
             {ride && (
               <>
                 <HotspotLayer key={ride.slug} ride={ride} accent={accent} />
                 <WorldHud key={`hud-${ride.slug}`} ride={ride} accent={accent} onBack={leaveWorld} onNext={enterWorld} />
               </>
             )}
+            <TrophyRoom open={popup === 'trophies'} onClose={closePopup} />
+            <ContinueScreen open={popup === 'contact'} onClose={closePopup} />
+            <KonamiCelebration open={popup === 'konami'} onClose={closePopup} />
             {/* CRT scanlines over the whole site (the boot screen has its own) */}
             <CRTOverlay soft />
           </>
