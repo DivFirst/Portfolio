@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useArcade, BootScreen, ModeSelect, type ArcadeMode } from '../arcade';
 import { portfolioData } from '../../data/portfolioData';
+import { sound } from '../../utils/soundEffects';
 
 /**
  * What a visitor sees before the 3D world (DESIGN.md §4, BUILD_GUIDE Part 2 step 1):
@@ -59,7 +60,7 @@ function useLoadPercent(stage: LoadStage) {
 type Phase = 'mode' | 'boot' | 'quick' | 'done';
 
 function IntroFlow({ loadStage, onDone, skipModeSelect = false }: { loadStage: LoadStage; onDone: (mode: ArcadeMode) => void; skipModeSelect?: boolean }) {
-  const { setCrtOn, setForceReducedMotion } = useArcade();
+  const { setCrtOn, setForceReducedMotion, setSoundOn } = useArcade();
   const [savedMode] = useState(readSavedMode);
   const [mode, setMode] = useState<ArcadeMode>(savedMode ?? 'fun');
   // Opened on a world link (site.com/#career): skip the mode question, go straight to the boot screen.
@@ -75,8 +76,16 @@ function IntroFlow({ loadStage, onDone, skipModeSelect = false }: { loadStage: L
 
   const finish = () => { setPhase('done'); onDone(mode); };
 
+  // Fun Mode = the full arcade: sound effects + music on. The click that picks it is what lets
+  // the browser start audio, so nothing plays before the visitor clicks. Recruiter Mode = silent.
+  const setAudioFor = (m: ArcadeMode) => {
+    setSoundOn(m === 'fun');
+    sound.setMusic(m === 'fun');
+  };
+
   const pick = (m: ArcadeMode) => {
     setMode(m);
+    setAudioFor(m);
     if (m === 'recruiter') {
       // Full Recruiter Mode page comes in Phase 4; for now the CV opens in a new tab.
       window.open(profile.resumeUrl, '_blank', 'noopener,noreferrer');
@@ -104,7 +113,12 @@ function IntroFlow({ loadStage, onDone, skipModeSelect = false }: { loadStage: L
       name={profile.name}
       headline={profile.title}
       recruiterHref={profile.resumeUrl}
-      onStart={() => { saveMode(mode); finish(); }}
+      onStart={() => {
+        // Opened on a world link: the mode question was skipped, so PRESS START counts as picking Fun Mode.
+        if (skipModeSelect && !savedMode && phase === 'boot') setAudioFor('fun');
+        saveMode(mode);
+        finish();
+      }}
     />
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { accentClass, type Accent } from './accent';
 import { useArcade } from './ArcadeProvider';
+import type { ArcadeSfx } from './arcadeSound';
 
 interface ArcadeModalProps {
   open: boolean;
@@ -12,6 +13,8 @@ interface ArcadeModalProps {
   /** wider box for grids (Trophy Room) */
   wide?: boolean;
   className?: string;
+  /** sound when it opens (default "open"; null for none) */
+  openSound?: ArcadeSfx | null;
 }
 
 /**
@@ -19,17 +22,19 @@ interface ArcadeModalProps {
  * Closes with ✕, Esc or a click on the dark backdrop. Keyboard focus moves into the box
  * when it opens and returns to where it was when it closes.
  */
-export function ArcadeModal({ open, onClose, title, accent = 'yellow', children, wide = false, className }: ArcadeModalProps) {
+export function ArcadeModal({ open, onClose, title, accent = 'yellow', children, wide = false, className, openSound = 'open' }: ArcadeModalProps) {
   const { play } = useArcade();
   const boxRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
+  const playRef = useRef(play); // latest play() without re-running the open effect
+  playRef.current = play;
 
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
-    play('open');
+    if (openSound) playRef.current(openSound);
     // focus the first button/link inside (or the box itself)
     const first = boxRef.current?.querySelector<HTMLElement>('a[href], button:not([disabled])');
     (first ?? boxRef.current)?.focus({ preventScroll: true });
@@ -48,10 +53,10 @@ export function ArcadeModal({ open, onClose, title, accent = 'yellow', children,
     window.addEventListener('keydown', onKey, true);
     return () => {
       window.removeEventListener('keydown', onKey, true);
-      play('close');
+      playRef.current('close');
       previous?.focus?.({ preventScroll: true });
     };
-  }, [open, play]);
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null;
 

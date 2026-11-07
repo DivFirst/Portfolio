@@ -15,7 +15,7 @@ const emailAddress = emailUrl.replace(/^mailto:/, '');
 
 export function TrophyRoom({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
-    <ArcadeModal open={open} onClose={onClose} title="🏆 Trophy room" accent="yellow" wide>
+    <ArcadeModal open={open} onClose={onClose} title="🏆 Trophy room" accent="yellow" wide openSound="levelUp">
       <h3 className="arcade-display mb-3 text-[10px] text-arcade-pink">Achievements · {achievementTrophies.length} unlocked</h3>
       <div className="arcade-trophy-grid">
         {achievementTrophies.map((t) => <Badge key={t.id} icon={t.icon} title={t.title} detail={t.detail} />)}
@@ -64,7 +64,7 @@ export function ContinueScreen({ open, onClose }: { open: boolean; onClose: () =
   // a blip each second, a coin at zero (only when sound is on)
   useEffect(() => {
     if (!open || reducedMotion || count === COUNT_FROM) return;
-    play(count === 0 ? 'coin' : 'hover');
+    play(count === 0 ? 'coin' : 'tick');
   }, [count, open, reducedMotion, play]);
 
   const done = count === 0;
@@ -147,7 +147,7 @@ export function KonamiCelebration({ open, onClose }: { open: boolean; onClose: (
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <ArcadeModal open={open} onClose={onClose} title="Cheat code accepted!" accent="green">
+    <ArcadeModal open={open} onClose={onClose} title="Cheat code accepted!" accent="green" openSound={null}>
       <div className="text-center">
         <p className="arcade-display arcade-glow arcade-accent-green mb-1 text-[14px] text-arcade-green md:text-[18px]">+30 lives</p>
         <p className="mb-5 text-[14px] text-arcade-muted">↑ ↑ ↓ ↓ ← → ← → B A</p>

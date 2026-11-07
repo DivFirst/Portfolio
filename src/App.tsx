@@ -12,6 +12,7 @@ import { useWorldRoute } from './components/world/useWorldRoute';
 import { WorldHud } from './components/world/WorldHud';
 import { HotspotLayer } from './components/world/HotspotLayer';
 import { resetRide } from './components/world/rideStore';
+import { sound } from './utils/soundEffects';
 import { TrophyRoom, ContinueScreen, KonamiCelebration, useKonamiCode } from './components/ui/ArcadeExtras';
 
 // The 3D world (three.js, ~1 MB) is its own download, so the intro screens paint
@@ -42,7 +43,10 @@ export function App() {
   }, []);
 
   // New world (or back to the map): start its ride from 0%.
-  useEffect(() => { resetRide(); }, [world]);
+  useEffect(() => {
+    resetRide();
+    if (world) sound.play('coin'); // entering a world = insert coin
+  }, [world]);
 
   const handleLoadStage = useCallback((stage: 'created' | 'ready') => {
     const next: LoadStage = stage === 'created' ? 2 : 3;

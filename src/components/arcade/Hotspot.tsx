@@ -54,7 +54,7 @@ export function Hotspot({ label, title, accent = 'cyan', boxAccent = 'yellow', c
         className="arcade-hotspot animate-arcade-pulse"
         aria-label={label}
         aria-expanded={open}
-        onClick={() => { if (open) close(); else { setOpen(true); play('open'); } }}
+        onClick={() => { if (open) close(); else { setOpen(true); play('bonk'); } }}
       >
         ?
       </button>

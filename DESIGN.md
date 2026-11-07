@@ -177,8 +177,11 @@ One fixed, full-screen overlay on top of everything, `pointer-events: none`:
 ## 6. Sound
 
 - 8-bit square-wave beeps made in code (Web Audio `OscillatorNode` type `square`, extends `src/utils/soundEffects.ts`). No audio files.
-- **Muted by default.** A clear toggle in the HUD: `🔊 SOUND: OFF` / `🔊 SOUND: ON`, remembered in `localStorage`.
-- Audio starts only after a user click (browsers require it).
+- **On when the visitor picks Fun Mode** (sound effects + the chiptune music loop); **off in Recruiter Mode**.
+  Opening a world link skips the mode question, so there PRESS START counts as picking Fun Mode.
+- Clear toggles in the HUD: `🔊 SOUND: ON/OFF` and `🎵 MUSIC: ON/OFF`, both remembered in `localStorage`
+  (a returning visitor who turned music off keeps it off).
+- Audio starts only after a user click, tap or key press (browsers require it); nothing plays before that.
 - Volume low (gain ≈ 0.05–0.08). Every sound is < 250ms except the "STAGE CLEAR" jingle (< 1.2s).
 
 | Event | Sound |
@@ -273,7 +276,7 @@ import { ArcadeProvider, HudBar, CRTOverlay, PixelPanel, ArcadeButton } from './
 
 | Component | What it is |
 |---|---|
-| `ArcadeProvider`, `useArcade()`, `useReducedMotion()` | Settings: `soundOn` (muted by default, remembered), `crtOn`, `forceReducedMotion` (Recruiter Mode), `play(sfx)` |
+| `ArcadeProvider`, `useArcade()`, `useReducedMotion()` | Settings: `soundOn` (on after picking Fun Mode, remembered), `crtOn`, `forceReducedMotion` (Recruiter Mode), `play(sfx)` |
 | `ModeSelect` | First screen: Fun Mode / Recruiter Mode |
 | `HudBar` | Top strip with lives, coins, stage and the sound toggle |
 | `PixelPanel` | Panel with optional title bar and ✕ |

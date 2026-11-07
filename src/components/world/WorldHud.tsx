@@ -109,7 +109,7 @@ export function WorldHud({ ride, accent, onBack, onNext }: WorldHudProps) {
         <div className="arcade-stage-clear animate-arcade-pop" role="status">
           <p className="arcade-display arcade-glow arcade-accent-green text-arcade-green text-base md:text-2xl">Stage clear!</p>
           {nextId ? (
-            <ArcadeButton variant="success" sound="coin" onClick={() => onNext(nextId)}>
+            <ArcadeButton variant="success" sound={null} onClick={() => onNext(nextId)}>
               Next world ▶
             </ArcadeButton>
           ) : (

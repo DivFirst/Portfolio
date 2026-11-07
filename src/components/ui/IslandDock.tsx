@@ -33,8 +33,7 @@ export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelect
       if (target) return;
       const num = parseInt(e.key, 10);
       if (num >= 1 && num <= islandsList.length) {
-        sound.playSelect();
-        onSelectIsland(islandsList[num - 1]);
+        onSelectIsland(islandsList[num - 1]); // App plays the coin
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -85,7 +84,7 @@ export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelect
                 className={clsx('arcade-stage-btn', accentClass[world.accent], isSelected && 'is-selected')}
                 aria-pressed={isSelected}
                 aria-label={`World ${world.number}: ${world.name} (${island.name})`}
-                onClick={() => { sound.playSelect(); onSelectIsland(isSelected ? null : island); }}
+                onClick={() => onSelectIsland(isSelected ? null : island)}
                 onMouseEnter={() => sound.playHover()}
               >
                 <span className="arcade-stage-num" aria-hidden="true">{world.number}</span>

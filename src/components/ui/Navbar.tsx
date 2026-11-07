@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useSyncExternalStore } from 'react';
 import { HudBar, useArcade } from '../arcade';
 import { portfolioData } from '../../data/portfolioData';
 import { caseCompetitionCount } from '../../data/arcadeWorlds';
@@ -20,14 +20,12 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView, onOpenTrophies, onOpenContact }) => {
   const { profile } = portfolioData;
   const { play } = useArcade();
-  const [musicOn, setMusicOn] = useState(sound.isBgm());
-
-  // Stop the music if the HUD goes away (e.g. hot reload); never auto-start it.
-  useEffect(() => () => { sound.toggleAmbientMusic(false); }, []);
+  // Music switch follows the sound engine (Fun Mode turns it on; the choice is remembered).
+  const musicOn = useSyncExternalStore(sound.subscribe, () => sound.isMusicWanted());
 
   const toggleMusic = () => {
     play('press');
-    setMusicOn(sound.toggleAmbientMusic(!musicOn));
+    sound.setMusic(!musicOn);
   };
 
   return (

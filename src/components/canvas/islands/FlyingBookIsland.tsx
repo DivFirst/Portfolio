@@ -115,7 +115,6 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
 
   const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playSelect();
     onSelect(meta);
   };
 

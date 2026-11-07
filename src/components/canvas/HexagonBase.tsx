@@ -71,7 +71,6 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
 
   const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playSelect();
     onSelect(meta);
   };
 
