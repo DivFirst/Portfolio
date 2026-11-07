@@ -2,9 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50 5, 90 25, 90 75, 50 95, 10 75, 10 25' fill='%236366f1'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Personal Portfolio | 3D Hexagonal World</title>
+    <title>Divyanshu Garg Journey</title>
+    <!-- Search + share previews. __SITE_URL__ is filled in at build time (vite.config.ts → siteMeta). -->
+    <meta name="description" content="Product Manager with ~3 years in wealth management and retail banking. IIT Ropar engineer, XLRI PGDM. Read my CV or play my portfolio as an arcade game." />
+    <meta name="author" content="Divyanshu Garg" />
+    <meta name="theme-color" content="#0b0b1a" />
+
+    <!-- Pixel-art favicon (SVG for browsers, PNGs for Google results and iPhone home screens) -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Open Graph: LinkedIn, WhatsApp, Facebook, Slack -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="Divyanshu Garg Journey" />
+    <meta property="og:title" content="Divyanshu Garg Journey" />
+    <meta property="og:description" content="Product Manager with ~3 years in wealth management and retail banking. IIT Ropar engineer, XLRI PGDM. Read my CV or play my portfolio as an arcade game." />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Divyanshu Garg: Product Manager. Arcade-style title screen with PRESS START." />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="profile:first_name" content="Divyanshu" />
+    <meta property="profile:last_name" content="Garg" />
+
+    <!-- X / Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Divyanshu Garg Journey" />
+    <meta name="twitter:description" content="Product Manager with ~3 years in wealth management and retail banking. IIT Ropar engineer, XLRI PGDM. Read my CV or play my portfolio as an arcade game." />
+    <meta name="twitter:image" content="__SITE_URL__/og-image.png" />
+    <meta name="twitter:image:alt" content="Divyanshu Garg: Product Manager. Arcade-style title screen with PRESS START." />
+
+    <!-- Structured data for Google (Person). Every fact is from the resume / portfolioData.ts. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Divyanshu Garg",
+        "url": "__SITE_URL__/",
+        "image": "__SITE_URL__/me.jpg",
+        "jobTitle": "Senior Product Manager",
+        "worksFor": { "@type": "Organization", "name": "Kotak Private" },
+        "alumniOf": [
+          { "@type": "CollegeOrUniversity", "name": "XLRI Delhi-NCR" },
+          { "@type": "CollegeOrUniversity", "name": "Indian Institute of Technology Ropar" }
+        ],
+        "address": { "@type": "PostalAddress", "addressLocality": "Mumbai", "addressCountry": "IN" },
+        "description": "Product Manager with ~3 years in wealth management and retail banking. IIT Ropar engineer, XLRI PGDM.",
+        "knowsAbout": ["Product Management", "B2B & Platform Strategy", "AI Enablement", "Wealth Management", "Retail Banking"],
+        "sameAs": ["https://www.linkedin.com/in/divgarg03/", "https://github.com/DivFirst"]
+      }
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

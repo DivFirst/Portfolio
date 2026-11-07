@@ -68,7 +68,7 @@ export function RecruiterPage() {
 
   // This page scrolls and lets visitors select text (the game page doesn't).
   useEffect(() => {
-    document.title = `${profile.name} · CV (Recruiter Mode)`;
+    document.title = 'CV (Recruiter Mode) · Divyanshu Garg Journey';
     document.body.classList.remove('overflow-hidden', 'select-none');
     document.body.classList.add('arcade-page');
   }, []);
