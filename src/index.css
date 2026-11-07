@@ -573,3 +573,150 @@ body {
   animation: none !important; transition: none !important;
 }
 .arcade-reduce-motion .arcade-btn:active, .arcade-reduce-motion .arcade-mode-card:active { transform: none; }
+
+/* ---- Recruiter Mode (/cv): fast, readable, printable CV page ---- */
+@layer components {
+  .cv-page { min-height: 100vh; background: var(--arcade-bg); }
+  .cv-skip { position: absolute; left: -9999px; top: 8px; z-index: 50; background: var(--arcade-cyan); padding: 8px 12px; }
+  .arcade-root .cv-skip { color: var(--arcade-bg); }
+  .cv-skip:focus { left: 16px; }
+
+  .cv-topbar {
+    position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 6px 16px; background: var(--arcade-bg); border-bottom: var(--arcade-px) solid var(--arcade-pink);
+  }
+  @media (min-width: 760px) { .cv-topbar { padding: 6px 32px; } }
+  .cv-topbar .cv-play { font-size: 9px; padding: 10px 12px; }
+
+  .cv-wrap { max-width: 880px; margin: 0 auto; padding: 24px 16px 48px; }
+  @media (min-width: 760px) { .cv-wrap { padding: 40px 32px 64px; } }
+
+  .cv-notice {
+    margin-bottom: 24px; padding: 12px 16px; font-size: 15px; background: var(--arcade-panel);
+    box-shadow: inset 4px 0 0 0 var(--arcade-yellow);
+  }
+
+  .cv-hero { display: flex; align-items: center; gap: 20px; }
+  @media (min-width: 760px) { .cv-hero { gap: 32px; } }
+  .cv-photo {
+    flex-shrink: 0; width: 96px; height: 96px; margin: var(--arcade-px); background: var(--arcade-panel-2);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c),
+      8px 8px 0 0 #000;
+  }
+  @media (min-width: 760px) { .cv-photo { width: 140px; height: 140px; } }
+  .cv-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cv-h1 { margin-top: 6px; font-size: 16px; line-height: 1.5; color: var(--arcade-text); }
+  @media (min-width: 760px) { .cv-h1 { font-size: 24px; } }
+  .cv-title { margin-top: 8px; font-size: 15px; line-height: 1.5; font-weight: 700; color: var(--arcade-cyan); }
+  @media (min-width: 760px) { .cv-title { font-size: 17px; } }
+  .cv-meta { margin-top: 4px; font-size: 14px; color: var(--arcade-muted); }
+
+  .cv-actions { display: flex; flex-wrap: wrap; gap: 14px 12px; margin-top: 24px; }
+  .cv-actions-center { justify-content: center; }
+  @media (max-width: 479px) {
+    .cv-actions > .arcade-btn:not(.arcade-btn-ghost) { flex: 1 1 100%; }
+    .cv-actions > .arcade-btn-ghost { flex: 1 1 calc(50% - 20px); }
+  }
+
+  .cv-section { margin-top: 40px; }
+  @media (min-width: 760px) { .cv-section { margin-top: 48px; } }
+  .cv-h2 {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 10px;
+    font-size: 13px; color: var(--arcade-pink); border-bottom: 2px solid var(--arcade-panel-2);
+  }
+  @media (min-width: 760px) { .cv-h2 { font-size: 16px; } }
+  .cv-h2-mark { color: var(--arcade-cyan); font-size: 0.75em; }
+
+  .cv-lead { font-size: 16px; line-height: 1.6; font-weight: 700; color: var(--arcade-text); }
+  .cv-body { margin-top: 10px; font-size: 15px; line-height: 1.6; color: var(--arcade-text); max-width: 70ch; }
+  @media (min-width: 760px) { .cv-lead { font-size: 17px; } .cv-body { font-size: 16px; } }
+
+  .cv-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (min-width: 640px) { .cv-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+  .cv-stat {
+    display: flex; flex-direction: column; gap: 4px; padding: 14px 12px; background: var(--arcade-panel);
+    box-shadow: inset 0 0 0 2px var(--arcade-panel-2), 4px 4px 0 0 #000;
+  }
+  .cv-stat-value { font-size: 40px; color: var(--arcade-yellow); }
+  @media (min-width: 760px) { .cv-stat-value { font-size: 48px; } }
+  .cv-stat-label { font-size: 14px; font-weight: 700; line-height: 1.35; color: var(--arcade-text); }
+  .cv-stat-note { font-size: 13px; line-height: 1.4; color: var(--arcade-muted); }
+
+  .cv-jobs, .cv-edu { display: flex; flex-direction: column; gap: 28px; }
+  .cv-job-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 16px; }
+  .cv-job-company { font-size: 18px; font-weight: 700; line-height: 1.4; color: var(--arcade-cyan); }
+  .cv-job-period { font-size: 14px; color: var(--arcade-muted); white-space: nowrap; }
+  .cv-job-role { margin-top: 2px; font-size: 15px; font-weight: 700; color: var(--arcade-text); }
+  .cv-job-where { font-weight: 400; color: var(--arcade-muted); }
+  .cv-bullets { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+  .cv-bullets li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.6; color: var(--arcade-text); }
+  .cv-bullets li::before { content: "■"; position: absolute; left: 0; top: 0; font-size: 10px; line-height: 2.4; color: var(--arcade-pink); }
+  .cv-num { font-weight: 700; color: var(--arcade-yellow); }
+  .cv-edu-note { margin-top: 4px; font-size: 14px; color: var(--arcade-muted); }
+
+  .cv-awards { display: grid; grid-template-columns: 1fr; gap: 10px 24px; }
+  @media (min-width: 640px) { .cv-awards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .cv-awards li { display: flex; gap: 10px; font-size: 15px; line-height: 1.5; color: var(--arcade-text); }
+  .cv-awards strong { color: var(--arcade-text); }
+
+  .cv-skills { display: flex; flex-direction: column; gap: 18px; }
+  .cv-skill-cat { margin-bottom: 8px; font-size: 14px; font-weight: 700; color: var(--arcade-cyan); }
+  .cv-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cv-chips li {
+    padding: 4px 10px; font-size: 14px; line-height: 1.5; color: var(--arcade-text);
+    background: var(--arcade-panel); box-shadow: inset 0 0 0 2px var(--arcade-panel-2);
+  }
+
+  .cv-contact {
+    margin-top: 56px; padding: 24px 16px; text-align: center; background: var(--arcade-panel);
+    box-shadow: inset 0 0 0 4px var(--arcade-pink), 6px 6px 0 0 #000;
+  }
+  @media (min-width: 760px) { .cv-contact { padding: 32px; } }
+  .cv-contact .cv-body { margin-left: auto; margin-right: auto; }
+  .cv-contact-title { font-size: 16px; color: var(--arcade-yellow); }
+  @media (min-width: 760px) { .cv-contact-title { font-size: 24px; } }
+  .cv-footer { margin-top: 32px; text-align: center; font-size: 14px; }
+  .cv-footer a { display: inline-block; padding: 12px 0; }
+
+  .cv-print-only { display: none; }
+}
+
+/* Paper version: black on white, no buttons, nothing cut across pages */
+@media print {
+  @page { margin: 14mm 14mm 16mm; }
+  body.arcade-page, .cv-page { background: #fff !important; }
+  .cv-page, .cv-page * { color: #111 !important; background: transparent !important; box-shadow: none !important; text-shadow: none !important; }
+  .cv-bullets li::before { color: #111; }
+  .cv-no-print, .cv-skip { display: none !important; }
+  .cv-print-only { display: block; }
+  .cv-print-contact { margin-top: 10px; font-size: 11pt; }
+  .cv-wrap { max-width: none; padding: 0; }
+  .cv-photo { width: 84px; height: 84px; border: 2px solid #111; margin: 0; }
+  .cv-h1 { font-size: 18px; }
+  .cv-section { margin-top: 18px; }
+  .cv-h2 { font-size: 11px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1.5px solid #111; break-after: avoid; }
+  .cv-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .cv-stat { padding: 6px 8px; border: 1px solid #999; }
+  .cv-stat-value { font-size: 28px; }
+  .cv-bullets li, .cv-body, .cv-awards li, .cv-chips li { font-size: 10pt; line-height: 1.45; }
+  .cv-bullets { gap: 4px; }
+  .cv-jobs, .cv-edu { gap: 12px; }
+  .cv-job, .cv-edu > li, .cv-stat, .cv-awards li { break-inside: avoid; }
+  .cv-chips li { border: 1px solid #999; padding: 1px 6px; }
+  .cv-awards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .arcade-root a { text-decoration: none; }
+}
+
+/* ---- Recruiter Mode links in the game: HUD "CV" button + slow-device offer ---- */
+@layer components {
+  .arcade-root a.arcade-toggle { display: inline-flex; align-items: center; color: var(--arcade-cyan); text-decoration: none; box-shadow: inset 0 0 0 2px var(--arcade-cyan); }
+  .arcade-root a.arcade-toggle:hover { color: var(--arcade-bg); background: var(--arcade-cyan); }
+  .arcade-lite-layer {
+    position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 16px;
+    background: rgba(11, 11, 26, 0.92); overflow-y: auto;
+  }
+  .arcade-lite-box { width: min(480px, 100%); }
+  .arcade-lite-box .arcade-btn { line-height: 1.6; padding-top: 12px; padding-bottom: 12px; }
+}

@@ -149,7 +149,15 @@ The very first screen a visitor sees, before the boot screen. One question and t
   Each has an icon, the name (JetBrains Mono bold 26px in its accent colour), one plain sentence (17px, `text` colour) and a small "Start ▶" / "Open ▶" tag.
   They press down like arcade buttons and show a yellow focus ring on Tab.
 - No CRT scanlines or animation on this screen: it must be readable in under 2 seconds.
-- **Fun Mode** goes to the boot screen with all effects on. **Recruiter Mode** shows the same content with CRT, animation and sound off (the full Recruiter Mode layout comes in Phase 4).
+- **Fun Mode** goes to the boot screen with all effects on. **Recruiter Mode** opens the `/cv` page (below) and is remembered, so a returning recruiter lands on `/cv` directly.
+
+### Recruiter Mode page (`/cv`, `src/pages/RecruiterPage.tsx`)
+One scrollable, printable CV page that never downloads the 3D code. Pink + cyan only, pixel font for headings,
+JetBrains Mono for everything you read, numbers in resume lines highlighted in `yellow`. No CRT, sound or animation.
+Linked from the mode select, the boot screen's "Recruiter mode" button and the HUD's "📄 CV" button; "Play the game" goes to `/?play`.
+Print styles turn it black-on-white with contact details as plain text.
+**Slow or no-3D devices** (`src/utils/deviceCheck.ts`): no WebGL → straight to `/cv`; old/slow device → an offer before the 3D loads;
+a 3D crash, a 25 s load or a low frame rate → the same offer. Test with `?lite` or `?no3d`; `?3d` skips the check.
 - A "◀ Change mode" button stays available afterwards.
 
 ### Hotspot "?" block

@@ -29,6 +29,8 @@ interface WorldCanvasProps {
   resetKey?: number;
   /** Loading milestones for the boot screen: 'created' = WebGL scene set up, 'ready' = first frames drawn */
   onLoadStage?: (stage: 'created' | 'ready') => void;
+  /** the browser dropped the 3D graphics (crash, out of memory): App offers Recruiter Mode */
+  onContextLost?: () => void;
 }
 
 // Tells the boot screen the world is ready once a few real frames have been drawn
@@ -106,6 +108,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
   onLeave,
   resetKey = 0,
   onLoadStage,
+  onContextLost,
 }) => {
   const selectedIsland = activeIsland;
   const onSelectIsland = (island: IslandMeta | null) => { if (island) onEnterIsland(island); else onLeave(); };
@@ -139,7 +142,10 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
         // cap pixel density: crisp on retina laptops without rendering 4x the pixels
         dpr={[1, 1.5]}
         gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping }}
-        onCreated={() => onLoadStage?.('created')}
+        onCreated={({ gl }) => {
+          gl.domElement.addEventListener('webglcontextlost', () => onContextLost?.(), { once: true });
+          onLoadStage?.('created');
+        }}
       >
         <FirstFramesWatcher onReady={() => onLoadStage?.('ready')} />
         <color attach="background" args={[SKY_COLOR]} />

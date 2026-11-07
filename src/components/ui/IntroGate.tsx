@@ -6,9 +6,10 @@ import { sound } from '../../utils/soundEffects';
 /**
  * What a visitor sees before the 3D world (DESIGN.md §4, BUILD_GUIDE Part 2 step 1):
  *   first visit:     Mode select → (Fun) boot screen with PRESS START
- *                                 → (Recruiter) CV opens in a new tab, this tab loads the world with effects off
+ *                                 → (Recruiter) Recruiter Mode page at /cv
  *   returning visit: a short loading bar only, then straight into the world
- * Add ?intro to the address to see the full intro again.
+ *                    (a returning Recruiter Mode visitor is sent to /cv by main.tsx)
+ * Add ?intro to the address to see the full intro again; ?play (handled in App) skips straight to PRESS START.
  *
  * The 3D world loads in the background the whole time; `loadStage` reports how far it got.
  */
@@ -87,10 +88,9 @@ function IntroFlow({ loadStage, onDone, skipModeSelect = false }: { loadStage: L
     setMode(m);
     setAudioFor(m);
     if (m === 'recruiter') {
-      // Full Recruiter Mode page comes in Phase 4; for now the CV opens in a new tab.
-      window.open(profile.resumeUrl, '_blank', 'noopener,noreferrer');
+      // Recruiter Mode = the fast /cv page (no 3D). Remembered, so next time /cv opens directly.
       saveMode('recruiter');
-      setPhase('quick');
+      window.location.assign('/cv');
     } else {
       setPhase('boot');
     }
@@ -112,7 +112,8 @@ function IntroFlow({ loadStage, onDone, skipModeSelect = false }: { loadStage: L
       progress={percent}
       name={profile.name}
       headline={profile.title}
-      recruiterHref={profile.resumeUrl}
+      recruiterHref="/cv"
+      onRecruiter={() => saveMode('recruiter')}
       onStart={() => {
         // Opened on a world link: the mode question was skipped, so PRESS START counts as picking Fun Mode.
         if (skipModeSelect && !savedMode && phase === 'boot') setAudioFor('fun');

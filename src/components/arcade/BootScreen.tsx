@@ -12,7 +12,7 @@ interface BootScreenProps {
   progress: number;
   /** called when the player starts (after the short power-off animation) */
   onStart: () => void;
-  /** "RECRUITER MODE: skip to CV" target (for now the resume link) */
+  /** "RECRUITER MODE: skip to CV" target (the /cv page) */
   recruiterHref: string;
   /** called when the Recruiter Mode button is used */
   onRecruiter?: () => void;
@@ -134,8 +134,6 @@ export function BootScreen({
           <ArcadeButton
             variant="ghost"
             href={recruiterHref}
-            target="_blank"
-            rel="noopener noreferrer"
             onClick={onRecruiter}
           >
             [ Recruiter mode: skip to CV ]

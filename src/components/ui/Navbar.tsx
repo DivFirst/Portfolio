@@ -13,8 +13,9 @@ interface NavbarProps {
 
 /**
  * Top arcade HUD (DESIGN.md §4 "HUD bar"):
- *   1UP DIVYANSHU · LVL 99 · ❤❤❤ · 🪙 x N   [reset view] [♪ music] [🔊 sound]
- * Phones show 1UP · ❤❤❤ · 🪙 N + music and sound (the "◀ map" button lives in the stage bar).
+ *   1UP DIVYANSHU · LVL 99 · ❤❤❤ · 🪙 x N   [📄 CV] [reset view] [♪ music] [🔊 sound]
+ * Phones show 1UP · ❤❤❤ · 🪙 N + CV, music and sound (the "◀ map" button lives in the stage bar).
+ * "📄 CV" opens Recruiter Mode (/cv) on every screen size.
  * Sound effects are muted by default; music is off until the visitor turns it on.
  */
 export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView, onOpenTrophies, onOpenContact }) => {
@@ -38,6 +39,9 @@ export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView, on
       coinsLabel="case competitions"
       right={
         <>
+          <a href="/cv" className="arcade-toggle" aria-label="Recruiter Mode: my CV on one page" title="Recruiter Mode">
+            <span aria-hidden="true">📄 <span className="hidden sm:inline">Recruiter </span>CV</span>
+          </a>
           {/* Trophy Room + CONTINUE? (desktop; on smaller screens they sit in the stage bar) */}
           <button type="button" className="arcade-toggle hidden lg:inline-flex lg:items-center" onClick={onOpenTrophies}>
             🏆 Trophies
