@@ -74,7 +74,8 @@ export function HotspotLayer({ ride, accent }: { ride: WorldRide; accent: Accent
   const visible = ride.chapters.flatMap((ch, i) =>
     ch.hotspots.filter((h) => {
       const [from, to] = h.show ?? chapterRange(ride, i);
-      return p >= from && p <= to;
+      // end is exclusive (except at 100%), so two chapters' blocks never show together at the border
+      return p >= from && (p < to || to >= 1);
     }),
   );
 

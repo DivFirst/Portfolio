@@ -469,6 +469,49 @@ body {
   .arcade-infobox a { display: inline-flex; align-items: center; min-height: 44px; }
   .arcade-infobox p:has(> a) { margin-top: 0; }
   .arcade-hotspot-popover .arcade-panel-close { min-width: 44px; min-height: 44px; margin: -10px -12px -10px 0; }
+
+  /* Ride "floor screen" (RideScreenPanel): solid panel beside the scene, never catches the scroll */
+  .arcade-ride-screen {
+    position: fixed; z-index: 24; pointer-events: none;
+    left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
+    max-height: 42dvh; overflow: hidden;
+    padding: 12px 14px; background: var(--arcade-panel);
+    box-shadow: inset 0 0 0 3px var(--arcade-c), 4px 4px 0 0 #000;
+  }
+  .arcade-ride-screen.has-hint { bottom: calc(92px + env(safe-area-inset-bottom)); }
+  @media (min-width: 760px) {
+    .arcade-ride-screen, .arcade-ride-screen.has-hint {
+      left: auto; right: 24px; bottom: auto; top: clamp(76px, calc(50dvh - 170px), 50dvh); width: 360px; max-height: calc(100dvh - 100px);
+      padding: 18px 20px;
+    }
+  }
+  .arcade-ride-screen-title { font-size: 12px; line-height: 1.5; color: var(--arcade-c); text-shadow: 0 0 8px color-mix(in srgb, var(--arcade-c) 50%, transparent); }
+  @media (min-width: 760px) { .arcade-ride-screen-title { font-size: 14px; } }
+  .arcade-ride-screen-sub { margin-top: 4px; font-size: 14px; line-height: 1.45; color: var(--arcade-muted); }
+  .arcade-ride-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; margin-top: 10px; }
+  .arcade-ride-metric { background: var(--arcade-panel-2); padding: 8px 10px 6px; }
+  .arcade-ride-metric dt { font-size: 8px; line-height: 1.5; color: var(--arcade-muted); }
+  @media (min-width: 760px) { .arcade-ride-metric dt { font-size: 9px; } }
+  .arcade-ride-number { display: block; font-size: 32px; line-height: 1.05; color: var(--arcade-yellow); text-shadow: 0 0 8px rgba(255, 230, 0, 0.45); font-variant-numeric: tabular-nums; }
+  @media (min-width: 760px) { .arcade-ride-number { font-size: 40px; } }
+  .arcade-ride-note { display: block; font-size: 14px; color: var(--arcade-text); }
+  .arcade-ride-group { margin-top: 10px; }
+  .arcade-ride-group-title { font-size: 14px; font-weight: 700; color: var(--arcade-text); }
+  .arcade-ride-group ul { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .arcade-ride-group li {
+    font-size: 14px; line-height: 1.3; padding: 3px 8px; color: var(--arcade-text);
+    background: var(--arcade-panel-2); box-shadow: inset 0 0 0 1px var(--arcade-c);
+  }
+  /* Phones: skills as a compact dotted list so a stats page fits above the scene */
+  @media (max-width: 759px) {
+    .arcade-ride-screen:has(.arcade-ride-group) { max-height: 54dvh; }
+    .arcade-ride-group { margin-top: 8px; }
+    .arcade-ride-group ul { display: block; margin-top: 2px; font-size: 14px; line-height: 1.45; }
+    .arcade-ride-group li { display: inline; padding: 0; background: none; box-shadow: none; color: var(--arcade-text); }
+    .arcade-ride-group li + li::before { content: " · "; color: var(--arcade-c); }
+  }
+  /* Reduced motion: the scene fades through black between chapters (scroll-linked, not timed) */
+  .arcade-ride-fade { position: fixed; inset: 0; z-index: 23; pointer-events: none; background: var(--arcade-bg); opacity: 0; }
 }
 
 /* ---- Pop-up windows: Trophy Room, CONTINUE?, cheat code ---- */

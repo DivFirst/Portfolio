@@ -29,12 +29,15 @@ function readSound() {
   try { return localStorage.getItem(SOUND_KEY) === 'on'; } catch { return false; }
 }
 
+/** `?reduce` in the address forces reduced motion, for testing (like `?lite`). */
+const testReduce = () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('reduce');
+
 function useSystemReducedMotion() {
   const query = '(prefers-reduced-motion: reduce)';
-  const [reduced, setReduced] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches);
+  const [reduced, setReduced] = useState(() => typeof window !== 'undefined' && (window.matchMedia(query).matches || testReduce()));
   useEffect(() => {
     const mq = window.matchMedia(query);
-    const onChange = () => setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches || testReduce());
     mq.addEventListener('change', onChange);
     return () => mq.removeEventListener('change', onChange);
   }, []);

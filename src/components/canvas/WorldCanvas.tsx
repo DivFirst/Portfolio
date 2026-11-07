@@ -199,7 +199,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           reducedMotion={reducedMotion}
           hideSign={!!ride}
         >
-          <ProfessionalIsland />
+          <ProfessionalIsland rideActive={ride?.islandId === 'professional'} reducedMotion={reducedMotion} />
         </HexagonBase>
 
         {/* 3. Projects */}

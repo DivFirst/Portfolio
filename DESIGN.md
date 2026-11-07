@@ -221,6 +221,8 @@ Every animation has an off switch. When the device asks for less motion:
 - Scroll rides become simple fades between "chapters" with the same hotspots.
 - 3D camera flights become instant cuts.
 
+To test on any device, add `?reduce` to the address (e.g. `/?reduce#career`): JS-driven motion (scroll rides, counters, 3D) switches to the reduced version.
+
 Implement with one global CSS block plus a `useReducedMotion()` hook for JS-driven animation:
 ```css
 @media (prefers-reduced-motion: reduce) {

@@ -11,6 +11,7 @@ import { ArcadeProvider, CRTOverlay } from './components/arcade';
 import { useWorldRoute } from './components/world/useWorldRoute';
 import { WorldHud } from './components/world/WorldHud';
 import { HotspotLayer } from './components/world/HotspotLayer';
+import { RideScreenPanel } from './components/world/RideScreenPanel';
 import { resetRide } from './components/world/rideStore';
 import { sound } from './utils/soundEffects';
 import { TrophyRoom, ContinueScreen, KonamiCelebration, useKonamiCode } from './components/ui/ArcadeExtras';
@@ -190,6 +191,7 @@ export function App({ lowEndDevice = false }: { lowEndDevice?: boolean }) {
             />
             {ride && (
               <>
+                <RideScreenPanel key={`screen-${ride.slug}`} ride={ride} accent={accent} />
                 <HotspotLayer key={ride.slug} ride={ride} accent={accent} />
                 <WorldHud key={`hud-${ride.slug}`} ride={ride} accent={accent} onBack={leaveWorld} onNext={enterWorld} />
               </>

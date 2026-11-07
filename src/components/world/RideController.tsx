@@ -63,8 +63,13 @@ export const RideController: React.FC<RideControllerProps> = ({ ride, origin, go
     // Tall, narrow screens (phones) see less side-to-side: pull the camera back so the shot still fits.
     const aspect = size.width / size.height;
     if (aspect < 1) {
-      const pull = Math.min(1.8, Math.sqrt(1 / aspect));
+      const pull = Math.min(1.8, Math.sqrt(1 / aspect)) * (ride.portrait?.pull ?? 1);
       goal.position.sub(goal.target).multiplyScalar(pull).add(goal.target);
+      if (ride.portrait?.shift) {
+        tmpA.set(...ride.portrait.shift);
+        goal.position.add(tmpA);
+        goal.target.add(tmpA);
+      }
     }
 
     // pinned hotspots -> screen pixels
