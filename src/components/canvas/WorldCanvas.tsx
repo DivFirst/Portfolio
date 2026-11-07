@@ -211,7 +211,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           reducedMotion={reducedMotion}
           hideSign={!!ride}
         >
-          <ProjectsIsland />
+          <ProjectsIsland rideActive={ride?.islandId === 'projects'} reducedMotion={reducedMotion} />
         </HexagonBase>
 
         {/* 4. Hobby */}
@@ -281,7 +281,8 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           rotateSpeed={0.85}
           zoomSpeed={1.2}
           minDistance={8}
-          maxDistance={55}
+          // the zoom limit is for the visitor on the map; ride cameras (e.g. World 3's orbit shot) may go further
+          maxDistance={ride ? 400 : 55}
           minPolarAngle={Math.PI / 6} // ~30° angle
           maxPolarAngle={Math.PI / 2.15} // ~83.7° angle (above horizon)
         />
