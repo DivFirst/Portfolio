@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import { Sparkles, Briefcase, Terminal, Gamepad2, BookOpen, Compass } from 'lucide-react';
+import clsx from 'clsx';
 import { IslandMeta } from '../../types/portfolio';
 import { portfolioData } from '../../data/portfolioData';
+import { arcadeWorlds } from '../../data/arcadeWorlds';
+import { accentClass, useArcade } from '../arcade';
 import { sound } from '../../utils/soundEffects';
 
 interface IslandDockProps {
@@ -9,101 +11,76 @@ interface IslandDockProps {
   onSelectIsland: (island: IslandMeta | null) => void;
 }
 
-const iconMap: Record<string, React.FC<{ className?: string }>> = {
-  Sparkles,
-  Briefcase,
-  Terminal,
-  Gamepad2,
-  BookOpen,
-  Compass,
-};
+/**
+ * "STAGE SELECT" bar (BUILD_GUIDE Part 2): one button per world, keys 1–6.
+ * Desktop: one row of six. Phones and tablets: 3 × 2 grid, so nothing scrolls sideways.
+ * Buttons are neutral until hovered/selected, then take their world's accent (DESIGN.md §2).
+ */
+export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelectIsland }) => {
+  const { play } = useArcade();
+  const islandsList = Object.values(portfolioData.islands).sort((a, b) => a.index - b.index);
 
-export const IslandDock: React.FC<IslandDockProps> = ({
-  selectedIsland,
-  onSelectIsland,
-}) => {
-  const islandsList = Object.values(portfolioData.islands);
-
-  // Keyboard navigation shortcuts: 1-6 selects islands, Esc returns to overview
+  // Keys 1–6 pick a world (Esc back to the map is handled in App).
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = (e.target as HTMLElement | null)?.closest('input, textarea, select, [contenteditable="true"]');
+      if (target) return;
       const num = parseInt(e.key, 10);
       if (num >= 1 && num <= islandsList.length) {
-        const target = islandsList[num - 1];
         sound.playSelect();
-        onSelectIsland(target);
+        onSelectIsland(islandsList[num - 1]);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [islandsList, onSelectIsland]);
 
+  const selectedWorld = selectedIsland ? arcadeWorlds[selectedIsland.id] : null;
+
   return (
-    <footer className="fixed bottom-4 inset-x-0 z-30 pointer-events-none flex flex-col items-center gap-2 px-4">
-      {/* Navigation Hint banner */}
-      <div className="glass-panel px-3 py-1 rounded-full text-[11px] font-mono text-slate-400 border border-white/5 shadow-lg hidden sm:flex items-center gap-2">
-        <span>🖱️ Drag to rotate view</span>
-        <span>•</span>
-        <span>🔍 Scroll to zoom</span>
-        <span>•</span>
-        <span>⌨️ Keys 1-{islandsList.length}</span>
+    <nav className="arcade-stage-bar" aria-label="Stage select">
+      <div className="arcade-stage-head">
+        <span className="arcade-display text-[10px] text-arcade-pink">
+          {selectedWorld ? `World ${selectedWorld.number}: ${selectedWorld.name}` : 'Stage select'}
+        </span>
+        {selectedIsland ? (
+          <button
+            type="button"
+            className="arcade-toggle"
+            onClick={() => { play('close'); sound.playWhoosh(); onSelectIsland(null); }}
+          >
+            ◀ Map
+          </button>
+        ) : (
+          <span className="hidden text-[14px] text-arcade-muted md:inline">Drag to rotate · scroll to zoom · keys 1–6</span>
+        )}
       </div>
 
-      {/* Main Island Dock */}
-      <div className="glass-panel p-1.5 rounded-2xl flex items-center gap-1.5 pointer-events-auto border border-white/10 shadow-2xl overflow-x-auto max-w-full">
+      <ul className="arcade-stage-grid">
         {islandsList.map((island) => {
+          const world = arcadeWorlds[island.id];
           const isSelected = selectedIsland?.id === island.id;
-          const IconComponent = iconMap[island.iconName] || Sparkles;
-
           return (
-            <button
-              key={island.id}
-              onClick={() => {
-                sound.playSelect();
-                onSelectIsland(isSelected ? null : island);
-              }}
-              onMouseEnter={() => sound.playHover()}
-              className={`relative px-3 py-2 rounded-xl flex items-center gap-2 transition-all duration-200 group whitespace-nowrap ${
-                isSelected
-                  ? 'bg-white/15 text-white shadow-lg'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
-              style={{
-                boxShadow: isSelected ? `0 0 20px -5px ${island.accentColor}50` : undefined,
-              }}
-            >
-              {/* Number Tag */}
-              <span
-                className={`text-[10px] font-mono px-1.5 py-0.5 rounded transition-colors ${
-                  isSelected
-                    ? 'bg-white/20 text-white font-bold'
-                    : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'
-                }`}
+            <li key={island.id}>
+              <button
+                type="button"
+                className={clsx('arcade-stage-btn', accentClass[world.accent], isSelected && 'is-selected')}
+                aria-pressed={isSelected}
+                aria-label={`World ${world.number}: ${world.name} (${island.name})`}
+                onClick={() => { sound.playSelect(); onSelectIsland(isSelected ? null : island); }}
+                onMouseEnter={() => sound.playHover()}
               >
-                {island.index}
-              </span>
-
-              {/* Icon */}
-              <IconComponent
-                className="w-4 h-4 transition-transform group-hover:scale-110"
-              />
-
-              {/* Name */}
-              <span className="text-xs font-semibold">
-                {island.name}
-              </span>
-
-              {/* Glowing active indicator dot */}
-              {isSelected && (
-                <span
-                  className="w-1.5 h-1.5 rounded-full animate-ping"
-                  style={{ backgroundColor: island.accentColor }}
-                />
-              )}
-            </button>
+                <span className="arcade-stage-num" aria-hidden="true">{world.number}</span>
+                <span className="arcade-stage-text" aria-hidden="true">
+                  <span className="arcade-stage-world">World {world.number}</span>
+                  <span className="arcade-stage-name">{world.name}</span>
+                </span>
+              </button>
+            </li>
           );
         })}
-      </div>
-    </footer>
+      </ul>
+    </nav>
   );
 };

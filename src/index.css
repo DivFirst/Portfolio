@@ -66,3 +66,441 @@ body {
 .text-glow {
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
 }
+
+/* =====================================================================
+   ARCADE DESIGN SYSTEM (DESIGN.md)
+   Everything below is prefixed "arcade-" and only affects elements that
+   use these classes, so the current site is untouched until Phase 3.
+   ===================================================================== */
+
+:root {
+  --arcade-bg: #0b0b1a;
+  --arcade-panel: #14142b;
+  --arcade-panel-2: #1d1d3a;
+  --arcade-text: #e8e8f5;
+  --arcade-muted: #a0a0c0;
+  --arcade-dim: #6b6b8f;
+  --arcade-pink: #ff2e88;
+  --arcade-cyan: #00f0ff;
+  --arcade-yellow: #ffe600;
+  --arcade-green: #39ff14;
+  --arcade-purple: #9d4dff;
+  --arcade-purple-text: #b57bff;
+  --arcade-pink-dark: #a3104f;
+  --arcade-cyan-dark: #007a85;
+  --arcade-yellow-dark: #9e8c00;
+  --arcade-green-dark: #1f8f0a;
+  --arcade-purple-dark: #5a1fb0;
+  --arcade-px: 4px;
+  --arcade-font-display: "Press Start 2P", "Courier New", monospace;
+  --arcade-font-body: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --arcade-font-score: "VT323", monospace;
+}
+
+@layer components {
+  /* ---- Root wrapper: put arcade UI inside this ---- */
+  .arcade-root {
+    font-family: var(--arcade-font-body);
+    color: var(--arcade-text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .arcade-root ::selection { background: var(--arcade-pink); color: var(--arcade-bg); }
+  .arcade-root a { color: var(--arcade-cyan); text-decoration: underline; text-underline-offset: 3px; }
+  .arcade-root a:hover { color: var(--arcade-yellow); }
+  .arcade-root :focus-visible { outline: 3px solid var(--arcade-cyan); outline-offset: 4px; }
+
+  /* A full page in arcade style (used by /style-test; the main site keeps its own body rules for now) */
+  body.arcade-page {
+    background: var(--arcade-bg);
+    overflow-x: hidden;
+    overflow-y: auto;
+    user-select: text;
+  }
+
+  /* ---- Accent colour: sets --arcade-c / --arcade-c-dark for any component ---- */
+  .arcade-accent-pink   { --arcade-c: var(--arcade-pink);   --arcade-c-dark: var(--arcade-pink-dark); }
+  .arcade-accent-cyan   { --arcade-c: var(--arcade-cyan);   --arcade-c-dark: var(--arcade-cyan-dark); }
+  .arcade-accent-yellow { --arcade-c: var(--arcade-yellow); --arcade-c-dark: var(--arcade-yellow-dark); }
+  .arcade-accent-green  { --arcade-c: var(--arcade-green);  --arcade-c-dark: var(--arcade-green-dark); }
+  .arcade-accent-purple { --arcade-c: var(--arcade-purple); --arcade-c-dark: var(--arcade-purple-dark); }
+  .arcade-accent-dim    { --arcade-c: var(--arcade-dim);    --arcade-c-dark: var(--arcade-panel-2); }
+
+  /* ---- Type ---- */
+  .arcade-display {
+    font-family: var(--arcade-font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .arcade-glow { text-shadow: 0 0 8px color-mix(in srgb, var(--arcade-c, var(--arcade-pink)) 50%, transparent); }
+  .arcade-score { font-family: var(--arcade-font-score); font-variant-numeric: tabular-nums; line-height: 1; }
+
+  /* ---- Pixel border: 4px frame with notched corners ---- */
+  .arcade-pixel-border {
+    margin: var(--arcade-px);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c, var(--arcade-cyan)),
+      0 var(--arcade-px) 0 0 var(--arcade-c, var(--arcade-cyan)),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c, var(--arcade-cyan)),
+      var(--arcade-px) 0 0 0 var(--arcade-c, var(--arcade-cyan));
+  }
+
+  /* ---- Panel ---- */
+  .arcade-panel {
+    background: var(--arcade-panel);
+    margin: var(--arcade-px);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c, var(--arcade-cyan)),
+      0 var(--arcade-px) 0 0 var(--arcade-c, var(--arcade-cyan)),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c, var(--arcade-cyan)),
+      var(--arcade-px) 0 0 0 var(--arcade-c, var(--arcade-cyan)),
+      calc(var(--arcade-px) * 3) calc(var(--arcade-px) * 3) 0 0 #000;
+  }
+  .arcade-panel-title {
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    background: var(--arcade-c, var(--arcade-cyan)); color: var(--arcade-bg);
+    font-family: var(--arcade-font-display); font-size: 10px; line-height: 1.6;
+    text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 12px;
+  }
+  .arcade-panel-close {
+    font-family: var(--arcade-font-display); font-size: 12px; color: var(--arcade-bg);
+    min-width: 28px; min-height: 28px; display: grid; place-items: center; cursor: pointer;
+  }
+  .arcade-root .arcade-panel-close:focus-visible { outline: 3px solid var(--arcade-bg); outline-offset: 0; }
+  .arcade-panel-body { padding: 16px; }
+  @media (min-width: 760px) { .arcade-panel-body { padding: 24px; } }
+
+  /* ---- Buttons ---- */
+  .arcade-btn {
+    --arcade-c: var(--arcade-pink); --arcade-c-dark: var(--arcade-pink-dark);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; min-width: 44px; padding: 14px 20px;
+    font-family: var(--arcade-font-display); font-size: 10px; line-height: 1.2;
+    text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none;
+    color: var(--arcade-bg); background: var(--arcade-c); cursor: pointer; border-radius: 0;
+    box-shadow:
+      inset calc(var(--arcade-px) * -1) calc(var(--arcade-px) * -1) 0 0 var(--arcade-c-dark),
+      inset var(--arcade-px) var(--arcade-px) 0 0 rgba(255, 255, 255, 0.35),
+      0 6px 0 0 #000;
+    transition: transform 60ms steps(2), box-shadow 60ms steps(2), filter 60ms;
+  }
+  @media (min-width: 760px) { .arcade-btn { font-size: 12px; } }
+  .arcade-btn:hover { filter: brightness(1.1); }
+  .arcade-btn:active {
+    transform: translateY(6px);
+    box-shadow: inset var(--arcade-px) var(--arcade-px) 0 0 var(--arcade-c-dark), 0 0 0 0 #000;
+  }
+  .arcade-btn-secondary { --arcade-c: var(--arcade-cyan); --arcade-c-dark: var(--arcade-cyan-dark); }
+  .arcade-root .arcade-btn-secondary:focus-visible { outline-color: var(--arcade-yellow); }
+  .arcade-btn-coin { --arcade-c: var(--arcade-yellow); --arcade-c-dark: var(--arcade-yellow-dark); }
+  .arcade-btn-success { --arcade-c: var(--arcade-green); --arcade-c-dark: var(--arcade-green-dark); }
+  .arcade-btn-ghost {
+    --arcade-c: var(--arcade-cyan);
+    background: transparent; color: var(--arcade-c); margin: var(--arcade-px);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c);
+  }
+  .arcade-btn-ghost:hover { background: var(--arcade-panel-2); filter: none; }
+  .arcade-btn-ghost:active {
+    transform: translateY(2px);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c);
+  }
+  /* Buttons rendered as links: don't pick up the generic link colour/underline */
+  .arcade-root a.arcade-btn, .arcade-root a.arcade-btn:hover { color: var(--arcade-bg); text-decoration: none; }
+  .arcade-root a.arcade-btn-ghost, .arcade-root a.arcade-btn-ghost:hover { color: var(--arcade-c); }
+  .arcade-btn:disabled {
+    background: var(--arcade-panel-2); color: var(--arcade-dim);
+    box-shadow: none; cursor: not-allowed; filter: none; transform: none;
+  }
+
+  /* Small toggle (sound, settings) */
+  .arcade-toggle {
+    font-family: var(--arcade-font-display); font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em;
+    min-height: 44px; padding: 8px 12px; background: var(--arcade-panel-2); color: var(--arcade-muted);
+    box-shadow: inset 0 0 0 2px var(--arcade-dim); cursor: pointer; border-radius: 0;
+  }
+  .arcade-toggle[aria-pressed="true"] { color: var(--arcade-bg); background: var(--arcade-green); box-shadow: inset 0 0 0 2px var(--arcade-green); }
+
+  /* ---- Stat bar ---- */
+  .arcade-stat-track {
+    height: 16px; padding: 3px; background: var(--arcade-panel-2); margin: var(--arcade-px);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-dim), 0 var(--arcade-px) 0 0 var(--arcade-dim),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-dim), var(--arcade-px) 0 0 0 var(--arcade-dim);
+  }
+  .arcade-stat-fill {
+    height: 100%;
+    background: repeating-linear-gradient(to right, var(--arcade-c, var(--arcade-green)) 0 8px, transparent 8px 10px);
+    transition: width 600ms steps(12);
+  }
+
+  /* ---- Badge + tag ---- */
+  .arcade-badge {
+    --arcade-c: var(--arcade-yellow);
+    background: var(--arcade-panel); margin: var(--arcade-px); padding: 16px 12px; text-align: center;
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c),
+      0 0 18px 2px rgba(255, 230, 0, 0.18);
+  }
+  .arcade-badge-locked {
+    --arcade-c: var(--arcade-dim);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c);
+  }
+  .arcade-tag {
+    display: inline-block; font-family: var(--arcade-font-display); font-size: 8px; line-height: 1;
+    text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 8px;
+    background: var(--arcade-c, var(--arcade-pink)); color: var(--arcade-bg); vertical-align: middle;
+  }
+
+  /* ---- HUD ---- */
+  .arcade-hud {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 16px; background: var(--arcade-bg);
+    border-bottom: var(--arcade-px) solid var(--arcade-pink);
+    font-family: var(--arcade-font-display); font-size: 10px; line-height: 1.6;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--arcade-text);
+  }
+  @media (min-width: 760px) { .arcade-hud { padding: 12px 32px; } }
+
+  /* ---- Hotspot "?" block ---- */
+  .arcade-hotspot {
+    width: 48px; height: 48px; display: grid; place-items: center; cursor: pointer; border-radius: 0;
+    font-family: var(--arcade-font-display); font-size: 18px; color: var(--arcade-bg);
+    background: var(--arcade-yellow);
+    box-shadow:
+      inset -4px -4px 0 0 var(--arcade-yellow-dark), inset 4px 4px 0 0 rgba(255, 255, 255, 0.5),
+      0 0 0 4px var(--arcade-bg), 0 0 0 8px var(--arcade-c, var(--arcade-cyan)),
+      0 0 18px 6px color-mix(in srgb, var(--arcade-c, var(--arcade-cyan)) 35%, transparent);
+  }
+  .arcade-hotspot-popover { position: absolute; left: 72px; top: -8px; width: min(360px, calc(100vw - 140px)); z-index: 5; }
+  @media (max-width: 559px) {
+    .arcade-hotspot-popover { position: fixed; left: 16px; right: 16px; top: 50%; width: auto; transform: translateY(-50%); z-index: 40; }
+    .arcade-hotspot-backdrop { position: fixed; inset: 0; background: rgba(11, 11, 26, 0.7); z-index: 39; }
+  }
+
+  /* ---- Mode select cards ---- */
+  .arcade-mode-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px; text-align: left;
+    padding: 24px; margin: var(--arcade-px); background: var(--arcade-panel);
+    color: var(--arcade-text); font-family: var(--arcade-font-body); cursor: pointer; border-radius: 0;
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c),
+      8px 10px 0 0 #000;
+    transition: transform 60ms steps(2), box-shadow 60ms steps(2), background 60ms;
+  }
+  .arcade-mode-card:hover { background: var(--arcade-panel-2); }
+  .arcade-mode-card:active {
+    transform: translate(4px, 6px);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c);
+  }
+  .arcade-root .arcade-mode-card:focus-visible { outline: 3px solid var(--arcade-yellow); outline-offset: 10px; }
+
+  /* ---- CRT overlay ---- */
+  .arcade-crt { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+  .arcade-crt::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+  }
+  .arcade-crt::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.45) 100%);
+  }
+  /* main site: lighter lines + vignette so HUD text stays sharp */
+  .arcade-crt-soft::before {
+    background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 3px);
+  }
+  .arcade-crt-soft::after {
+    background: radial-gradient(ellipse at center, transparent 65%, rgba(0, 0, 0, 0.35) 100%);
+  }
+}
+
+/* ---- Main-site HUD (top bar, Player 1 card, stage select) ---- */
+@layer components {
+  .arcade-hud-fixed { position: fixed; top: 0; left: 0; right: 0; z-index: 30; }
+  @media (max-width: 759px) { .arcade-hud-fixed { padding: 10px 12px; } }
+
+  /* Player 1 card: below the HUD, left side */
+  .arcade-p1-card {
+    position: fixed; z-index: 35; top: 80px; left: 16px;
+    width: min(380px, calc(100vw - 32px));
+    max-height: calc(100dvh - 80px - 16px);
+    overflow-y: auto; overscroll-behavior: contain;
+    scrollbar-width: thin; scrollbar-color: var(--arcade-cyan) var(--arcade-panel-2);
+    padding: 4px 12px 12px 4px; /* room for the pixel border + hard shadow */
+  }
+  @media (min-width: 760px) {
+    .arcade-p1-card { left: 24px; max-height: calc(100dvh - 80px - 176px); }
+  }
+  /* 44px tap area for the hide button without making the title bar taller */
+  .arcade-p1-card .arcade-panel-close { min-width: 44px; min-height: 44px; margin: -10px -12px -10px 0; }
+  .arcade-p1-body { padding: 16px; }
+  @media (min-width: 760px) { .arcade-p1-body { padding: 20px; } }
+
+  /* Photo in a pixel frame (notched corners + hard shadow) */
+  .arcade-p1-frame {
+    display: inline-block; line-height: 0; margin: var(--arcade-px); background: var(--arcade-bg); padding: 3px;
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-c), 0 var(--arcade-px) 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-c), var(--arcade-px) 0 0 0 var(--arcade-c),
+      calc(var(--arcade-px) * 2) calc(var(--arcade-px) * 2) 0 0 #000;
+  }
+
+  /* Collapsed card: a small "P1 ▶" tab on the left edge */
+  .arcade-p1-tab {
+    position: fixed; z-index: 35; top: 80px; left: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    min-width: 56px; min-height: 44px; padding: 8px 8px 10px; cursor: pointer; border-radius: 0;
+    background: var(--arcade-panel);
+    box-shadow:
+      inset 0 0 0 2px var(--arcade-cyan),
+      4px 4px 0 0 #000;
+  }
+  .arcade-p1-tab:hover { background: var(--arcade-panel-2); }
+
+  /* Stage select bar */
+  .arcade-stage-bar {
+    position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
+    background: var(--arcade-bg); border-top: var(--arcade-px) solid var(--arcade-pink);
+    padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 760px) { .arcade-stage-bar { padding: 10px 32px 14px; } }
+  .arcade-stage-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    min-height: 28px; margin-bottom: 8px;
+  }
+  .arcade-stage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  @media (min-width: 1024px) { .arcade-stage-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; } }
+
+  .arcade-stage-btn {
+    width: 100%; min-height: 52px; display: flex; align-items: center; gap: 8px; text-align: left;
+    padding: 6px 8px; cursor: pointer; border-radius: 0;
+    background: var(--arcade-panel); color: var(--arcade-text);
+    box-shadow: inset 0 0 0 2px var(--arcade-panel-2), 3px 3px 0 0 #000;
+    transition: transform 60ms steps(2), box-shadow 60ms steps(2);
+  }
+  @media (min-width: 760px) { .arcade-stage-btn { padding: 8px 10px; gap: 10px; } }
+  .arcade-stage-btn:hover { box-shadow: inset 0 0 0 2px var(--arcade-c), 3px 3px 0 0 #000; }
+  .arcade-stage-btn:active { transform: translate(3px, 3px); box-shadow: inset 0 0 0 2px var(--arcade-c), 0 0 0 0 #000; }
+  .arcade-stage-btn.is-selected { background: var(--arcade-c); color: var(--arcade-bg); box-shadow: inset 0 0 0 2px var(--arcade-c), 3px 3px 0 0 #000; }
+  .arcade-root .arcade-stage-btn:focus-visible { outline: 3px solid var(--arcade-cyan); outline-offset: 3px; }
+  .arcade-root .arcade-stage-btn.arcade-accent-cyan:focus-visible { outline-color: var(--arcade-yellow); }
+
+  .arcade-stage-num {
+    flex: none; display: none; place-items: center; width: 24px; height: 24px;
+    font-family: var(--arcade-font-display); font-size: 10px;
+    background: var(--arcade-panel-2); color: var(--arcade-muted);
+  }
+  .arcade-stage-btn:hover .arcade-stage-num { background: var(--arcade-c); color: var(--arcade-bg); }
+  .arcade-stage-btn.is-selected .arcade-stage-num { background: var(--arcade-bg); color: var(--arcade-c); }
+  .arcade-stage-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .arcade-stage-world {
+    display: block; font-family: var(--arcade-font-display); font-size: 8px; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--arcade-muted);
+  }
+  .arcade-stage-btn.is-selected .arcade-stage-world { color: var(--arcade-bg); }
+  .arcade-stage-name {
+    font-family: var(--arcade-font-display); font-size: 10px; line-height: 1.5;
+    letter-spacing: 0.02em; text-transform: uppercase;
+  }
+  @media (min-width: 760px) { .arcade-stage-num { display: grid; } }
+}
+
+/* ---- Loading bar (segmented, like the stat bar) ---- */
+@layer components {
+  .arcade-loading-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px;
+  }
+  .arcade-loading-head .arcade-display { color: var(--arcade-c, var(--arcade-yellow)); }
+  .arcade-loading-track {
+    display: flex; gap: 2px; height: 20px; padding: 3px; background: var(--arcade-panel-2); margin: var(--arcade-px);
+    box-shadow:
+      0 calc(var(--arcade-px) * -1) 0 0 var(--arcade-dim), 0 var(--arcade-px) 0 0 var(--arcade-dim),
+      calc(var(--arcade-px) * -1) 0 0 0 var(--arcade-dim), var(--arcade-px) 0 0 0 var(--arcade-dim);
+  }
+  .arcade-loading-seg { flex: 1; background: transparent; }
+  .arcade-loading-seg.is-lit { background: var(--arcade-c, var(--arcade-yellow)); }
+
+  /* ---- Boot screen (BUILD_GUIDE Part 2 step 1) ---- */
+  .arcade-intro-layer { position: fixed; inset: 0; z-index: 90; }
+  .arcade-intro-modeselect { background: var(--arcade-bg); overflow-y: auto; user-select: text; }
+
+  .arcade-boot {
+    position: fixed; inset: 0; z-index: 90; background: var(--arcade-bg);
+    display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+    transform-origin: 50% 50%;
+  }
+  .arcade-boot-inner {
+    flex: 1; display: flex; flex-direction: column; min-height: 100%;
+    padding: 16px; gap: 24px;
+  }
+  @media (min-width: 760px) { .arcade-boot-inner { padding: 24px 32px; } }
+  .arcade-boot-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .arcade-boot-hiscore { display: flex; flex-direction: column; gap: 4px; }
+  .arcade-boot-center {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  }
+  .arcade-boot-title { font-size: 18px; line-height: 1.5; }
+  @media (min-width: 480px) { .arcade-boot-title { font-size: 24px; } }
+  @media (min-width: 760px) { .arcade-boot-title { font-size: 32px; } }
+  .arcade-boot-headline {
+    margin-top: 20px; max-width: 34ch; font-size: 15px; line-height: 1.6; color: var(--arcade-muted);
+  }
+  @media (min-width: 760px) { .arcade-boot-headline { font-size: 16px; max-width: none; margin-top: 28px; } }
+  /* fixed height so the screen doesn't jump when LOADING turns into PRESS START */
+  .arcade-boot-status {
+    margin-top: 40px; min-height: 96px; width: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .arcade-boot-start {
+    font-family: var(--arcade-font-display); text-transform: uppercase; letter-spacing: 0.08em;
+    font-size: 14px; color: var(--arcade-yellow); background: transparent; cursor: pointer;
+    min-height: 44px; padding: 12px 16px; border-radius: 0;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--arcade-yellow) 50%, transparent);
+  }
+  @media (min-width: 760px) { .arcade-boot-start { font-size: 18px; } }
+  .arcade-root .arcade-boot-start:focus-visible { outline: 3px solid var(--arcade-cyan); outline-offset: 4px; }
+  .arcade-boot-bottom { display: flex; justify-content: center; padding-bottom: 8px; }
+  .arcade-boot-bottom .arcade-btn { font-size: 9px; }
+  @media (min-width: 760px) { .arcade-boot-bottom .arcade-btn { font-size: 10px; } }
+
+  /* returning visitors: just a small loading bar */
+  .arcade-boot-quick { align-items: center; justify-content: center; padding: 16px; text-align: center; }
+
+  /* CRT power-on: a bright line opens into the picture (once), then the 2s flicker */
+  .arcade-boot.is-powering-on { animation: arcadePowerOn 520ms steps(10) 1 both; }
+  .arcade-boot.is-leaving { animation: arcadePowerOff 280ms steps(6) 1 both; }
+  .arcade-boot-quick.is-leaving { animation: arcadeFadeOut 280ms steps(4) 1 both; }
+}
+@keyframes arcadePowerOn {
+  0%   { transform: scale(0, 0.004); filter: brightness(3); }
+  40%  { transform: scale(1, 0.004); filter: brightness(3); }
+  100% { transform: scale(1, 1); filter: brightness(1); }
+}
+@keyframes arcadePowerOff {
+  0%   { transform: scale(1, 1); filter: brightness(1); opacity: 1; }
+  60%  { transform: scale(1, 0.004); filter: brightness(3); opacity: 1; }
+  100% { transform: scale(0, 0.004); filter: brightness(3); opacity: 0; }
+}
+@keyframes arcadeFadeOut { to { opacity: 0; } }
+
+/* ---- Reduced motion (device setting, or Recruiter Mode via .arcade-reduce-motion) ---- */
+@media (prefers-reduced-motion: reduce) {
+  .arcade-root *, .arcade-root *::before, .arcade-root *::after { animation: none !important; transition: none !important; }
+  .arcade-root .arcade-btn:active, .arcade-root .arcade-mode-card:active { transform: none; }
+}
+.arcade-reduce-motion, .arcade-reduce-motion *, .arcade-reduce-motion *::before, .arcade-reduce-motion *::after {
+  animation: none !important; transition: none !important;
+}
+.arcade-reduce-motion .arcade-btn:active, .arcade-reduce-motion .arcade-mode-card:active { transform: none; }

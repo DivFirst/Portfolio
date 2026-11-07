@@ -1,0 +1,59 @@
+/* TEMPORARY: layout for the /style-test sample page only.
+   All arcade looks (colours, fonts, panels, buttons, CRT...) come from src/index.css
+   and src/components/arcade. Classes here are prefixed "st-". */
+
+.st-page { max-width: 1120px; margin: 0 auto; padding: 24px 16px 96px; }
+@media (min-width: 760px) { .st-page { padding: 32px 32px 120px; } }
+
+.st-section { margin-top: 56px; scroll-margin-top: 72px; }
+.st-section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+
+.st-grid-2 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+.st-grid-3 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 760px) {
+  .st-grid-2 { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .st-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+.st-body { margin: 0 0 12px; max-width: 65ch; font-size: 15px; }
+@media (min-width: 760px) { .st-body { font-size: 16px; } }
+
+.st-note {
+  border-left: var(--arcade-px) solid var(--arcade-yellow); padding: 8px 12px;
+  background: var(--arcade-panel); font-size: 14px; color: var(--arcade-muted); max-width: 72ch;
+}
+.st-note strong { color: var(--arcade-yellow); font-weight: 700; }
+
+.st-caption {
+  display: block; margin-top: 14px; text-align: center; letter-spacing: 0.04em;
+  font-family: var(--arcade-font-display); font-size: 8px; color: var(--arcade-dim);
+}
+
+.st-boot { text-align: center; padding: 40px 16px 44px; }
+.st-title {
+  --arcade-c: var(--arcade-pink);
+  font-size: 18px; color: var(--arcade-text);
+  text-shadow: 0 0 10px rgba(255, 46, 136, 0.55), 3px 3px 0 var(--arcade-pink-dark);
+}
+@media (min-width: 760px) { .st-title { font-size: 32px; } }
+
+.st-bullets { margin: 0; padding: 0; list-style: none; }
+.st-bullets li { position: relative; padding-left: 22px; margin-bottom: 10px; max-width: 65ch; }
+.st-bullets li::before { content: "▶"; position: absolute; left: 0; top: 3px; font-size: 12px; color: var(--arcade-c, var(--arcade-cyan)); }
+
+.st-kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 12px 0 0; }
+.st-kv dt { font-family: var(--arcade-font-display); font-size: 10px; color: var(--arcade-yellow); padding-top: 4px; }
+.st-kv dd { margin: 0; }
+
+.st-hotspot-stage {
+  position: relative; min-height: 340px; margin: var(--arcade-px); padding: 16px;
+  background-color: var(--arcade-panel-2);
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Sample-only switch to compare VT323 as the body font */
+body.st-body-vt323 .arcade-root { --arcade-font-body: "VT323", monospace; font-size: 22px; line-height: 1.35; }
+body.st-body-vt323 .st-body, body.st-body-vt323 .st-note { font-size: 22px; }

@@ -1,0 +1,116 @@
+import { useEffect, useState } from 'react';
+import { useArcade, BootScreen, ModeSelect, type ArcadeMode } from '../arcade';
+import { portfolioData } from '../../data/portfolioData';
+
+/**
+ * What a visitor sees before the 3D world (DESIGN.md §4, BUILD_GUIDE Part 2 step 1):
+ *   first visit:     Mode select → (Fun) boot screen with PRESS START
+ *                                 → (Recruiter) CV opens in a new tab, this tab loads the world with effects off
+ *   returning visit: a short loading bar only, then straight into the world
+ * Add ?intro to the address to see the full intro again.
+ *
+ * The 3D world loads in the background the whole time; `loadStage` reports how far it got.
+ */
+
+/** 0 = starting, 1 = 3D code downloaded, 2 = 3D scene created, 3 = first frames drawn */
+export type LoadStage = 0 | 1 | 2 | 3;
+
+const STORAGE_KEY = 'arcade-intro';
+
+function readSavedMode(): ArcadeMode | null {
+  try {
+    if (new URLSearchParams(window.location.search).has('intro')) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const mode = (JSON.parse(raw) as { mode?: string }).mode;
+    return mode === 'fun' || mode === 'recruiter' ? mode : null;
+  } catch {
+    return null; // storage blocked (private window etc.): show the full intro
+  }
+}
+
+function saveMode(mode: ArcadeMode) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode, at: Date.now() })); } catch { /* fine */ }
+}
+
+/**
+ * Turns the coarse load stages into a smooth, honest bar: it creeps toward each stage's
+ * ceiling while waiting and only reaches 100% when the world has really drawn.
+ */
+function useLoadPercent(stage: LoadStage) {
+  const [percent, setPercent] = useState(0);
+  useEffect(() => {
+    const ceiling = [60, 80, 94, 100][stage];
+    const id = window.setInterval(() => {
+      setPercent((p) => {
+        if (p >= ceiling) return p;
+        const step = stage === 3 ? 12 : Math.max(1, Math.round((ceiling - p) * 0.08));
+        return Math.min(ceiling, p + step);
+      });
+    }, 80);
+    return () => window.clearInterval(id);
+  }, [stage]);
+  return percent;
+}
+
+type Phase = 'mode' | 'boot' | 'quick' | 'done';
+
+function IntroFlow({ loadStage, onDone }: { loadStage: LoadStage; onDone: (mode: ArcadeMode) => void }) {
+  const { setCrtOn, setForceReducedMotion } = useArcade();
+  const [savedMode] = useState(readSavedMode);
+  const [mode, setMode] = useState<ArcadeMode>(savedMode ?? 'fun');
+  const [phase, setPhase] = useState<Phase>(savedMode ? 'quick' : 'mode');
+  const percent = useLoadPercent(loadStage);
+  const { profile } = portfolioData;
+
+  // Recruiter Mode = same content with CRT and animation off (DESIGN.md §4).
+  useEffect(() => {
+    setCrtOn(mode === 'fun');
+    setForceReducedMotion(mode === 'recruiter');
+  }, [mode, setCrtOn, setForceReducedMotion]);
+
+  const finish = () => { setPhase('done'); onDone(mode); };
+
+  const pick = (m: ArcadeMode) => {
+    setMode(m);
+    if (m === 'recruiter') {
+      // Full Recruiter Mode page comes in Phase 4; for now the CV opens in a new tab.
+      window.open(profile.resumeUrl, '_blank', 'noopener,noreferrer');
+      saveMode('recruiter');
+      setPhase('quick');
+    } else {
+      setPhase('boot');
+    }
+  };
+
+  if (phase === 'done') return null;
+
+  if (phase === 'mode') {
+    return (
+      <div className="arcade-intro-layer arcade-intro-modeselect">
+        <ModeSelect onPick={pick} />
+      </div>
+    );
+  }
+
+  return (
+    <BootScreen
+      variant={phase === 'quick' ? 'quick' : 'full'}
+      progress={percent}
+      name={profile.name}
+      headline={profile.title}
+      recruiterHref={profile.resumeUrl}
+      onStart={() => { saveMode(mode); finish(); }}
+    />
+  );
+}
+
+/** Must sit inside <ArcadeProvider> (App provides it for the intro and the HUD). */
+export function IntroGate(props: { loadStage: LoadStage; onDone: (mode: ArcadeMode) => void }) {
+  const [done, setDone] = useState(false);
+  if (done) return null;
+  return <IntroFlow {...props} onDone={(m) => { setDone(true); props.onDone(m); }} />;
+}

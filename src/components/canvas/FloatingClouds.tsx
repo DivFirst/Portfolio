@@ -29,19 +29,19 @@ const SingleCloud: React.FC<CloudProps> = ({ initialPos, scale, speed }) => {
     >
       <mesh position={[0, 0, 0]} castShadow>
         <sphereGeometry args={[1.2, 8, 8]} />
-        <meshStandardMaterial color="#f8fafc" roughness={0.9} transparent opacity={0.75} />
+        <meshStandardMaterial color="#3a2d6e" roughness={0.9} transparent opacity={0.55} />
       </mesh>
       <mesh position={[0.9, -0.1, 0]} castShadow>
         <sphereGeometry args={[0.9, 8, 8]} />
-        <meshStandardMaterial color="#f8fafc" roughness={0.9} transparent opacity={0.75} />
+        <meshStandardMaterial color="#3a2d6e" roughness={0.9} transparent opacity={0.55} />
       </mesh>
       <mesh position={[-0.8, -0.15, 0.2]} castShadow>
         <sphereGeometry args={[0.85, 8, 8]} />
-        <meshStandardMaterial color="#f8fafc" roughness={0.9} transparent opacity={0.75} />
+        <meshStandardMaterial color="#3a2d6e" roughness={0.9} transparent opacity={0.55} />
       </mesh>
       <mesh position={[0.2, 0.2, -0.4]} castShadow>
         <sphereGeometry args={[0.75, 8, 8]} />
-        <meshStandardMaterial color="#f8fafc" roughness={0.9} transparent opacity={0.75} />
+        <meshStandardMaterial color="#3a2d6e" roughness={0.9} transparent opacity={0.55} />
       </mesh>
     </group>
   );

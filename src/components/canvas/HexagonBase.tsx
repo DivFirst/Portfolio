@@ -3,13 +3,16 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { IslandMeta } from '../../types/portfolio';
 import { sound } from '../../utils/soundEffects';
-import { ConstructionBarricade } from './ConstructionBarricade';
+import { arcadeWorlds, accentHex } from '../../data/arcadeWorlds';
+import { NeonHexEdge } from './NeonHexEdge';
+import { WorldSign } from './WorldSign';
 
 interface HexagonBaseProps {
   meta: IslandMeta;
   isSelected: boolean;
   onSelect: (meta: IslandMeta) => void;
   children?: React.ReactNode;
+  reducedMotion?: boolean;
 }
 
 export const HexagonBase: React.FC<HexagonBaseProps> = ({
@@ -17,7 +20,10 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
   isSelected,
   onSelect,
   children,
+  reducedMotion = false,
 }) => {
+  const world = arcadeWorlds[meta.id];
+  const neon = accentHex[world.accent];
   const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
@@ -29,7 +35,7 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
-    const idleFloat = Math.sin(state.clock.elapsedTime * 1.5 + meta.index) * 0.08;
+    const idleFloat = reducedMotion ? 0 : Math.sin(state.clock.elapsedTime * 1.5 + meta.index) * 0.08;
     const targetY = isSelected ? 0.6 : (hovered ? 0.45 : 0);
     
     // Smooth dampening towards target elevation
@@ -42,7 +48,7 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
 
     // Rotate the beacon glow ring slowly
     if (ringRef.current) {
-      ringRef.current.rotation.z += delta * 0.4;
+      if (!reducedMotion) ringRef.current.rotation.z += delta * 0.4;
       const ringScale = isSelected ? 1.08 : (hovered ? 1.04 : 1.0);
       ringRef.current.scale.set(ringScale, ringScale, 1);
     }
@@ -89,11 +95,11 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
       <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 6, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[radius, radius * 0.98, height * 0.35, 6]} />
         <meshStandardMaterial
-          color={hovered || isSelected ? meta.accentColor : "#243048"}
+          color="#1c2140"
           roughness={0.65}
           metalness={0.2}
-          emissive={hovered || isSelected ? meta.accentColor : "#0a1120"}
-          emissiveIntensity={hovered || isSelected ? 0.3 : 0.05}
+          emissive={neon}
+          emissiveIntensity={isSelected ? 0.32 : hovered ? 0.22 : 0.04}
         />
       </mesh>
 
@@ -123,17 +129,24 @@ export const HexagonBase: React.FC<HexagonBaseProps> = ({
       >
         <ringGeometry args={[radius * 0.94, radius * 1.02, 6]} />
         <meshBasicMaterial
-          color={meta.accentColor}
+          color={neon}
+          toneMapped={false}
           transparent
-          opacity={isSelected ? 0.95 : (hovered ? 0.75 : 0.25)}
+          opacity={isSelected ? 0.6 : (hovered ? 0.45 : 0.15)}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* 5. Floating Interactive Props placed on top */}
+      {/* 5. Neon outline on the island edges, in the world's accent colour (DESIGN.md §2) */}
+      <group rotation={[0, Math.PI / 6, 0]}>
+        <NeonHexEdge radius={radius * 1.005} y={height * 0.175} color={neon} intensity={isSelected ? 1 : hovered ? 0.8 : 0.45} />
+        <NeonHexEdge radius={radius * 0.785} y={-height * 1.3} color={neon} thickness={0.035} intensity={isSelected ? 0.7 : 0.3} />
+      </group>
+
+      {/* 6. Props on top + the arcade sign with the world's name */}
       <group position={[0, height * 0.2, 0]}>
         {children}
-        <ConstructionBarricade yOffset={2.5} />
+        <WorldSign number={world.number} name={world.name} color={neon} reducedMotion={reducedMotion} active={hovered || isSelected} />
       </group>
     </group>
   );

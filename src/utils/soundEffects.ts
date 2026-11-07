@@ -2,7 +2,7 @@
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
-  private isMuted: boolean = false;
+  private isMuted: boolean = true; // muted by default (DESIGN.md §6); synced with the arcade 🔊 toggle
   private bgmGain: GainNode | null = null;
   private bgmInterval: number | null = null;
   private isBgmPlaying: boolean = false;
@@ -15,7 +15,7 @@ class SoundEngine {
     }
     if (!this.bgmGain && this.ctx) {
       this.bgmGain = this.ctx.createGain();
-      this.bgmGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
+      this.bgmGain.gain.setValueAtTime(1, this.ctx.currentTime);
       this.bgmGain.connect(this.ctx.destination);
     }
     if (this.ctx.state === 'suspended') {
@@ -37,10 +37,12 @@ class SoundEngine {
 
   public toggleMute(): boolean {
     this.isMuted = !this.isMuted;
-    if (this.bgmGain && this.ctx) {
-      this.bgmGain.gain.setTargetAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime, 0.08);
-    }
     return this.isMuted;
+  }
+
+  /** Sound effects on/off (music has its own toggle). */
+  public setMuted(muted: boolean) {
+    this.isMuted = muted;
   }
 
   // Soft hover blip
@@ -164,7 +166,7 @@ class SoundEngine {
     if (this.isBgmPlaying) return true;
 
     this.isBgmPlaying = true;
-    this.bgmGain.gain.setTargetAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime, 0.1);
+    this.bgmGain.gain.setTargetAtTime(1, this.ctx.currentTime, 0.1);
 
     const chords = [
       [261.63, 329.63, 392.00, 493.88], // Cmaj7 (C4, E4, G4, B4)
@@ -175,7 +177,7 @@ class SoundEngine {
     let chordIdx = 0;
 
     const playChord = () => {
-      if (!this.ctx || !this.bgmGain || this.isMuted || !this.isBgmPlaying) return;
+      if (!this.ctx || !this.bgmGain || !this.isBgmPlaying) return;
       const currentChord = chords[chordIdx % chords.length];
       chordIdx++;
 

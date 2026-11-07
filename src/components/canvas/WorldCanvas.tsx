@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Stars, Sparkles } from '@react-three/drei';
+import { OrbitControls, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
 import { IslandMeta } from '../../types/portfolio';
@@ -14,12 +14,32 @@ import { ProjectsIsland } from './islands/ProjectsIsland';
 import { HobbyIsland } from './islands/HobbyIsland';
 import { BookstagramIsland } from './islands/BookstagramIsland';
 import { TravelIsland } from './islands/TravelIsland';
+import { RetroSky, SKY_COLOR } from './RetroSky';
+import { useReducedMotion } from '../arcade';
 
 interface WorldCanvasProps {
   selectedIsland: IslandMeta | null;
   onSelectIsland: (island: IslandMeta | null) => void;
   resetKey?: number;
+  /** Loading milestones for the boot screen: 'created' = WebGL scene set up, 'ready' = first frames drawn */
+  onLoadStage?: (stage: 'created' | 'ready') => void;
 }
+
+// Tells the boot screen the world is ready once a few real frames have been drawn
+// (shaders compiled, shadows built), so PRESS START never reveals a half-drawn scene.
+const FirstFramesWatcher: React.FC<{ onReady?: () => void }> = ({ onReady }) => {
+  const frames = useRef(0);
+  const done = useRef(false);
+  useFrame(() => {
+    if (done.current) return;
+    frames.current += 1;
+    if (frames.current >= 3) {
+      done.current = true;
+      onReady?.();
+    }
+  });
+  return null;
+};
 
 const DEFAULT_CAMERA_POS: [number, number, number] = [22, 26, 22];
 const DEFAULT_TARGET: [number, number, number] = [0, 0, 0];
@@ -87,7 +107,10 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
   selectedIsland,
   onSelectIsland,
   resetKey = 0,
+  onLoadStage,
 }) => {
+  // Device "reduce motion" setting or Recruiter Mode: stop idle animations in the world.
+  const reducedMotion = useReducedMotion();
   const controlsRef = useRef<OrbitControlsType | null>(null);
   const isTransitioningRef = useRef(false);
 
@@ -108,10 +131,14 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           near: 0.1,
           far: 200,
         }}
+        // cap pixel density: crisp on retina laptops without rendering 4x the pixels
+        dpr={[1, 1.5]}
         gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping }}
+        onCreated={() => onLoadStage?.('created')}
       >
-        <color attach="background" args={["#070a13"]} />
-        <fog attach="fog" args={["#070a13", 25, 75]} />
+        <FirstFramesWatcher onReady={() => onLoadStage?.('ready')} />
+        <color attach="background" args={[SKY_COLOR]} />
+        <fog attach="fog" args={[SKY_COLOR, 30, 85]} />
 
         {/* Ambient & Directional Lighting */}
         <ambientLight intensity={0.65} color="#e0e7ff" />
@@ -134,8 +161,9 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
 
         {/* Floating Clouds & Atmosphere */}
         <FloatingClouds />
-        <Stars radius={60} depth={30} count={1200} factor={4} saturation={0.5} fade speed={1} />
-        <Sparkles count={90} scale={35} size={2.5} speed={0.4} opacity={0.4} color="#818cf8" />
+        {/* Retro sky: pixel stars + synthwave grid floor */}
+        <RetroSky reducedMotion={reducedMotion} />
+        <Sparkles count={60} scale={35} size={2.5} speed={reducedMotion ? 0 : 0.4} opacity={0.35} color="#9d4dff" />
 
         {/* Central Flying Rocket (Navigates to selected island) */}
         <FlyingRocket
@@ -148,6 +176,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           meta={islands.life}
           isSelected={selectedIsland?.id === 'life'}
           onSelect={onSelectIsland}
+          reducedMotion={reducedMotion}
         />
 
         {/* 2. Professional */}
@@ -155,6 +184,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           meta={islands.professional}
           isSelected={selectedIsland?.id === 'professional'}
           onSelect={onSelectIsland}
+          reducedMotion={reducedMotion}
         >
           <ProfessionalIsland />
         </HexagonBase>
@@ -164,6 +194,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           meta={islands.projects}
           isSelected={selectedIsland?.id === 'projects'}
           onSelect={onSelectIsland}
+          reducedMotion={reducedMotion}
         >
           <ProjectsIsland />
         </HexagonBase>
@@ -173,6 +204,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           meta={islands.hobby}
           isSelected={selectedIsland?.id === 'hobby'}
           onSelect={onSelectIsland}
+          reducedMotion={reducedMotion}
         >
           <HobbyIsland />
         </HexagonBase>
@@ -182,6 +214,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           meta={islands.bookstagram}
           isSelected={selectedIsland?.id === 'bookstagram'}
           onSelect={onSelectIsland}
+          reducedMotion={reducedMotion}
         >
           <BookstagramIsland />
         </HexagonBase>
@@ -191,6 +224,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           meta={islands.travel}
           isSelected={selectedIsland?.id === 'travel'}
           onSelect={onSelectIsland}
+          reducedMotion={reducedMotion}
         >
           <TravelIsland />
         </HexagonBase>

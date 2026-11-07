@@ -61,7 +61,7 @@ export const IslandDossierModal: React.FC<IslandDossierModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-40 w-full max-w-xl p-4 sm:p-6 flex flex-col pointer-events-none animate-in slide-in-from-right duration-300">
+    <div className="fixed top-[72px] bottom-[200px] lg:bottom-[130px] right-0 z-20 w-full max-w-xl p-4 sm:p-6 flex flex-col pointer-events-none animate-in slide-in-from-right duration-300">
       <div className="w-full h-full glass-panel rounded-3xl overflow-hidden flex flex-col pointer-events-auto border border-white/15 shadow-2xl relative">
         {/* Top Header */}
         <div

@@ -1,21 +1,27 @@
 import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Sparkles } from '@react-three/drei';
+import { Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import { IslandMeta } from '../../../types/portfolio';
 import { sound } from '../../../utils/soundEffects';
+import { arcadeWorlds, accentHex } from '../../../data/arcadeWorlds';
+import { WorldSign } from '../WorldSign';
 
 interface FlyingBookIslandProps {
   meta: IslandMeta;
   isSelected: boolean;
   onSelect: (meta: IslandMeta) => void;
+  reducedMotion?: boolean;
 }
 
 export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
   meta,
   isSelected,
   onSelect,
+  reducedMotion = false,
 }) => {
+  const world = arcadeWorlds[meta.id];
+  const neon = accentHex[world.accent];
   const rootGroupRef = useRef<THREE.Group>(null);
   const bookGroupRef = useRef<THREE.Group>(null);
   const leftWingRef = useRef<THREE.Group>(null);
@@ -132,9 +138,10 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
       >
         <ringGeometry args={[2.8, 3.4, 32]} />
         <meshBasicMaterial
-          color={meta.accentColor}
+          color={neon}
+          toneMapped={false}
           transparent
-          opacity={isSelected ? 0.85 : (hovered ? 0.65 : 0.28)}
+          opacity={isSelected ? 0.85 : (hovered ? 0.65 : 0.35)}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -558,84 +565,10 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
           color="#fffbeb"
         />
 
-        {/* ======================================================== */}
-        {/* 8. 3D TEXT OVER THE BOOK: "My Life"                      */}
-        {/* ======================================================== */}
-        {/* Pure Floating 3D Text with Golden Extrusion & Glow       */}
-        <group position={[0, bookHeight * 0.5 + 1.2, 0]} rotation={[-0.18, 0, 0]}>
-          {/* Decorative Golden Filigree Underbar */}
-          <group position={[0, -0.38, 0]}>
-            <mesh>
-              <boxGeometry args={[2.4, 0.04, 0.04]} />
-              <meshStandardMaterial
-                color="#f59e0b"
-                metalness={0.9}
-                roughness={0.2}
-                emissive="#b45309"
-                emissiveIntensity={0.5}
-              />
-            </mesh>
-            {/* Center diamond ornament */}
-            <mesh rotation={[0, 0, Math.PI / 4]}>
-              <boxGeometry args={[0.18, 0.18, 0.06]} />
-              <meshStandardMaterial
-                color="#fef08a"
-                metalness={0.95}
-                roughness={0.15}
-                emissive="#f59e0b"
-                emissiveIntensity={0.7}
-              />
-            </mesh>
-          </group>
-
-          {/* Deep Shadow Extrusion Layer */}
-          <Text
-            position={[0, 0, -0.06]}
-            fontSize={0.68}
-            color="#451a03"
-            anchorX="center"
-            anchorY="middle"
-          >
-            My Life
-          </Text>
-
-          {/* Mid Extrusion Bronze/Gold Layer */}
-          <Text
-            position={[0, 0, -0.03]}
-            fontSize={0.68}
-            color="#b45309"
-            anchorX="center"
-            anchorY="middle"
-          >
-            My Life
-          </Text>
-
-          {/* Front Bright 3D Golden Text */}
-          <Text
-            position={[0, 0, 0]}
-            fontSize={0.68}
-            color={hovered || isSelected ? "#ffffff" : "#fef3c7"}
-            anchorX="center"
-            anchorY="middle"
-            outlineWidth={0.035}
-            outlineColor="#92400e"
-          >
-            My Life
-          </Text>
-
-          {/* Subtitle Tag */}
-          <Text
-            position={[0, -0.56, 0.01]}
-            fontSize={0.19}
-            color="#fbbf24"
-            anchorX="center"
-            anchorY="middle"
-            letterSpacing={0.18}
-          >
-            JOURNEY & ROOTS
-          </Text>
-        </group>
       </group>
+
+      {/* Arcade sign with the world's name (replaces the old "My Life" title) */}
+      <WorldSign number={world.number} name={world.name} color={neon} y={3.0} reducedMotion={reducedMotion} active={hovered || isSelected} />
 
       {/* Radiant Completion Aura for Active Island */}
       <Sparkles
