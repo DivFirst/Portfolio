@@ -55,14 +55,16 @@ export const RideController: React.FC<RideControllerProps> = ({ ride, origin, go
       t = reducedMotion ? (x - a < 0.5 ? 0 : 1) : smooth(x - a);
     }
     const [ox, oy, oz] = origin;
-    const ca = chapters[a].camera;
-    const cb = chapters[b].camera;
+    // Tall, narrow screens (phones): use the ride's own phone cameras when every chapter has one
+    const aspect = size.width / size.height;
+    const phoneCams = aspect < 1 && chapters.every((c) => c.cameraPortrait);
+    const ca = (phoneCams && chapters[a].cameraPortrait) || chapters[a].camera;
+    const cb = (phoneCams && chapters[b].cameraPortrait) || chapters[b].camera;
     goal.position.copy(tmpA.set(...ca.position)).lerp(tmpB.set(...cb.position), t).add(tmpA.set(ox, oy, oz));
     goal.target.copy(tmpA.set(...ca.target)).lerp(tmpB.set(...cb.target), t).add(tmpA.set(ox, oy, oz));
 
-    // Tall, narrow screens (phones) see less side-to-side: pull the camera back so the shot still fits.
-    const aspect = size.width / size.height;
-    if (aspect < 1) {
+    // Otherwise phones see less side-to-side: pull the camera back so the shot still fits.
+    if (aspect < 1 && !phoneCams) {
       const pull = Math.min(1.8, Math.sqrt(1 / aspect)) * (ride.portrait?.pull ?? 1);
       goal.position.sub(goal.target).multiplyScalar(pull).add(goal.target);
       if (ride.portrait?.shift) {

@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { accentClass, useReducedMotion, type Accent } from '../arcade';
-import type { RideMetric, WorldRide } from '../../data/worldRides';
+import { formatMetric, type WorldRide } from '../../data/worldRides';
 import { getRideProgress, useRidePercent } from './rideStore';
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const smooth = (t: number) => t * t * (3 - 2 * t);
-const fmt = (m: RideMetric, v: number) => `${m.prefix ?? ''}${v.toFixed(m.decimals ?? 0)}${m.suffix ?? ''}`;
+const fmt = formatMetric;
 
 /**
  * The ride's "floor screen": a solid pixel panel beside the 3D scene showing the current

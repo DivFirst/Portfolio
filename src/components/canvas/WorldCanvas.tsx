@@ -189,6 +189,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           onSelect={onSelectIsland}
           reducedMotion={reducedMotion}
           hideSign={!!ride}
+          rideActive={ride?.islandId === 'life'}
         />
 
         {/* 2. Professional */}

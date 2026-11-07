@@ -13,7 +13,9 @@ function InfoBoxBody({ hotspot }: { hotspot: RideHotspot }) {
       {lines.map((l, i) => <p key={i}>{l}</p>)}
       {link && (
         <p className="mt-3">
-          <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+          {link.href.startsWith('#')
+            ? <a href={link.href}>{link.label}</a> /* another world on this site: same tab */
+            : <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>}
         </p>
       )}
     </div>

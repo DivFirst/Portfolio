@@ -6,6 +6,9 @@ import { IslandMeta } from '../../../types/portfolio';
 import { sound } from '../../../utils/soundEffects';
 import { arcadeWorlds, accentHex } from '../../../data/arcadeWorlds';
 import { WorldSign } from '../WorldSign';
+import { getRideProgress } from '../../world/rideStore';
+import { OriginBookRide } from './origin/OriginBookRide';
+import { clamp01, originStateAt, smooth } from './origin/originRide';
 
 interface FlyingBookIslandProps {
   meta: IslandMeta;
@@ -13,7 +16,12 @@ interface FlyingBookIslandProps {
   onSelect: (meta: IslandMeta) => void;
   reducedMotion?: boolean;
   hideSign?: boolean;
+  /** World 1 ride is on: scrolling lands the book, opens it and plays the map */
+  rideActive?: boolean;
 }
+
+/** How high the ride origin sits above the island (WorldCanvas SELECTED_LIFT) */
+const RIDE_LIFT = 0.6;
 
 export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
   meta,
@@ -21,6 +29,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
   onSelect,
   reducedMotion = false,
   hideSign = false,
+  rideActive = false,
 }) => {
   const world = arcadeWorlds[meta.id];
   const neon = accentHex[world.accent];
@@ -30,30 +39,43 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
   const rightWingRef = useRef<THREE.Group>(null);
   const runeRingRef = useRef<THREE.Mesh>(null);
   const ribbonRef = useRef<THREE.Group>(null);
+  const coverPivotRef = useRef<THREE.Group>(null);
+  const stackRef = useRef<THREE.Group>(null);
+  const leftPageMat = useRef<THREE.MeshStandardMaterial>(null);
+  const readingLightRef = useRef<THREE.PointLight>(null);
+  const spineRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 
   // Flight physics & wing flapping
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
+    const ride = rideActive ? originStateAt(getRideProgress(), reducedMotion) : null;
+    const flying = ride ? 1 - ride.land : 1;
 
     if (rootGroupRef.current) {
       // Gentle floating levitation
-      const idleFloat = Math.sin(t * 1.6) * 0.22;
+      const idleFloat = reducedMotion ? 0 : Math.sin(t * 1.6) * 0.22;
       const targetY = isSelected ? 1.0 : (hovered ? 0.65 : 0);
+      // In the ride the book follows the scroll: it hovers, then lands exactly on the ride origin
+      // (hotspots are pinned there), with no idle bobbing once it's down.
+      const goalY = ride
+        ? meta.coordinates[1] + RIDE_LIFT + (1 - ride.land) * (0.4 + idleFloat)
+        : meta.coordinates[1] + targetY + idleFloat;
 
       rootGroupRef.current.position.y = THREE.MathUtils.damp(
         rootGroupRef.current.position.y,
-        meta.coordinates[1] + targetY + idleFloat,
-        5,
+        goalY,
+        ride ? 10 : 5,
         delta
       );
     }
 
     if (bookGroupRef.current) {
       // Atmospheric banking & gentle aerodynamic rocking
-      const targetRoll = Math.sin(t * 1.3) * 0.06 + (hovered ? 0.04 : 0);
-      const targetPitch = Math.cos(t * 1.1) * 0.05 + (isSelected ? 0.1 : 0);
-      const targetYaw = Math.sin(t * 0.8) * 0.05;
+      // Flying: gently rocking. Landed (ride): flat, so the pages lie level.
+      const targetRoll = (Math.sin(t * 1.3) * 0.06 + (hovered ? 0.04 : 0)) * flying;
+      const targetPitch = (Math.cos(t * 1.1) * 0.05 + (isSelected ? 0.1 : 0)) * flying;
+      const targetYaw = Math.sin(t * 0.8) * 0.05 * flying;
 
       bookGroupRef.current.rotation.z = THREE.MathUtils.damp(
         bookGroupRef.current.rotation.z,
@@ -86,6 +108,29 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
       rightWingRef.current.rotation.z = 0.15 + flap;
       rightWingRef.current.rotation.y = -Math.cos(t * wingSpeed) * 0.1;
     }
+    // Landing: the wings tuck away
+    const wing = ride ? 1 - smooth(clamp01(ride.land / 0.7)) : 1;
+    [leftWingRef.current, rightWingRef.current].forEach((w) => {
+      if (!w) return;
+      w.scale.setScalar(Math.max(0.0001, wing));
+      w.visible = wing > 0.01;
+    });
+
+    // Opening: the front cover swings over on the spine and settles flat on the left,
+    // carrying the left half of the pages with it.
+    const open = ride ? ride.open : 0;
+    if (coverPivotRef.current) {
+      coverPivotRef.current.rotation.z = Math.PI * smooth(clamp01(open * 1.25));
+      coverPivotRef.current.position.y = bookHeight * 0.5 - bookHeight * smooth(clamp01((open - 0.45) / 0.45));
+    }
+    if (stackRef.current) {
+      const h = clamp01((open - 0.5) / 0.4);
+      stackRef.current.scale.y = Math.max(0.0001, h);
+      stackRef.current.visible = h > 0.001;
+    }
+    if (readingLightRef.current) readingLightRef.current.intensity = open * 1.6;
+    // the spine sinks into the gutter once the book lies open
+    if (spineRef.current) spineRef.current.scale.y = 1 - 0.2 * smooth(clamp01((open - 0.6) / 0.4));
 
     // Gently swaying ribbon bookmark
     if (ribbonRef.current) {
@@ -174,7 +219,21 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
         {/* ======================================================== */}
         {/* 1. FRONT COVER (Top Leather Board)                       */}
         {/* ======================================================== */}
-        <group position={[0, bookHeight * 0.5, 0]}>
+        {/* Hinged on the spine (x = -bookWidth/2) so the ride can open it */}
+        <group ref={coverPivotRef} position={[-bookWidth * 0.5, bookHeight * 0.5, 0]}>
+        {/* Left half of the pages: grows under the cover as it opens (hidden while closed) */}
+        <group ref={stackRef} position={[bookWidth * 0.5 + 0.1, 0, 0]} visible={false}>
+          <mesh position={[0, -(bookHeight - 0.08) * 0.5, 0]} receiveShadow>
+            <boxGeometry args={[bookWidth - 0.35, bookHeight - 0.08, bookLength - 0.3]} />
+            <meshStandardMaterial color="#fef3c7" roughness={0.88} metalness={0.05} />
+          </mesh>
+          {/* the chapter page (faces up once the cover is open); OriginBookRide sets its picture */}
+          <mesh position={[0, -(bookHeight - 0.08) - 0.003, 0]} rotation={[Math.PI / 2, 0, Math.PI]}>
+            <planeGeometry args={[bookWidth - 0.35, bookLength - 0.3]} />
+            <meshStandardMaterial ref={leftPageMat} color="#fef3c7" roughness={0.9} />
+          </mesh>
+        </group>
+        <group position={[bookWidth * 0.5, 0, 0]}>
           {/* Main Leather Slab */}
           <mesh castShadow receiveShadow position={[0, 0.05, 0]}>
             <boxGeometry args={[bookWidth, 0.1, bookLength]} />
@@ -297,6 +356,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
             </mesh>
           </group>
         </group>
+        </group>
 
         {/* ======================================================== */}
         {/* 2. BACK COVER (Bottom Leather Board)                     */}
@@ -344,7 +404,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
 
           {/* Gilded Edge Shading (Front Opening, Top & Bottom Edges) */}
           {/* Right Edge (Fore-edge) */}
-          <mesh position={[(bookWidth - 0.35) * 0.5 + 0.005, 0, 0]}>
+          <mesh position={[(bookWidth - 0.35) * 0.5 + 0.005, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
             <planeGeometry args={[bookLength - 0.3, bookHeight - 0.16]} />
             <meshStandardMaterial
               color="#eab308"
@@ -355,7 +415,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
           {/* Top Edge */}
           <mesh
             position={[0, 0, -(bookLength - 0.3) * 0.5 - 0.005]}
-            rotation={[0, Math.PI / 2, 0]}
+            rotation={[0, Math.PI, 0]}
           >
             <planeGeometry args={[bookWidth - 0.35, bookHeight - 0.16]} />
             <meshStandardMaterial
@@ -367,7 +427,6 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
           {/* Bottom Edge */}
           <mesh
             position={[0, 0, (bookLength - 0.3) * 0.5 + 0.005]}
-            rotation={[0, -Math.PI / 2, 0]}
           >
             <planeGeometry args={[bookWidth - 0.35, bookHeight - 0.16]} />
             <meshStandardMaterial
@@ -381,7 +440,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
         {/* ======================================================== */}
         {/* 4. LEATHER SPINE & RAISED BINDING BANDS                 */}
         {/* ======================================================== */}
-        <group position={[-bookWidth * 0.5, 0, 0]}>
+        <group ref={spineRef} position={[-bookWidth * 0.5, 0, 0]}>
           {/* Spine Curved Arch */}
           <mesh position={[-0.05, 0, 0]} rotation={[0, 0, 0]}>
             <boxGeometry args={[0.25, bookHeight + 0.04, bookLength]} />
@@ -557,6 +616,11 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
             />
           </mesh>
         </group>
+
+        {/* World 1 ride: map, train and turning page on the open book */}
+        {rideActive && <OriginBookRide reducedMotion={reducedMotion} leftPageMaterial={leftPageMat} />}
+        {/* Reading light over the open pages (off while closed) */}
+        <pointLight ref={readingLightRef} position={[-1.8, 4.2, 1.6]} intensity={0} distance={10} color="#fff7e0" />
 
         {/* Dedicated Cover Illumination Spot */}
         <pointLight
