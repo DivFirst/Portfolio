@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import {
   TRAVEL_MAP, TRAVEL_ROUTE, TRAVEL_STAMPS, TRAVEL_STAMP_SIZE, travelStateAt,
-} from '../../../../data/worldRides';
+} from '../../../../data/rides/explorer';
 import { getRideProgress } from '../../../world/rideStore';
 import { useTravelTextures } from './travelTextures';
 

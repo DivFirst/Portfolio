@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import confetti from 'canvas-confetti';
 import { ArcadeButton, ArcadeModal, Badge, BlinkingText, useArcade } from '../arcade';
 import { achievementTrophies, caseCompetitionTrophies } from '../../data/trophies';
 import { portfolioData } from '../../data/portfolioData';
@@ -141,8 +140,11 @@ export function KonamiCelebration({ open, onClose }: { open: boolean; onClose: (
     play('stageClear');
     if (!reducedMotion) {
       const colors = ['#ff2e88', '#00f0ff', '#ffe600', '#39ff14', '#9d4dff'];
-      confetti({ particleCount: 90, spread: 75, origin: { x: 0.2, y: 0.7 }, colors, shapes: ['square'], zIndex: 120, disableForReducedMotion: true });
-      confetti({ particleCount: 90, spread: 75, origin: { x: 0.8, y: 0.7 }, colors, shapes: ['square'], zIndex: 120, disableForReducedMotion: true });
+      // the confetti library is only downloaded the first time the cheat code is entered
+      import('canvas-confetti').then(({ default: confetti }) => {
+        confetti({ particleCount: 90, spread: 75, origin: { x: 0.2, y: 0.7 }, colors, shapes: ['square'], zIndex: 120, disableForReducedMotion: true });
+        confetti({ particleCount: 90, spread: 75, origin: { x: 0.8, y: 0.7 }, colors, shapes: ['square'], zIndex: 120, disableForReducedMotion: true });
+      }).catch(() => { /* no confetti offline: the fun fact still shows */ });
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 

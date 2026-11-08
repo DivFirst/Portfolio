@@ -14,6 +14,8 @@ export interface ProfileData {
   location: string;
   status: string;
   avatarUrl: string;
+  /** Same photo as WebP (smaller); browsers that can't show WebP use avatarUrl */
+  avatarWebpUrl?: string;
   resumeUrl: string;
   socials: SocialLink[];
 }

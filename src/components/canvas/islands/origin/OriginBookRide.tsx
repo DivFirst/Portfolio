@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Line2 } from 'three-stdlib';
-import { ORIGIN_PAGE_Y, ORIGIN_STOPS, mapPoint } from '../../../../data/worldRides';
+import { ORIGIN_PAGE_Y, ORIGIN_STOPS, mapPoint } from '../../../../data/rides/origin';
 import { getRideProgress } from '../../../world/rideStore';
 import {
   arcForStop,

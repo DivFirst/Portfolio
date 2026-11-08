@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
-import { LIBRARY_BOOKS, ratingText, type LibraryBookInfo } from '../../../../data/worldRides';
+import { LIBRARY_BOOKS, ratingText, type LibraryBookInfo } from '../../../../data/rides/libraryLayout';
 
 /**
  * Canvas textures for World 5: the two inside pages of every book

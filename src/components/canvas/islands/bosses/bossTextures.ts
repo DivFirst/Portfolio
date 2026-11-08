@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
-import { BOSSES } from '../../../../data/worldRides';
+import { BOSSES } from '../../../../data/rides/bosses';
 
 /**
  * Canvas textures for World 3: boss name tags, DEFEATED / CLEARED + LOOT banners,

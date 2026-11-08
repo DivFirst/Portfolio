@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { travelStateAt } from '../../../data/worldRides';
 import { getRideProgress } from '../../world/rideStore';
-import { MapRide, routePoint, routeTangent } from './travel/MapRide';
+import { rideKit } from '../../world/rideKits';
 
 interface TravelIslandProps {
   /** true while the visitor is inside WORLD 6 (Map Explorer): the scroll ride flies the plane */
@@ -23,6 +22,7 @@ export const TravelIsland: React.FC<TravelIslandProps> = ({ rideActive = false, 
 
     // In the ride the paper plane flies the route with the scroll (nose = -x)
     if (planeRef.current && rideActive) {
+      const { travelStateAt, routePoint, routeTangent } = rideKit('travel');
       const s = travelStateAt(getRideProgress(), reducedMotion);
       const p = planeRef.current;
       routePoint(s.route, p.position);
@@ -194,7 +194,13 @@ export const TravelIsland: React.FC<TravelIslandProps> = ({ rideActive = false, 
         </mesh>
       </group>
 
-      {rideActive && <MapRide reducedMotion={reducedMotion} />}
+      {rideActive && <RideOnly reducedMotion={reducedMotion} />}
     </group>
   );
+};
+
+/** The map, route and passport stamps (World 6 ride kit, downloaded on entry) */
+const RideOnly: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion }) => {
+  const { MapRide } = rideKit('travel');
+  return <MapRide reducedMotion={reducedMotion} />;
 };

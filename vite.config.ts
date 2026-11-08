@@ -42,23 +42,25 @@ export default defineConfig({
   plugins: [
     react(),
     siteMeta(),
-    // TEMPORARY (Phase 2.1): dev-only redirect so /style-test opens the design sample page.
-    {
-      name: 'style-test-redirect',
-      apply: 'serve',
-      configureServer(server) {
-        server.middlewares.use((req, res, next) => {
-          if ((req as { url?: string }).url === '/style-test') {
-            res.statusCode = 302
-            res.setHeader('Location', '/style-test/')
-            res.end()
-            return
-          }
-          next()
-        })
+  ],
+  build: {
+    rollupOptions: {
+      output: {
+        // The 3D engine gets its own files with stable names: they only change when the library
+        // is upgraded, so returning visitors keep them cached across site updates.
+        // (drei / three-stdlib stay with the code that uses them, so World 1's line helper
+        // only downloads with World 1.)
+        manualChunks(id) {
+          // The small helpers every library shares go with React, so the first download never pulls in a 3D file
+          if (/commonjsHelpers/.test(id)) return 'vendor-react'
+          if (/node_modules[\\/]three[\\/]/.test(id)) return 'vendor-three'
+          if (/node_modules[\\/](@react-three[\\/]fiber|react-reconciler|zustand|its-fine|suspend-react|react-use-measure)[\\/]/.test(id)) return 'vendor-r3f'
+          // (after the 3D rules, so react-reconciler's own copy of scheduler stays with the 3D files)
+          if (/node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return 'vendor-react'
+        },
       },
     },
-  ],
+  },
   server: {
     port: 3000,
     open: false
