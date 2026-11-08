@@ -3,8 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import { Grid } from '@react-three/drei';
 import * as THREE from 'three';
 
-/** Background colour of the 3D world (darker than the UI's #0b0b1a so panels stand out). */
-export const SKY_COLOR = '#05050f';
 
 const STAR_COLORS = ['#e8e8f5', '#e8e8f5', '#e8e8f5', '#00f0ff', '#ff2e88', '#ffe600'];
 

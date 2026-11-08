@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
-import { ORIGIN_PAGES, ORIGIN_STOPS, type OriginPage } from '../../../../data/worldRides';
+import { ORIGIN_PAGES, ORIGIN_STOPS, type OriginPage } from '../../../../data/rides/origin';
 
 /**
  * Canvas textures for World 1: the chapter pages and the city labels on the map.

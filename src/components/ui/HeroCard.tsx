@@ -40,12 +40,15 @@ export const HeroCard: React.FC<HeroCardProps> = ({ isIslandFocused }) => {
 
   const photo = (size: string) =>
     !imageError ? (
-      <img
-        src={profile.avatarUrl}
-        alt=""
-        onError={() => setImageError(true)}
-        className={`${size} object-cover bg-arcade-panel-2`}
-      />
+      <picture className="contents">
+        {profile.avatarWebpUrl && <source srcSet={profile.avatarWebpUrl} type="image/webp" />}
+        <img
+          src={profile.avatarUrl}
+          alt=""
+          onError={() => setImageError(true)}
+          className={`${size} object-cover bg-arcade-panel-2`}
+        />
+      </picture>
     ) : (
       <span className={`${size} grid place-items-center bg-arcade-panel-2 font-pixel text-[10px] text-arcade-text`}>DG</span>
     );

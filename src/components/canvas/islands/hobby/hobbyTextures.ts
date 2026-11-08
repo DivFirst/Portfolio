@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
-import { QUEST_SCENES, QUEST_STRIP } from '../../../../data/worldRides';
+import { QUEST_SCENES, QUEST_STRIP } from '../../../../data/rides/quests';
 
 /**
  * Pixel-art canvas textures for World 4 (Side Quests): the side-scroller strip

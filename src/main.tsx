@@ -42,6 +42,8 @@ if (path === '/cv') {
     // Returning visitor who picked Recruiter Mode last time (?play / ?intro = they asked for the game).
     goToCv();
   } else {
+    // The boot screen code is small and loads first; App starts the big 3D download as soon as it
+    // mounts. (Starting both at once made them share the connection and delayed the first screen.)
     import('./App').then(({ App }) => {
       root.render(<React.StrictMode><App lowEndDevice={device.lowEnd} /></React.StrictMode>);
     });

@@ -77,17 +77,19 @@ Portfolio/
     ├── types/
     │   └── portfolio.ts                 # Full TypeScript definitions for islands, milestones, books, etc.
     ├── data/
-    │   └── portfolioData.ts             # Central typed configuration file for all user data & content
+    │   ├── portfolioCore.ts             # Name, headline and the 6 islands (what the boot screen needs)
+    │   ├── portfolioData.ts             # Central typed configuration file for all user data & content
+    │   ├── worldRides.ts                # World web addresses + loadRide(); each ride lives in rides/<world>.ts
+    │   └── rides/                       # One scroll-ride script per world, downloaded when that world opens
     ├── utils/
     │   └── soundEffects.ts              # Web Audio procedural synthesizer (SFX + ambient music)
     ├── components/
     │   ├── canvas/
     │   │   ├── WorldCanvas.tsx          # R3F Canvas, lighting, fog, stars, camera lerper, OrbitControls
     │   │   ├── HexagonBase.tsx          # Reusable 3D hexagonal base with stone strata, turf, and hover glow
-    │   │   ├── CentralBeacon.tsx        # Floating celestial nexus crystal with concentric gyro rings
     │   │   ├── FloatingClouds.tsx       # Low-poly procedural drifting sky clouds
     │   │   └── islands/                 # The 6 custom 3D low-poly themed diorama components:
-    │   │       ├── MyLifeIsland.tsx     # Cozy wooden cabin, chimney smoke puffs, Memory Tree with fireflies, bench
+    │   │       ├── FlyingBookIsland.tsx # World 1: the winged book (replaced the old MyLifeIsland cabin)
     │   │       ├── ProfessionalIsland.tsx # Glass office skyscraper, workstation, dual monitors, server rack LEDs
     │   │       ├── ProjectsIsland.tsx   # Rocket on launchpad gantry, holographic core crystal, satellite dish
     │   │       ├── HobbyIsland.tsx      # Retro CRT arcade machine, artist's easel & canvas, acoustic guitar, camera

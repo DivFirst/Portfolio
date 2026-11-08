@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { IslandId } from '../../types/portfolio';
-import { rideForSlug, worldRides } from '../../data/worldRides';
+import { worldForSlug, worldSlugs } from '../../data/worldRides';
 
 /**
  * The web address decides which world is open: site.com/#career = World 2.
@@ -10,7 +10,7 @@ import { rideForSlug, worldRides } from '../../data/worldRides';
  *   it swaps the address for the plain map instead of leaving the site.
  */
 
-const readWorld = (): IslandId | null => rideForSlug(window.location.hash)?.islandId ?? null;
+const readWorld = (): IslandId | null => worldForSlug(window.location.hash);
 const base = () => window.location.pathname + window.location.search;
 
 export function useWorldRoute() {
@@ -27,7 +27,7 @@ export function useWorldRoute() {
   }, []);
 
   const enterWorld = useCallback((id: IslandId) => {
-    const url = `${base()}#${worldRides[id].slug}`;
+    const url = `${base()}#${worldSlugs[id]}`;
     if (readWorld() === id) return;
     if (readWorld()) {
       const fromMap = (history.state as { fromMap?: boolean } | null)?.fromMap ?? false;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useArcade, BootScreen, ModeSelect, type ArcadeMode } from '../arcade';
-import { portfolioData } from '../../data/portfolioData';
+import { portfolioCore } from '../../data/portfolioCore';
 import { sound } from '../../utils/soundEffects';
 
 /**
@@ -67,7 +67,7 @@ function IntroFlow({ loadStage, onDone, skipModeSelect = false }: { loadStage: L
   // Opened on a world link (site.com/#career): skip the mode question, go straight to the boot screen.
   const [phase, setPhase] = useState<Phase>(savedMode ? 'quick' : skipModeSelect ? 'boot' : 'mode');
   const percent = useLoadPercent(loadStage);
-  const { profile } = portfolioData;
+  const { profile } = portfolioCore;
 
   // Recruiter Mode = same content with CRT and animation off (DESIGN.md §4).
   useEffect(() => {

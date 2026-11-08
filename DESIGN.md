@@ -2,7 +2,7 @@
 
 The single source of truth for how the site looks, sounds and moves.
 Concept and flow live in `BUILD_GUIDE.md` Part 2; this file is the rulebook for building it.
-Live sample of every piece: run `npm run dev` and open **http://localhost:3000/style-test/**.
+The components live in `src/components/arcade/` (the temporary `/style-test` sample page was removed once the real site used them).
 
 **One-line brief:** an 80s/90s arcade cabinet that a recruiter can still read in 2 seconds.
 When style and readability disagree, **readability wins**.
@@ -299,4 +299,3 @@ import { ArcadeProvider, HudBar, CRTOverlay, PixelPanel, ArcadeButton } from './
 | `CRTOverlay`, `SoundToggle` | Scanlines; sound switch |
 
 Every component takes an `accent` (`pink` · `cyan` · `yellow` · `green` · `purple`) where colour applies.
-The live check page is `/style-test` (temporary; delete `style-test/` and the redirect in `vite.config.ts`/`.js` when the real site is done).

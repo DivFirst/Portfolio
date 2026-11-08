@@ -1,28 +1,26 @@
 import { useState, useEffect, useRef, lazy, Suspense, useCallback, Component, type ReactNode } from 'react';
 import { IslandMeta } from './types/portfolio';
-import { portfolioData } from './data/portfolioData';
-import { arcadeWorlds } from './data/arcadeWorlds';
-import { worldRides } from './data/worldRides';
-import { Navbar } from './components/ui/Navbar';
-import { HeroCard } from './components/ui/HeroCard';
-import { IslandDock } from './components/ui/IslandDock';
+import { portfolioCore } from './data/portfolioCore';
 import { IntroGate, type LoadStage } from './components/ui/IntroGate';
-import { ArcadeProvider, CRTOverlay } from './components/arcade';
+import { ArcadeProvider } from './components/arcade/ArcadeProvider';
 import { useWorldRoute } from './components/world/useWorldRoute';
-import { WorldHud } from './components/world/WorldHud';
-import { HotspotLayer } from './components/world/HotspotLayer';
-import { RideScreenPanel } from './components/world/RideScreenPanel';
+import { useWorldRide } from './components/world/rideKits';
 import { resetRide } from './components/world/rideStore';
 import { sound } from './utils/soundEffects';
-import { TrophyRoom, ContinueScreen, KonamiCelebration, useKonamiCode } from './components/ui/ArcadeExtras';
 import { LiteModeOffer, type LiteReason } from './components/ui/LiteModeOffer';
 import { rememberPlayAnyway, wantsPlayAnyway } from './utils/deviceCheck';
 
-// The 3D world (three.js, ~1 MB) is its own download, so the intro screens paint right away
-// and the world loads behind them. On a slow device it only starts once the visitor says "play anyway".
+// What loads when (so the boot screen paints right away):
+//   1. this file + the boot screen (small)
+//   2. once it is on screen, in the background: the 3D world (three.js, the big one)
+//      and the HUD shown after PRESS START (GameHud)
+//   3. a world's ride, only when someone enters that world (world/rideKits.ts)
+// On a slow device the 3D world only starts once the visitor says "play anyway".
 let worldImport: Promise<typeof import('./components/canvas/WorldCanvas')> | null = null;
 const loadWorld = () => (worldImport ??= import('./components/canvas/WorldCanvas'));
 const WorldCanvas = lazy(() => loadWorld().then((m) => ({ default: m.WorldCanvas })));
+const loadHud = () => import('./components/GameHud');
+const GameHud = lazy(() => loadHud().then((m) => ({ default: m.GameHud })));
 
 // Was the site opened on a world link (site.com/#career) or from Recruiter Mode's "Play the game"
 // (site.com/?play)? Then the intro skips the mode question.
@@ -51,16 +49,12 @@ class WorldErrorBoundary extends Component<{ onError: () => void; children: Reac
 
 export function App({ lowEndDevice = false }: { lowEndDevice?: boolean }) {
   const { world, enterWorld, leaveWorld } = useWorldRoute();
-  const activeIsland: IslandMeta | null = world ? portfolioData.islands[world] : null;
-  const ride = world ? worldRides[world] : null;
+  const activeIsland: IslandMeta | null = world ? portfolioCore.islands[world] : null;
 
   const [resetKey, setResetKey] = useState(0);
   const [loadStage, setLoadStage] = useState<LoadStage>(0);
   const [started, setStarted] = useState(false);
-  // Pop-up windows: Trophy Room, CONTINUE? contact screen, Konami cheat code
-  const [popup, setPopup] = useState<'trophies' | 'contact' | 'konami' | null>(null);
-  const closePopup = useCallback(() => setPopup(null), []);
-  useKonamiCode(started, () => setPopup('konami'));
+  useEffect(() => { loadHud(); }, []); // fetch the HUD while the boot screen is up
 
   // Slow / old device: ask before downloading the 3D world (DeviceCheck in main.tsx).
   const [allow3d, setAllow3d] = useState(() => !lowEndDevice || wantsPlayAnyway());
@@ -76,6 +70,9 @@ export function App({ lowEndDevice = false }: { lowEndDevice?: boolean }) {
     setLiteOffer(null);
     setAllow3d(true);
   }, []);
+
+  // The open world's ride (downloaded on entry). If it fails to download, go back to the map.
+  const ride = useWorldRide(world, useCallback(() => { console.warn('[ride] download failed: back to the map'); leaveWorld(); }, [leaveWorld]));
 
   useEffect(() => {
     if (!allow3d) return;
@@ -136,17 +133,6 @@ export function App({ lowEndDevice = false }: { lowEndDevice?: boolean }) {
     setResetKey((k) => k + 1);
   }, [world, leaveWorld]);
 
-  // Esc: leave the world / reset the view. An open info box handles Esc first (defaultPrevented).
-  useEffect(() => {
-    if (!started) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !e.defaultPrevented && !popup) handleResetView();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [started, handleResetView, popup]);
-
-  const accent = world ? arcadeWorlds[world].accent : 'cyan';
 
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-[#060911]">
@@ -158,6 +144,7 @@ export function App({ lowEndDevice = false }: { lowEndDevice?: boolean }) {
             <Suspense fallback={null}>
               <WorldCanvas
                 activeIsland={activeIsland}
+                ride={ride}
                 onEnterIsland={(island) => enterWorld(island.id)}
                 onLeave={leaveWorld}
                 resetKey={resetKey}
@@ -173,35 +160,18 @@ export function App({ lowEndDevice = false }: { lowEndDevice?: boolean }) {
 
         {/* HUD only after PRESS START, so 1–6 / Esc shortcuts can't fire behind the intro */}
         {started && (
-          <>
-            <Navbar
-              isIslandFocused={!!world}
-              onResetView={handleResetView}
-              onOpenTrophies={() => setPopup('trophies')}
-              onOpenContact={() => setPopup('contact')}
-            />
-            {/* Map mode: Player 1 card + stage select. World mode: world HUD + hotspots. */}
-            {!world && <HeroCard isIslandFocused={false} />}
-            <IslandDock
-              selectedIsland={activeIsland}
+          <Suspense fallback={null}>
+            <GameHud
+              world={world}
+              activeIsland={activeIsland}
+              ride={ride}
+              loadingRide={!!world && !ride}
               onSelectIsland={handleSelectIsland}
-              hidden={!!world || !!popup}
-              onOpenTrophies={() => setPopup('trophies')}
-              onOpenContact={() => setPopup('contact')}
+              onEnterWorld={enterWorld}
+              onLeaveWorld={leaveWorld}
+              onResetView={handleResetView}
             />
-            {ride && (
-              <>
-                <RideScreenPanel key={`screen-${ride.slug}`} ride={ride} accent={accent} />
-                <HotspotLayer key={ride.slug} ride={ride} accent={accent} />
-                <WorldHud key={`hud-${ride.slug}`} ride={ride} accent={accent} onBack={leaveWorld} onNext={enterWorld} />
-              </>
-            )}
-            <TrophyRoom open={popup === 'trophies'} onClose={closePopup} />
-            <ContinueScreen open={popup === 'contact'} onClose={closePopup} />
-            <KonamiCelebration open={popup === 'konami'} onClose={closePopup} />
-            {/* CRT scanlines over the whole site (the boot screen has its own) */}
-            <CRTOverlay soft />
-          </>
+          </Suspense>
         )}
         {/* Slow / old device or a 3D failure: offer Recruiter Mode instead of a broken world */}
         {liteOffer && <LiteModeOffer reason={liteOffer} onStay={stayIn3d} />}

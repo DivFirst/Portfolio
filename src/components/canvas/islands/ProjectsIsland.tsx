@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { BOSS_ROCKET } from '../../../data/worldRides';
+import { BOSS_ROCKET } from '../../../data/rides/common';
 import { getRideProgress } from '../../world/rideStore';
-import { BossBattleRide, rocketStateAt } from './bosses/BossBattleRide';
+import { rideKit } from '../../world/rideKits';
 
 interface ProjectsIslandProps {
   /** true while the visitor is inside WORLD 3 (Boss Battles): the scroll ride drives the rocket */
@@ -26,7 +26,8 @@ export const ProjectsIsland: React.FC<ProjectsIslandProps> = ({ rideActive = fal
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    const ride = rideActive ? rocketStateAt(getRideProgress(), reducedMotion) : null;
+    const kit = rideActive ? rideKit('projects') : null;
+    const ride = kit ? kit.rocketStateAt(getRideProgress(), reducedMotion) : null;
 
     // Satellite dish: slow scan on the map; in the ride it turns up to track the rocket
     if (dishRef.current) {
@@ -158,7 +159,13 @@ export const ProjectsIsland: React.FC<ProjectsIslandProps> = ({ rideActive = fal
         <meshBasicMaterial color={PINK} />
       </mesh>
 
-      {rideActive && <BossBattleRide reducedMotion={reducedMotion} />}
+      {rideActive && <RideOnly reducedMotion={reducedMotion} />}
     </group>
   );
+};
+
+/** The ride's bosses and sky (World 3 ride kit, downloaded on entry) */
+const RideOnly: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion }) => {
+  const { BossBattleRide } = rideKit('projects');
+  return <BossBattleRide reducedMotion={reducedMotion} />;
 };

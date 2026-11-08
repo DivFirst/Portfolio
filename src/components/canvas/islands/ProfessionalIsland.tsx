@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { CAREER_FLOORS, careerElevator } from '../../../data/worldRides';
+import { rideKit } from '../../world/rideKits';
 import { getRideProgress } from '../../world/rideStore';
 
 interface ProfessionalIslandProps {
@@ -22,6 +22,7 @@ const smooth = (t: number) => t * t * (3 - 2 * t);
 
 /** Same chapter maths as RideController, so the elevator always matches the camera. */
 function elevatorAt(p: number, reduced: boolean) {
+  const { careerElevator } = rideKit('professional');
   const n = careerElevator.length;
   const x = p * (n - 1);
   const a = Math.min(n - 2, Math.floor(x));
@@ -73,6 +74,7 @@ export const ProfessionalIsland: React.FC<ProfessionalIslandProps> = ({ rideActi
       const p = getRideProgress();
       const boot = clamp01(p / 0.03); // first bit of scroll: power on
       const y = elevatorAt(p, reducedMotion);
+      const { CAREER_FLOORS } = rideKit('professional');
 
       // Floors light up as the elevator reaches them, and switch off again on the way down.
       windows.forEach((col) => col.forEach((m, j) => {

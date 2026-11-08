@@ -14,14 +14,17 @@ import { ProjectsIsland } from './islands/ProjectsIsland';
 import { HobbyIsland } from './islands/HobbyIsland';
 import { BookstagramIsland } from './islands/BookstagramIsland';
 import { TravelIsland } from './islands/TravelIsland';
-import { RetroSky, SKY_COLOR } from './RetroSky';
+import { RetroSky } from './RetroSky';
+import { SKY_COLOR } from './skyColor';
 import { useReducedMotion } from '../arcade';
-import { worldRides, type Vec3 } from '../../data/worldRides';
+import type { Vec3, WorldRide } from '../../data/worldRides';
 import { RideController } from '../world/RideController';
 
 interface WorldCanvasProps {
   /** island whose world is open (null = map) */
   activeIsland: IslandMeta | null;
+  /** that world's ride, once its script and 3D pieces have downloaded (world/rideKits.ts) */
+  ride: WorldRide | null;
   /** clicking an island enters its world */
   onEnterIsland: (island: IslandMeta) => void;
   /** e.g. the rocket's "back" click */
@@ -46,6 +49,33 @@ const FirstFramesWatcher: React.FC<{ onReady?: () => void }> = ({ onReady }) => 
       onReady?.();
     }
   });
+  return null;
+};
+
+/**
+ * Runs once when a ride opens, during the camera fly-in: uploads the ride's textures and prepares
+ * every material (hidden ones too) on the graphics card now, instead of the first time each
+ * object appears mid-scroll. Without it, a slow phone freezes for a moment at those points.
+ */
+const RideWarmup: React.FC = () => {
+  const { gl, scene, camera } = useThree();
+  useEffect(() => {
+    // short wait so the ride's pieces and their textures (made on entry) are in the scene
+    const id = window.setTimeout(() => {
+      scene.traverse((o) => {
+        const m = (o as THREE.Mesh).material;
+        if (!m) return;
+        for (const mat of Array.isArray(m) ? m : [m]) {
+          for (const key of ['map', 'emissiveMap', 'alphaMap'] as const) {
+            const tex = (mat as THREE.MeshStandardMaterial)[key];
+            if (tex) gl.initTexture(tex);
+          }
+        }
+      });
+      gl.compileAsync(scene, camera).catch(() => { /* only a warm-up */ });
+    }, 300);
+    return () => window.clearTimeout(id);
+  }, [gl, scene, camera]);
   return null;
 };
 
@@ -104,6 +134,7 @@ const CameraController: React.FC<{
 
 export const WorldCanvas: React.FC<WorldCanvasProps> = ({
   activeIsland,
+  ride: rideIn,
   onEnterIsland,
   onLeave,
   resetKey = 0,
@@ -112,7 +143,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
 }) => {
   const selectedIsland = activeIsland;
   const onSelectIsland = (island: IslandMeta | null) => { if (island) onEnterIsland(island); else onLeave(); };
-  const ride = activeIsland ? worldRides[activeIsland.id] : null;
+  const ride = activeIsland && rideIn?.islandId === activeIsland.id ? rideIn : null;
   const rideOrigin: Vec3 | null = activeIsland
     ? [activeIsland.coordinates[0], activeIsland.coordinates[1] + SELECTED_LIFT, activeIsland.coordinates[2]]
     : null;
@@ -268,6 +299,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
             <RideController ride={ride} origin={rideOrigin} goal={cameraGoal.current} reducedMotion={reducedMotion} />
           </ScrollControls>
         )}
+        {ride && <RideWarmup key={`warmup-${ride.slug}`} />}
 
         {/* Orbit Controls (smooth, responsive rotation & zoom) */}
         <OrbitControls

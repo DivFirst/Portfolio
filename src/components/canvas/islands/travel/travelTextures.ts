@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
-import { TRAVEL_MAP, TRAVEL_STAMPS, VIETNAM_STOPS, type TravelStampInfo } from '../../../../data/worldRides';
-import { INDIA } from '../origin/originRide';
+import { TRAVEL_MAP, TRAVEL_STAMPS, VIETNAM_STOPS, type TravelStampInfo } from '../../../../data/rides/explorer';
+import { INDIA } from '../origin/india';
 
 /**
  * Canvas textures for World 6: the parchment map (India + Vietnam, hand-drawn style)

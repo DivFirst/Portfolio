@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { BOSSES, BOSS_ORBIT, BOSS_ROCKET, bossAltitude, chapterBlend, type BossInfo } from '../../../../data/worldRides';
+import { BOSSES, BOSS_ORBIT, BOSS_ROCKET, bossAltitude, chapterBlend, type BossInfo } from '../../../../data/rides/bosses';
 import { getRideProgress } from '../../../world/rideStore';
-import { SKY_COLOR } from '../../RetroSky';
+import { SKY_COLOR } from '../../skyColor';
 import { useBossTextures, type TextTex } from './bossTextures';
 
 /**

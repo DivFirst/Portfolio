@@ -7,8 +7,10 @@ import { sound } from '../../../utils/soundEffects';
 import { arcadeWorlds, accentHex } from '../../../data/arcadeWorlds';
 import { WorldSign } from '../WorldSign';
 import { getRideProgress } from '../../world/rideStore';
-import { OriginBookRide } from './origin/OriginBookRide';
-import { clamp01, originStateAt, smooth } from './origin/originRide';
+import { rideKit } from '../../world/rideKits';
+
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+const smooth = (t: number) => t * t * (3 - 2 * t);
 
 interface FlyingBookIslandProps {
   meta: IslandMeta;
@@ -49,7 +51,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
   // Flight physics & wing flapping
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
-    const ride = rideActive ? originStateAt(getRideProgress(), reducedMotion) : null;
+    const ride = rideActive ? rideKit('life').originStateAt(getRideProgress(), reducedMotion) : null;
     const flying = ride ? 1 - ride.land : 1;
 
     if (rootGroupRef.current) {
@@ -618,7 +620,7 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
         </group>
 
         {/* World 1 ride: map, train and turning page on the open book */}
-        {rideActive && <OriginBookRide reducedMotion={reducedMotion} leftPageMaterial={leftPageMat} />}
+        {rideActive && <OriginRideOnly reducedMotion={reducedMotion} leftPageMaterial={leftPageMat} />}
         {/* Reading light over the open pages (off while closed) */}
         <pointLight ref={readingLightRef} position={[-1.8, 4.2, 1.6]} intensity={0} distance={10} color="#fff7e0" />
 
@@ -646,4 +648,10 @@ export const FlyingBookIsland: React.FC<FlyingBookIslandProps> = ({
       />
     </group>
   );
+};
+
+/** The map page, train and chapter pages (World 1 ride kit, downloaded on entry) */
+const OriginRideOnly: React.FC<{ reducedMotion: boolean; leftPageMaterial: React.RefObject<THREE.MeshStandardMaterial> }> = (props) => {
+  const { OriginBookRide } = rideKit('life');
+  return <OriginBookRide {...props} />;
 };

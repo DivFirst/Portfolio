@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { QUEST_SCENES, QUEST_STRIP, questStateAt } from '../../../../data/worldRides';
+import { QUEST_SCENES, QUEST_STRIP, questStateAt } from '../../../../data/rides/quests';
 import { getRideProgress } from '../../../world/rideStore';
 import type { QuestTextures } from './hobbyTextures';
 

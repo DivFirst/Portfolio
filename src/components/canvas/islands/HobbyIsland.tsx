@@ -1,10 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { questStateAt } from '../../../data/worldRides';
 import { getRideProgress } from '../../world/rideStore';
-import { useQuestTextures } from './hobby/hobbyTextures';
-import { SideScroller } from './hobby/SideScroller';
+import { rideKit } from '../../world/rideKits';
+import type { QuestTextures } from './hobby/hobbyTextures';
 
 interface HobbyIslandProps {
   /** true while the visitor is inside WORLD 4 (Side Quests): the scroll ride dives into the cabinet */
@@ -16,14 +15,15 @@ export const HobbyIsland: React.FC<HobbyIslandProps> = ({ rideActive = false, re
   const noteRef1 = useRef<THREE.Mesh>(null);
   const noteRef2 = useRef<THREE.Mesh>(null);
   const screenMat = useRef<THREE.MeshStandardMaterial>(null);
-  const tex = useQuestTextures(rideActive);
+  // The ride's pixel textures (made by the World 4 ride kit, downloaded on entry)
+  const [tex, setTex] = useState<QuestTextures | null>(null);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     // The cabinet screen: "SIDE QUESTS / PRESS ▼" in the ride, "ALL QUESTS CLEAR!" after the game
     const m = screenMat.current;
     if (m) {
-      const want = rideActive && tex ? (questStateAt(getRideProgress(), reducedMotion).x > 4 ? tex.screenClear : tex.screenStart) : null;
+      const want = rideActive && tex ? (rideKit('hobby').questStateAt(getRideProgress(), reducedMotion).x > 4 ? tex.screenClear : tex.screenStart) : null;
       if (m.map !== want) {
         m.map = want;
         m.emissiveMap = want;
@@ -161,7 +161,18 @@ export const HobbyIsland: React.FC<HobbyIslandProps> = ({ rideActive = false, re
         </mesh>
       </group>
 
-      {rideActive && <SideScroller tex={tex} reducedMotion={reducedMotion} />}
+      {rideActive && <RideOnly tex={tex} onTextures={setTex} reducedMotion={reducedMotion} />}
     </group>
+  );
+};
+
+/** The side-scroller inside the cabinet (World 4 ride kit, downloaded on entry) */
+const RideOnly: React.FC<{ tex: QuestTextures | null; onTextures: (t: QuestTextures | null) => void; reducedMotion: boolean }> = ({ tex, onTextures, reducedMotion }) => {
+  const { QuestTextureMaker, SideScroller } = rideKit('hobby');
+  return (
+    <>
+      <QuestTextureMaker onChange={onTextures} />
+      <SideScroller tex={tex} reducedMotion={reducedMotion} />
+    </>
   );
 };

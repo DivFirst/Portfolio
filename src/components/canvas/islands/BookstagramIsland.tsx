@@ -1,12 +1,13 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import {
   LIBRARY_BOOK, LIBRARY_BOOKS, LIBRARY_LIGHT_COUNT, LIBRARY_ORBIT, LIBRARY_RING, LIBRARY_STACKS,
   libraryReadPos, libraryStateAt,
-} from '../../../data/worldRides';
+} from '../../../data/rides/libraryLayout';
 import { getRideProgress } from '../../world/rideStore';
-import { useLibraryTextures, type LibraryTextures } from './library/libraryTextures';
+import { rideKit } from '../../world/rideKits';
+import type { LibraryTextures } from './library/libraryTextures';
 
 interface BookstagramIslandProps {
   /** true while the visitor is inside WORLD 5 (Lore Library): the scroll ride drives the scene */
@@ -128,14 +129,13 @@ const Book: React.FC<{ index: number; rig: BookRig; tex: LibraryTextures | null 
 };
 
 /** The golden ring, its halo, and the dark veil in front of the camera that dims the scene around it */
-const RingMoment: React.FC<{ tex: LibraryTextures | null; reducedMotion: boolean }> = ({ tex, reducedMotion }) => {
+const RingMoment: React.FC<{ tex: LibraryTextures | null; reducedMotion: boolean; lightRef: React.RefObject<THREE.PointLight> }> = ({ tex, reducedMotion, lightRef }) => {
   const { scene, camera } = useThree();
   const ringRef = useRef<THREE.Group>(null);
   const torusRef = useRef<THREE.Mesh>(null);
   const torusMat = useRef<THREE.MeshStandardMaterial>(null);
   const haloRef = useRef<THREE.Mesh>(null);
   const haloMat = useRef<THREE.MeshBasicMaterial>(null);
-  const lightRef = useRef<THREE.PointLight>(null);
   const veilRef = useRef<THREE.Mesh>(null);
   const veilMat = useRef<THREE.MeshBasicMaterial>(null);
   const from = useMemo(() => new THREE.Vector3(LIBRARY_RING.from[0], stack2Top + 0.06, LIBRARY_RING.from[2]), []);
@@ -150,6 +150,7 @@ const RingMoment: React.FC<{ tex: LibraryTextures | null; reducedMotion: boolean
       g.position.lerpVectors(from, to, s.ringRise);
       if (!reducedMotion) g.position.y += Math.sin(t * 1.4) * 0.03 * s.ringRise;
       g.scale.setScalar(0.4 + 0.6 * s.ringRise);
+      lightRef.current?.position.copy(g.position);
     }
     // turns with the scroll (and a slow idle sway), but always shows its face to the visitor
     torusRef.current?.rotation.set(0.25, Math.sin(s.x * 1.4 + (reducedMotion ? 0 : t * 0.5)) * 0.55, 0);
@@ -182,7 +183,6 @@ const RingMoment: React.FC<{ tex: LibraryTextures | null; reducedMotion: boolean
           <planeGeometry args={[1.3, 1.3]} />
           <meshBasicMaterial ref={haloMat} map={tex?.halo ?? null} transparent opacity={0} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
-        <pointLight ref={lightRef} color="#ffcc55" intensity={0} distance={3} />
       </group>
       {createPortal(
         <mesh ref={veilRef} renderOrder={998} visible={false} frustumCulled={false}>
@@ -199,7 +199,9 @@ export const BookstagramIsland: React.FC<BookstagramIslandProps> = ({ rideActive
   const bulbRefs = useRef<(THREE.Mesh | null)[]>([]);
   const chandelierRef = useRef<THREE.PointLight>(null);
   const rigs = useMemo<BookRig[]>(() => LIBRARY_BOOKS.map(() => ({ root: null, inner: null, front: null, back: null, fan: [] })), []);
-  const tex = useLibraryTextures(rideActive);
+  // Book pages + ring halo (made by the World 5 ride kit, downloaded on entry)
+  const [tex, setTex] = useState<LibraryTextures | null>(null);
+  const ringLightRef = useRef<THREE.PointLight>(null);
   const { size } = useThree();
 
   // ride poses: reading spot (desktop row / phone column) and the ring of finished books
@@ -345,7 +347,16 @@ export const BookstagramIsland: React.FC<BookstagramIslandProps> = ({ rideActive
         </mesh>
       </group>
 
-      {rideActive && <RingMoment tex={tex} reducedMotion={reducedMotion} />}
+      {rideActive && <TextureMaker onChange={setTex} />}
+      {rideActive && <RingMoment tex={tex} reducedMotion={reducedMotion} lightRef={ringLightRef} />}
+      {/* The ring's glow (World 5 ride). Always in the scene, at 0 brightness until the ring moment: a light
+          appearing later makes three.js rebuild every material in the scene at once, which freezes a phone. */}
+      <pointLight ref={ringLightRef} color="#ffcc55" intensity={0} distance={3} />
     </group>
   );
+};
+
+const TextureMaker: React.FC<{ onChange: (t: LibraryTextures | null) => void }> = ({ onChange }) => {
+  const { LibraryTextureMaker } = rideKit('bookstagram');
+  return <LibraryTextureMaker onChange={onChange} />;
 };

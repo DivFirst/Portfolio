@@ -100,7 +100,10 @@ export function RecruiterPage() {
         {/* ---- Headline + photo + contact ---- */}
         <section className="cv-hero" aria-label="About">
           <div className="cv-photo arcade-accent-cyan">
-            <img src={profile.avatarUrl} alt={`Photo of ${profile.name}`} width={400} height={400} decoding="async" />
+            <picture>
+              {profile.avatarWebpUrl && <source srcSet={profile.avatarWebpUrl} type="image/webp" />}
+              <img src={profile.avatarUrl} alt={`Photo of ${profile.name}`} width={400} height={400} decoding="async" />
+            </picture>
           </div>
           <div className="min-w-0">
             <p className="arcade-display text-[10px] text-arcade-pink">Player 1</p>
