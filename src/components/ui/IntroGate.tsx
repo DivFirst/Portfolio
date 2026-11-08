@@ -7,8 +7,10 @@ import { sound } from '../../utils/soundEffects';
  * What a visitor sees before the 3D world (DESIGN.md §4, BUILD_GUIDE Part 2 step 1):
  *   first visit:     Mode select → (Fun) boot screen with PRESS START
  *                                 → (Recruiter) Recruiter Mode page at /cv
- *   returning visit: a short loading bar only, then straight into the world
- *                    (a returning Recruiter Mode visitor is sent to /cv by main.tsx)
+ *   same tab later:  a short loading bar only, then straight into the world
+ *                    (Recruiter Mode in the same tab is sent to /cv by main.tsx)
+ *   new visit:       the mode select again. The choice lives in sessionStorage (this tab only),
+ *                    so every fresh visit starts on the Recruiter / Fun choice.
  * Add ?intro to the address to see the full intro again; ?play (handled in App) skips straight to PRESS START.
  *
  * The 3D world loads in the background the whole time; `loadStage` reports how far it got.
@@ -22,10 +24,11 @@ const STORAGE_KEY = 'arcade-intro';
 function readSavedMode(): ArcadeMode | null {
   try {
     if (new URLSearchParams(window.location.search).has('intro')) {
-      localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(STORAGE_KEY);
       return null;
     }
-    const raw = localStorage.getItem(STORAGE_KEY);
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* old builds kept it forever */ }
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const mode = (JSON.parse(raw) as { mode?: string }).mode;
     return mode === 'fun' || mode === 'recruiter' ? mode : null;
@@ -35,7 +38,7 @@ function readSavedMode(): ArcadeMode | null {
 }
 
 function saveMode(mode: ArcadeMode) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode, at: Date.now() })); } catch { /* fine */ }
+  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ mode, at: Date.now() })); } catch { /* fine */ }
 }
 
 /**

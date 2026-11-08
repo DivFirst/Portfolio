@@ -28,7 +28,7 @@ const params = typeof window !== 'undefined' ? new URLSearchParams(window.locati
 const openedOnWorldLink = typeof window !== 'undefined' && (/^#./.test(window.location.hash) || !!params?.has('play'));
 if (params?.has('play')) {
   // "Play the game" from Recruiter Mode: forget the saved Recruiter choice, then tidy the address.
-  try { localStorage.removeItem('arcade-intro'); } catch { /* storage blocked: fine */ }
+  try { sessionStorage.removeItem('arcade-intro'); } catch { /* storage blocked: fine */ }
   params.delete('play');
   const q = params.toString();
   history.replaceState(history.state, '', window.location.pathname + (q ? `?${q}` : '') + window.location.hash);

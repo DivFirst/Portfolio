@@ -16,7 +16,7 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 
 function savedRecruiter(): boolean {
   try {
-    const raw = localStorage.getItem('arcade-intro'); // written by IntroGate
+    const raw = sessionStorage.getItem('arcade-intro'); // written by IntroGate (this tab only)
     return !!raw && (JSON.parse(raw) as { mode?: string }).mode === 'recruiter';
   } catch {
     return false;
@@ -44,7 +44,7 @@ if (path === '/cv') {
     // No 3D on this device: the world would be a blank screen, so show the CV instead.
     goToCv('no3d');
   } else if (savedRecruiter() && !onWorldLink && !params.has('intro') && !params.has('play')) {
-    // Returning visitor who picked Recruiter Mode last time (?play / ?intro = they asked for the game).
+    // Picked Recruiter Mode earlier in this tab (?play / ?intro = they asked for the game).
     goToCv();
   } else {
     // The boot screen code is small and loads first; App starts the big 3D download as soon as it
