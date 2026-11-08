@@ -14,7 +14,7 @@ export const portfolioCore: Pick<PortfolioData, 'profile' | 'islands'> = {
     status: "Building scalable platform products & exploring GenAI workflows",
     avatarUrl: "/me.jpg", // local copy (public/me.jpg): 400x400, ~21 KB
     avatarWebpUrl: "/me.webp", // same photo, ~13 KB
-    resumeUrl: "https://drive.google.com/file/d/1TVY6LS8TpDv1xyjGPLnntFcYQJdX83H3/view?usp=sharing",
+    resumeUrl: "https://drive.google.com/file/d/1wLgaRMhMxW7Q9F7rUDj1tmsK92SkM6Pp/view?usp=sharing",
     socials: [
       { label: "LinkedIn", url: "https://www.linkedin.com/in/divgarg03/", icon: "Linkedin" },
       { label: "GitHub", url: "https://github.com/DivFirst", icon: "Github" },
