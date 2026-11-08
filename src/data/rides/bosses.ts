@@ -54,9 +54,10 @@ const BOSS_LAYERS: BossLayer[] = [
   { id: 'edge-1', label: 'Edge of space · Case competitions', heading: 'Edge of space', sub: 'Case competitions (1/2)', alt: 42, bosses: ['salaryse', 'asian-paints-canvas'] },
   { id: 'edge-2', label: 'Edge of space · Case competitions', heading: 'Edge of space', sub: 'Case competitions (2/2)', alt: 49, bosses: ['sun-pharma-prism', 'itc-interrobang'] },
   { id: 'belt', label: 'Asteroid belt · Case competitions', heading: 'Asteroid belt', sub: 'Case competitions', alt: 56, bosses: ['bajaj-atom', 'flipkart-quick-commerce', 'reckitt-veet'] },
-  { id: 'approach', label: 'Orbit approach · Product & live projects', heading: 'Orbit approach', sub: 'Product & live projects: the big bosses', alt: 63, bosses: ['adpilot', 'swasthiq', 'vivnovation'] },
+  { id: 'approach', label: 'Orbit approach · Product & live projects', heading: 'Orbit approach', sub: 'Product & live projects: the big bosses (1/2)', alt: 63, bosses: ['adpilot', 'swasthiq', 'vivnovation'] },
+  { id: 'approach-2', label: 'Orbit approach · Product builds', heading: 'Orbit approach', sub: 'Product builds: the big bosses (2/2)', alt: 70, bosses: ['jobbot', 'upskilling-platform'] },
 ];
-const ORBIT_ALT = 70;
+const ORBIT_ALT = 77;
 
 // Every project must be a boss exactly once (a new project in the data file needs a slot here).
 {
@@ -167,8 +168,9 @@ const bossChapters: RideChapter[] = [
     label: 'Orbit · Stage clear',
     // pull right back: the whole route, every defeated boss, and the dish beaming up to the rocket.
     // Desktop: the column sits right of centre, clear of the progress panel (top left) and STAGE CLEAR (bottom centre).
-    camera: { position: [33.5, 70.5, 131.6], target: [-26.7, 44, 13.5] },
-    cameraPortrait: { position: [78, 69.3, 153], target: [0, 35, 0] },
+    // (heights raised by 7 when the second approach layer was added)
+    camera: { position: [33.5, 77.5, 131.6], target: [-26.7, 51, 13.5] },
+    cameraPortrait: { position: [78, 76.3, 153], target: [0, 42, 0] },
     hotspots: [],
   },
 ];
