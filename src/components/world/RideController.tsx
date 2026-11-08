@@ -77,8 +77,9 @@ export const RideController: React.FC<RideControllerProps> = ({ ride, origin, go
     // pinned hotspots -> screen pixels
     for (const ch of chapters) {
       for (const h of ch.hotspots) {
-        if (!h.anchor) continue;
-        projected.set(h.anchor[0] + ox, h.anchor[1] + oy, h.anchor[2] + oz).project(camera);
+        const at = (phoneCams && h.anchorPortrait) || h.anchor;
+        if (!at) continue;
+        projected.set(at[0] + ox, at[1] + oy, at[2] + oz).project(camera);
         hotspotPositions.set(h.id, {
           x: (projected.x * 0.5 + 0.5) * size.width,
           y: (-projected.y * 0.5 + 0.5) * size.height,

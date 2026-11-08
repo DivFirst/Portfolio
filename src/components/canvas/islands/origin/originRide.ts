@@ -69,7 +69,7 @@ export function pointAtArc(arc: number, out: THREE.Vector3) {
 
 // ---------- India, hand-drawn (longitude, latitude), clockwise from Kutch ----------
 
-const INDIA: [number, number][] = [
+export const INDIA: [number, number][] = [
   [68.2, 23.7], [68.8, 24.3], [70.0, 24.4], [71.0, 24.6], [70.4, 25.7], [70.1, 27.2], [71.4, 27.9],
   [72.4, 28.9], [73.4, 29.9], [74.5, 31.0], [74.6, 32.5], [74.0, 33.2], [73.8, 34.5], [74.5, 35.0],
   [76.0, 35.8], [77.8, 35.5], [78.9, 34.3], [78.7, 32.6], [79.2, 31.3], [80.3, 30.5], [81.1, 30.0],

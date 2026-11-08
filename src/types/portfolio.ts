@@ -169,7 +169,7 @@ export interface HobbyData {
 export interface BookItem {
   title: string;
   author: string;
-  rating?: number | string; // out of 5, exactly as Divyanshu rated it (e.g. 4.25 or "3.5–4")
+  rating?: number | string; // out of 5, exactly as Divyanshu rated it (e.g. 4.25 or "3.5–4"; Kaigen really is 6)
   coverColor: string;
   genre: string;
   review?: string; // also the text for the book's "?" box
@@ -181,6 +181,8 @@ export interface BookstagramData {
   summary: string;
   account?: { name: string; handle: string; url: string };
   booksRead?: number;
+  /** Reels posted and their total views, added up from his reel sheet */
+  reels?: { count: number; views: number; asOf: string };
   yearlyGoal?: {
     read: number;
     target: number;
@@ -189,7 +191,7 @@ export interface BookstagramData {
   currentlyReading: {
     title: string;
     author: string;
-    progress: number; // 0-100%
+    progress?: number; // 0-100%, left out when the tracker has no number yet
   }[];
   books: BookItem[];
   genres: string[];

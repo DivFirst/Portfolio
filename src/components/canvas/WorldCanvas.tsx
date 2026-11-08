@@ -222,7 +222,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           reducedMotion={reducedMotion}
           hideSign={!!ride}
         >
-          <HobbyIsland />
+          <HobbyIsland rideActive={ride?.islandId === 'hobby'} reducedMotion={reducedMotion} />
         </HexagonBase>
 
         {/* 5. Bookstagram */}
@@ -233,7 +233,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           reducedMotion={reducedMotion}
           hideSign={!!ride}
         >
-          <BookstagramIsland />
+          <BookstagramIsland rideActive={ride?.islandId === 'bookstagram'} reducedMotion={reducedMotion} />
         </HexagonBase>
 
         {/* 6. Travel */}
@@ -244,7 +244,7 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           reducedMotion={reducedMotion}
           hideSign={!!ride}
         >
-          <TravelIsland />
+          <TravelIsland rideActive={ride?.islandId === 'travel'} reducedMotion={reducedMotion} />
         </HexagonBase>
 
         {/* Camera Lerp Controller */}
@@ -280,7 +280,8 @@ export const WorldCanvas: React.FC<WorldCanvasProps> = ({
           dampingFactor={0.06}
           rotateSpeed={0.85}
           zoomSpeed={1.2}
-          minDistance={8}
+          // same for close-ups: World 5 reads books from about 4 units away
+          minDistance={ride ? 1 : 8}
           // the zoom limit is for the visitor on the map; ride cameras (e.g. World 3's orbit shot) may go further
           maxDistance={ride ? 400 : 55}
           minPolarAngle={Math.PI / 6} // ~30° angle

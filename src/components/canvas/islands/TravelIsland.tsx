@@ -1,8 +1,19 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { travelStateAt } from '../../../data/worldRides';
+import { getRideProgress } from '../../world/rideStore';
+import { MapRide, routePoint, routeTangent } from './travel/MapRide';
 
-export const TravelIsland: React.FC = () => {
+interface TravelIslandProps {
+  /** true while the visitor is inside WORLD 6 (Map Explorer): the scroll ride flies the plane */
+  rideActive?: boolean;
+  reducedMotion?: boolean;
+}
+
+const tmpTan = new THREE.Vector3();
+
+export const TravelIsland: React.FC<TravelIslandProps> = ({ rideActive = false, reducedMotion = false }) => {
   const planeRef = useRef<THREE.Group>(null);
   const campfireLightRef = useRef<THREE.PointLight>(null);
   const emberRef = useRef<THREE.Mesh>(null);
@@ -10,8 +21,20 @@ export const TravelIsland: React.FC = () => {
   useFrame((state) => {
     const t = state.clock.elapsedTime;
 
-    // Orbiting mini paper airplane
-    if (planeRef.current) {
+    // In the ride the paper plane flies the route with the scroll (nose = -x)
+    if (planeRef.current && rideActive) {
+      const s = travelStateAt(getRideProgress(), reducedMotion);
+      const p = planeRef.current;
+      routePoint(s.route, p.position);
+      if (!reducedMotion && s.route > 0.02) p.position.y += Math.sin(t * 2) * 0.03;
+      routeTangent(s.route, tmpTan);
+      p.rotation.set(0, Math.atan2(tmpTan.z, -tmpTan.x), s.route > 0.02 ? 0.2 : 0);
+      p.scale.setScalar(1.3);
+    } else if (planeRef.current) {
+      planeRef.current.scale.setScalar(1);
+    }
+    // Orbiting mini paper airplane (map)
+    if (planeRef.current && !rideActive) {
       const radius = 2.4;
       const speed = 0.9;
       planeRef.current.position.x = Math.cos(t * speed) * radius;
@@ -170,6 +193,8 @@ export const TravelIsland: React.FC = () => {
           <meshStandardMaterial color="#06b6d4" />
         </mesh>
       </group>
+
+      {rideActive && <MapRide reducedMotion={reducedMotion} />}
     </group>
   );
 };

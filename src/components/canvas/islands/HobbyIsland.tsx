@@ -1,13 +1,37 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { questStateAt } from '../../../data/worldRides';
+import { getRideProgress } from '../../world/rideStore';
+import { useQuestTextures } from './hobby/hobbyTextures';
+import { SideScroller } from './hobby/SideScroller';
 
-export const HobbyIsland: React.FC = () => {
+interface HobbyIslandProps {
+  /** true while the visitor is inside WORLD 4 (Side Quests): the scroll ride dives into the cabinet */
+  rideActive?: boolean;
+  reducedMotion?: boolean;
+}
+
+export const HobbyIsland: React.FC<HobbyIslandProps> = ({ rideActive = false, reducedMotion = false }) => {
   const noteRef1 = useRef<THREE.Mesh>(null);
   const noteRef2 = useRef<THREE.Mesh>(null);
+  const screenMat = useRef<THREE.MeshStandardMaterial>(null);
+  const tex = useQuestTextures(rideActive);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
+    // The cabinet screen: "SIDE QUESTS / PRESS ▼" in the ride, "ALL QUESTS CLEAR!" after the game
+    const m = screenMat.current;
+    if (m) {
+      const want = rideActive && tex ? (questStateAt(getRideProgress(), reducedMotion).x > 4 ? tex.screenClear : tex.screenStart) : null;
+      if (m.map !== want) {
+        m.map = want;
+        m.emissiveMap = want;
+        m.color.set(want ? '#ffffff' : '#38bdf8');
+        m.emissive.set(want ? '#ffffff' : '#0284c7');
+        m.needsUpdate = true;
+      }
+    }
     // Floating music notes
     if (noteRef1.current) {
       noteRef1.current.position.y = 1.6 + Math.sin(t * 2) * 0.2;
@@ -34,9 +58,10 @@ export const HobbyIsland: React.FC = () => {
           <meshStandardMaterial color="#f43f5e" emissive="#e11d48" emissiveIntensity={0.6} />
         </mesh>
         {/* CRT Screen */}
-        <mesh position={[0, 1.35, 0.35]} rotation={[-0.2, 0, 0]}>
+        {/* sits just proud of the cabinet's front face (it used to be hidden inside the box) */}
+        <mesh position={[0, 1.35, 0.415]}>
           <planeGeometry args={[0.68, 0.52]} />
-          <meshStandardMaterial color="#38bdf8" emissive="#0284c7" emissiveIntensity={0.7} />
+          <meshStandardMaterial ref={screenMat} color="#38bdf8" emissive="#0284c7" emissiveIntensity={0.7} />
         </mesh>
         {/* Control Panel with Joystick & Buttons */}
         <mesh position={[0, 0.95, 0.42]} rotation={[0.3, 0, 0]}>
@@ -135,6 +160,8 @@ export const HobbyIsland: React.FC = () => {
           <meshStandardMaterial color="#475569" metalness={0.9} />
         </mesh>
       </group>
+
+      {rideActive && <SideScroller tex={tex} reducedMotion={reducedMotion} />}
     </group>
   );
 };

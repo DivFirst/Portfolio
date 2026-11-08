@@ -817,7 +817,7 @@ export const portfolioData: PortfolioData = {
         name: "Fantasy & Sci-Fi Worlds",
         icon: "Swords",
         description: "I read a lot of science fiction and fantasy, and share honest reactions on my bookstagram, The Unread Stack. I also rewatch the Lord of the Rings films every year.",
-        currentObsession: "Reading The Sword of Kaigen and Assassin's Quest",
+        currentObsession: "Reading Assassin's Quest and The Dungeon Anarchist's Cookbook",
         stats: [
           { label: "Reads", value: "Sanderson · Hobb · Pierce Brown" },
           { label: "Bookstagram", value: "@theun_readstack" }
@@ -828,28 +828,32 @@ export const portfolioData: PortfolioData = {
   },
 
   bookstagram: {
-    // Source: Divyanshu's reading tracker sheet and his @theun_readstack reel scripts (Oct 2026).
-    // Ratings and reviews are his own words; books without a stated rating show none.
+    // Source: Divyanshu's reading tracker sheet and his @theun_readstack reel scripts (updated Nov 2026).
+    // Ratings are from his Fable profile (Nov 2026); reviews and quotes are his own words from his reels.
     summary: "After about 10 years of not reading for fun, a leg injury that left me bedridden for weeks got me back into books. The Unread Stack is my reading journal: honest, real-time reactions right after each reading session.",
     account: { name: "The Unread Stack", handle: "@theun_readstack", url: "https://www.instagram.com/theun_readstack/" },
-    booksRead: 15,
+    booksRead: 18, // 16 in his tracker + The Maze Runner and Morisaki Bookshop from his Fable profile
+    // From the reel list: 104 reels, views added up from the sheet (Nov 2026)
+    reels: { count: 104, views: 103999, asOf: "Nov 2026" },
     currentlyReading: [
-      { title: "The Sword of Kaigen", author: "M. L. Wang", progress: 90 },
-      { title: "Assassin's Quest", author: "Robin Hobb", progress: 20 }
+      { title: "Assassin's Quest", author: "Robin Hobb", progress: 48 },
+      { title: "The Dungeon Anarchist's Cookbook", author: "Matt Dinniman" }
     ],
     genres: ["Epic Fantasy", "Sci-Fi", "LitRPG", "Indian Fantasy", "Literary Fiction", "Mystery"],
     books: [
       {
         title: "Mistborn: The Final Empire",
         author: "Brandon Sanderson",
+        rating: 4.5,
         coverColor: "#64748b",
         genre: "Epic Fantasy",
-        review: "A world where the Dark Lord already won and ash falls from the sky. I fell in love with Allomancy, and the action plays out like a high-octane anime in your head."
+        review: "A world where the Dark Lord already won and ash falls from the sky. I fell in love with Allomancy, and the action plays out like a high-octane anime in your head.",
+        favoriteQuote: "There's always another secret."
       },
       {
         title: "The Well of Ascension",
         author: "Brandon Sanderson",
-        rating: "3.5–4",
+        rating: 4.5,
         coverColor: "#0ea5e9",
         genre: "Epic Fantasy",
         review: "The middle drags with political mind games, but the final 20% is absolutely insane and completely saved the book for me."
@@ -866,21 +870,23 @@ export const portfolioData: PortfolioData = {
       {
         title: "The Kite Runner",
         author: "Khaled Hosseini",
-        rating: 5,
+        rating: 4,
         coverColor: "#b45309",
         genre: "Literary Fiction",
-        review: "Around chapter seven it stops being just a story and turns into a gut punch. A 5-star masterpiece, but respect the emotional toll and don't rush it."
+        review: "Around chapter seven it stops being just a story and turns into a gut punch. A masterpiece, but respect the emotional toll and don't rush it.",
+        favoriteQuote: "For you, a thousand times over."
       },
       {
         title: "And Then There Were None",
         author: "Agatha Christie",
+        rating: 4,
         coverColor: "#475569",
         genre: "Mystery"
       },
       {
         title: "Assassin's Apprentice",
         author: "Robin Hobb",
-        rating: 4,
+        rating: 3.5,
         coverColor: "#7c3aed",
         genre: "Epic Fantasy",
         review: "A slow-burn character study. The first 40% is slow, but after the Forge incident it picks up, with an incredible emotional payoff."
@@ -896,7 +902,7 @@ export const portfolioData: PortfolioData = {
       {
         title: "The Knife's Edge",
         author: "Matthew Wolf",
-        rating: 3.7,
+        rating: 3.5,
         coverColor: "#0d9488",
         genre: "Fantasy (Indie)",
         review: "Reads like a high-stakes shonen anime in print. Some parts dragged, but it kept getting better as it went."
@@ -904,7 +910,7 @@ export const portfolioData: PortfolioData = {
       {
         title: "Dark Matter",
         author: "Blake Crouch",
-        rating: 4.25,
+        rating: 4.5,
         coverColor: "#1e293b",
         genre: "Sci-Fi Thriller",
         review: "A relentless sci-fi mind-bender you can finish in a weekend. It has plot holes, but the human psychology sold me."
@@ -920,10 +926,11 @@ export const portfolioData: PortfolioData = {
       {
         title: "Morning Star",
         author: "Pierce Brown",
-        rating: 5,
+        rating: 4.5,
         coverColor: "#ea580c",
         genre: "Sci-Fi",
-        review: "The best writing in the trilogy, even though Golden Son's story felt tighter to me."
+        review: "The best writing in the trilogy, even though Golden Son's story felt tighter to me.",
+        favoriteQuote: "But I am no builder."
       },
       {
         title: "Dungeon Crawler Carl",
@@ -937,6 +944,7 @@ export const portfolioData: PortfolioData = {
       {
         title: "Carl's Doomsday Scenario",
         author: "Matt Dinniman",
+        rating: 4,
         coverColor: "#65a30d",
         genre: "LitRPG",
         review: "Felt like a DLC for book one: setup, setup, setup. Still a fun read, and it has me hyped for book three."
@@ -944,6 +952,7 @@ export const portfolioData: PortfolioData = {
       {
         title: "Royal Assassin",
         author: "Robin Hobb",
+        rating: 4.5,
         coverColor: "#6d28d9",
         genre: "Epic Fantasy",
         review: "This one put me on the Robin Hobb hype train. The good guys never win and you grind your teeth in frustration, but you still can't put it down."
@@ -951,10 +960,35 @@ export const portfolioData: PortfolioData = {
       {
         title: "Rakshas: The Fall of Halcyon",
         author: "M. Ninad",
+        rating: 4,
         coverColor: "#be123c",
         genre: "Indian Fantasy",
         badge: "First Indian fantasy",
-        review: "Set in Mumbai, it mixes fantasy, sci-fi and Indian mythology in a way I didn't see coming. The scenery felt thin, but it's a fun, fast story with a fresh concept."
+        review: "Set in Mumbai, it mixes fantasy, sci-fi and Indian mythology in a way I didn't see coming. The scenery felt thin, but it's a fun, fast story with a fresh concept.",
+        favoriteQuote: "A civilization falls not from hunger, but from the lies that they choose to believe."
+      },
+      {
+        title: "The Sword of Kaigen",
+        author: "M. L. Wang",
+        rating: 5,
+        coverColor: "#1d4ed8",
+        genre: "Fantasy (Standalone)",
+        badge: "Rated 6 out of 5",
+        review: "It might be my favourite single book ever. The war in the middle hit me harder than anything else I've read this year; I had to put it down just to breathe. Only the last chapter felt unnecessary."
+      },
+      {
+        title: "The Maze Runner",
+        author: "James Dashner",
+        rating: 3.5,
+        coverColor: "#4d7c0f",
+        genre: "YA Sci-Fi"
+      },
+      {
+        title: "Days at the Morisaki Bookshop",
+        author: "Satoshi Yagisawa",
+        rating: 3.5,
+        coverColor: "#0f766e",
+        genre: "Literary Fiction"
       }
     ]
   },
