@@ -1,6 +1,7 @@
 import { Fragment, useEffect, type ReactNode } from 'react';
 import { portfolioData } from '../data/portfolioData';
 import { achievementTrophies } from '../data/trophies';
+import { driveDownloadUrl } from '../utils/drive';
 
 /**
  * RECRUITER MODE (/cv): the whole CV on one fast, readable, printable page. No 3D, no sound,
@@ -11,9 +12,8 @@ import { achievementTrophies } from '../data/trophies';
 
 const { profile, professional, projects } = portfolioData;
 
-const DRIVE_ID = profile.resumeUrl.match(/\/d\/([^/]+)/)?.[1];
 /** Direct download of the resume PDF (falls back to the Drive viewer) */
-const CV_DOWNLOAD = DRIVE_ID ? `https://drive.google.com/uc?export=download&id=${DRIVE_ID}` : profile.resumeUrl;
+const CV_DOWNLOAD = driveDownloadUrl(profile.resumeUrl);
 const email = profile.socials.find((s) => s.icon === 'Mail')?.url ?? 'mailto:divgarg03@gmail.com';
 const linkedin = profile.socials.find((s) => s.icon === 'Linkedin')?.url;
 const github = profile.socials.find((s) => s.icon === 'Github')?.url;
@@ -78,9 +78,10 @@ export function RecruiterPage() {
       <a href="#cv-main" className="cv-skip">Skip to CV</a>
 
       <header className="cv-topbar cv-no-print">
-        <span className="arcade-display text-[10px] text-arcade-pink">
-          DG <span className="text-arcade-muted">·</span> <span className="text-arcade-cyan">Recruiter mode</span>
-        </span>
+        <nav className="pj-tabs" aria-label="Pages">
+          <a href="/cv" className="pj-tab is-active" aria-current="page">📄 CV</a>
+          <a href="/projects?from=cv" className="pj-tab">🚀 Projects</a>
+        </nav>
         {!no3d && (
           <a href="/?play" className="arcade-btn arcade-btn-ghost cv-play" aria-label="Play my portfolio as an arcade game">
             🕹️ <span className="hidden min-[400px]:inline">Play the</span> game ▶
@@ -116,6 +117,7 @@ export function RecruiterPage() {
         <div className="cv-actions cv-no-print">
           <a href={CV_DOWNLOAD} className="arcade-btn arcade-btn-coin" download>⬇ Download CV</a>
           <a href={email} className="arcade-btn arcade-btn-secondary">✉ Email me</a>
+          <a href="/projects?from=cv" className="arcade-btn arcade-btn-ghost">🚀 Projects</a>
           {linkedin && <a href={linkedin} className="arcade-btn arcade-btn-ghost" target="_blank" rel="noopener noreferrer">LinkedIn</a>}
           {github && <a href={github} className="arcade-btn arcade-btn-ghost" target="_blank" rel="noopener noreferrer">GitHub</a>}
           <button type="button" className="arcade-btn arcade-btn-ghost cv-print-btn" onClick={() => window.print()}>🖨 Print</button>

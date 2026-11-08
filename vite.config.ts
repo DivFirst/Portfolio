@@ -26,7 +26,7 @@ function siteMeta(): Plugin {
       const robots = ['User-agent: *', 'Allow: /', ...(site ? ['', `Sitemap: ${site}/sitemap.xml`] : [])].join('\n') + '\n'
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robots })
       if (site) {
-        const urls = ['/', '/cv'].map((p) => `  <url><loc>${site}${p}</loc></url>`).join('\n')
+        const urls = ['/', '/cv', '/projects'].map((p) => `  <url><loc>${site}${p}</loc></url>`).join('\n')
         this.emitFile({
           type: 'asset',
           fileName: 'sitemap.xml',

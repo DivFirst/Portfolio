@@ -126,9 +126,26 @@ export interface ProfessionalData {
   }[];
 }
 
+/** A file for a project card (deck, report, video…), usually a Google Drive share link. */
+export interface ProjectFile {
+  /** e.g. "Final deck", "Report" */
+  label: string;
+  type: 'ppt' | 'pdf' | 'doc' | 'sheet' | 'video' | 'link';
+  /** Google Drive share link ("Anyone with the link can view"), or any web address */
+  url: string;
+}
+
 export interface ProjectItem {
   id: string;
-  kind?: 'case-competition' | 'engineering-competition' | 'engineering-project' | 'internship' | 'case-study' | 'live-project';
+  /** Show this project on the /projects page */
+  showOnProjectsPage?: boolean;
+  /** Position on the /projects page (lower comes first) */
+  order?: number;
+  /** Decks, reports and other files shown on the project's card */
+  files?: ProjectFile[];
+  /** Optional picture for the front of the card (a path in /public or a web address) */
+  cover?: string;
+  kind?: 'case-competition' | 'engineering-competition' | 'engineering-project' | 'internship' | 'case-study' | 'live-project' | 'product-build';
   year?: string;
   role?: string;
   moreInfo?: MoreInfo;

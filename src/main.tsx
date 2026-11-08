@@ -4,10 +4,11 @@ import './index.css';
 import { checkDevice } from './utils/deviceCheck';
 
 /**
- * Two pages share this entry:
+ * Three pages share this entry:
  *   /cv  → Recruiter Mode: a light page, never downloads the 3D code.
+ *   /projects → the Projects page (flip cards), also light; linked from both modes.
  *   /    → the arcade game (3D world).
- * Each one is its own download, so /cv stays fast.
+ * Each one is its own download, so /cv and /projects stay fast.
  */
 const path = window.location.pathname.replace(/\/+$/, '') || '/';
 const params = new URLSearchParams(window.location.search);
@@ -29,6 +30,10 @@ function goToCv(reason?: string) {
 if (path === '/cv') {
   import('./pages/RecruiterPage').then(({ RecruiterPage }) => {
     root.render(<React.StrictMode><RecruiterPage /></React.StrictMode>);
+  });
+} else if (path === '/projects') {
+  import('./pages/ProjectsPage').then(({ ProjectsPage }) => {
+    root.render(<React.StrictMode><ProjectsPage /></React.StrictMode>);
   });
 } else {
   const device = checkDevice();

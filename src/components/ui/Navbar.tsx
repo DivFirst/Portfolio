@@ -42,6 +42,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isIslandFocused, onResetView, on
           <a href="/cv" className="arcade-toggle" aria-label="Recruiter Mode: my CV on one page" title="Recruiter Mode">
             <span aria-hidden="true">📄 <span className="hidden lg:inline">Recruiter </span>CV</span>
           </a>
+          {/* Projects page (wide screens; below 1280px it sits in the stage bar so this bar stays one row) */}
+          {/* (wrapped: link toggles are always display:inline-flex, so the span does the hiding) */}
+          <span className="hidden xl:inline-flex">
+            <a href="/projects?from=game" className="arcade-toggle" aria-label="Projects: my work as flip cards">
+              <span aria-hidden="true">🚀 Projects</span>
+            </a>
+          </span>
           {/* Trophy Room + CONTINUE? (desktop; on smaller screens they sit in the stage bar) */}
           <button type="button" className="arcade-toggle hidden lg:inline-flex lg:items-center" onClick={onOpenTrophies}>
             🏆 Trophies

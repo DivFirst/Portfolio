@@ -337,6 +337,14 @@ export const portfolioData: PortfolioData = {
     projects: [
       {
         id: "airtel-icreate",
+        showOnProjectsPage: true,
+        order: 9,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1Q7f6cIYnvIuyYTEPfPfBYd14OouZlXG5/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1e4gSOYXwVrVUEpRpQz2J8hug1Tw6dezJ/view" },
+          { label: "PRD", type: "pdf", url: "https://drive.google.com/file/d/1yHIpgPIsohO9GX5qNzPTdMlKiHlckobr/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1ovQu_hgvw0-Ed9IpZX6rjNMe7M2QKsrS" }
+        ],
         kind: "case-competition",
         year: "2025",
         title: "Airtel iCreate 2025",
@@ -353,6 +361,14 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "dataviz-iimb",
+        showOnProjectsPage: true,
+        order: 6,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1lVlx9l-wV7E2H4OhzeELiXmQns6xq9mS/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1uQ-NbIrocKeuuzbxCSfrz_Q1v4g3sjfK/view" },
+          { label: "Strategy memo", type: "pdf", url: "https://drive.google.com/file/d/1S1Gr3Wgr6Vrlf1XVMv5UxW0zsYMjjEF8/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1iFAUDp8Ch8ZtifujKJMxUbl73ZITZHd1" }
+        ],
         kind: "case-competition",
         title: "DataViz @ IIM Bangalore",
         tagline: "Market-entry plan for EV charging stations",
@@ -362,12 +378,20 @@ export const portfolioData: PortfolioData = {
         stats: { metric: "Finalist" },
         moreInfo: {
           problem: "How should a new player enter India's EV charging market?",
-          action: "Sized the market (EV market CAGR of 92.61% for FY25 to FY28), showed that AC chargers are 75% of the market so fast charging has room to grow, ran SWOT and Porter's Five Forces, and recommended partnering with an EV maker such as Ola and with real-estate and parking operators.",
+          action: "Sized the market (EV market CAGR of 92.61% for FY25 to FY28), showed that AC chargers are 70% of installed chargers so fast charging has room to grow, ran SWOT and Porter's Five Forces, and recommended partnering with an EV maker such as Ola and with real-estate and parking operators.",
           result: "Finalist."
         }
       },
       {
         id: "pwc-challenge",
+        showOnProjectsPage: true,
+        order: 8,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1QUv1-6gSOMKpu5Z_W79AlB81fhqnLLTW/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1zoQyrZPaFptuItPC1uVnUVbrkicv0Gxs/view" },
+          { label: "Strategy memo", type: "pdf", url: "https://drive.google.com/file/d/1Fn_tQcAwLay6-huT9DL4Vm6YDaObMgOK/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/14v81vP9I-zqnzr5037WyPqwEO9ZdO7hM" }
+        ],
         kind: "case-competition",
         title: "PwC AC India Challenge 7.0",
         tagline: "Choosing the best APAC market for a climate-tech company",
@@ -383,6 +407,14 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "asian-paints-canvas",
+        showOnProjectsPage: true,
+        order: 7,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1_a3s3SnvXz880quTLMHwSiI0bC3W7oT8/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1843cWdi3X0faIdunP_4IIlTOFfPwEyIn/view" },
+          { label: "PRD", type: "pdf", url: "https://drive.google.com/file/d/1r_PCOMgYxgFnUkHw4WHHt0vnefXFv_YP/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1WSwfRC4Mq8u9wy0XgSbW1__xKkeGAPA9" }
+        ],
         kind: "case-competition",
         year: "2025",
         title: "Asian Paints Canvas 2025",
@@ -445,6 +477,14 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "thoucentric-bottoms-up",
+        showOnProjectsPage: true,
+        order: 10,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1E2A3K-G7DAYFi3k7V2JzVjG_O7uHcUaz/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/10Ou26iQhoOfj_EsrvsY4ZsaCDbLpb7F3/view" },
+          { label: "Strategy memo", type: "pdf", url: "https://drive.google.com/file/d/1OPcCYN906h5QmqxuOi7J91rT2btE5AxW/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1w89GzeEkJruTsrcBBVmlBQfDUJztf2nD" }
+        ],
         kind: "case-competition",
         title: "Thoucentric Bottoms Up",
         tagline: "Winning on service, not price, for a legacy paint brand",
@@ -460,6 +500,14 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "salaryse",
+        showOnProjectsPage: true,
+        order: 4,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1AMbfwho6vPnEhfoPum3qWkswfjWbNeDI/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1BI4rZ4QLS1uGXdfPOXyi0o4ggVOoHYHj/view" },
+          { label: "PRD", type: "pdf", url: "https://drive.google.com/file/d/1hFWBc6YF4MgE4wbUyeBkf_y7CuOqdx4k/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1mumb7K7jLhuhGAX2GQoTdJEC665Wtq0P" }
+        ],
         kind: "case-competition",
         title: "SalarySe Case Competition",
         tagline: "Product improvement strategy for a personal-finance app",
@@ -475,6 +523,14 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "flipkart-quick-commerce",
+        showOnProjectsPage: true,
+        order: 5,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1wLJKYSOUDCm8VmvWxa6xgu-sHuHaiMZH/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1JF4nrIPtlM5mKoZI70rS7z5l_irjmsC5/view" },
+          { label: "PRD", type: "pdf", url: "https://drive.google.com/file/d/18So8WJnm31mX94d-ihuyu0Vp_9wiANY9/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/12GPJkuiKG6dotx9hltp9oyJ88tkhSGnN" }
+        ],
         kind: "case-competition",
         title: "Flipkart Case Competition",
         tagline: "Loyalty and user acquisition for quick commerce",
@@ -502,6 +558,14 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "adpilot",
+        showOnProjectsPage: true,
+        order: 1,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1efUlnoJRQwVucBLdFKP33EtLMEBVIwd9/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1bxUjFTM5izgJDedJ_VIv3qNFgp2-ofyn/view" },
+          { label: "PRD", type: "pdf", url: "https://drive.google.com/file/d/1FIHlbJR6haqZLrcW7Nl7CqYbwMyZwbBM/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1rQ8yVbo-rvMSz6FMT4yhgO5S7TeO-UYb" }
+        ],
         kind: "case-study",
         title: "AdPilot: AI Ad Co-Pilot for Small Businesses",
         tagline: "Launch a safe ad campaign in under 15 minutes",
@@ -518,7 +582,57 @@ export const portfolioData: PortfolioData = {
         }
       },
       {
+        id: "jobbot",
+        showOnProjectsPage: true,
+        order: 3,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1dhCEF1cY9ELnYG7jr858zLzjnMcie1KC/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1S2R6gqKRh0_1hY_hvuIaD01fOF226QSr/view" },
+          { label: "PRD", type: "pdf", url: "https://drive.google.com/file/d/1xInRH6i0r_KuqscDrMtem6Owoc02kd4k/view" },
+          { label: "Scoring model", type: "pdf", url: "https://drive.google.com/file/d/1SEGYoE3bE4JYw9n3LiPMjcJ_JgeHhTrN/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1yahSF6eZwxuYH-fgOFGRw536atKXuO7A" }
+        ],
+        kind: "product-build",
+        year: "2026",
+        title: "JobBot: AI Job-Search Copilot",
+        tagline: "Rank jobs before you write a single application",
+        description: "Built solo: an AI copilot that finds postings, filters out the ones a seeker can't realistically get, scores the rest with evidence from their own resume, and suggests where to spend time. The seeker decides; JobBot never applies or sends anything.",
+        tags: ["Product Management", "GenAI", "Ranking", "Evaluation", "Built MVP"],
+        featured: true,
+        stats: { metric: "MVP shipped · 166 postings → 5 suggestions" },
+        moreInfo: {
+          problem: "Early-career job seekers spend their evenings on postings they can't get, so the jobs that fit get a generic resume and no outreach. In the first live runs, 68% of unique PM postings were out of reach.",
+          action: "Wrote the spec and built the MVP with Claude Code: plain rules filter postings first, an LLM scores five dimensions and must cite resume evidence, code does all the maths, and a Google Sheet is the interface. Hand-labelled 20 real postings as a benchmark before tuning anything.",
+          result: "Ranking matched my own judgement on every benchmark pair (85% on AI scores alone), years of experience were read 20/20, and all live runs cost about two cents of AI spend."
+        }
+      },
+      {
+        id: "upskilling-platform",
+        showOnProjectsPage: true,
+        order: 2,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1E7VLDPL8HqhIIpDUvELlfhGfAPnsshTP/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1dy93uEcelWRzJwk-vHF7fAdhCQdjG5i4/view" },
+          { label: "PRD", type: "pdf", url: "https://drive.google.com/file/d/1Y70U35-RDYq5GXaQx5neLLdvpyuJSXck/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1F8kRom3t99s3sH7zMEHZ4r8PT691ZUbt" }
+        ],
+        kind: "case-study",
+        title: "SkillForge: Upskilling Platform",
+        tagline: "Practical, project-first upskilling for India's working professionals",
+        description: "Product case study taken through the full cycle: vision, personas, a 55-feature backlog, value/effort and Kano prioritisation, sprint capacity planning, a working prototype and an A/B/n test.",
+        tags: ["Product Management", "Prioritisation", "Kano", "A/B Testing", "Prototype"],
+        featured: true,
+        liveUrl: "https://dpcc-g4.lovable.app/",
+        stats: { metric: "Working prototype · 55 → 14 feature MVP" },
+        moreInfo: {
+          problem: "Working professionals know they need new skills, but most courses are theoretical, rigid in timing and vague about career payoff.",
+          action: "Built four personas and a competitor teardown (upGrad, Scaler, Simplilearn), cut a 55-feature backlog to a 14-feature MVP using value/effort scoring and a Kano survey (n=32), fitted it to a 28.8 story-point sprint, built the prototype on Lovable and designed a 4-way A/B/n test of the purchase button in VWO.",
+          link: "https://dpcc-g4.lovable.app/"
+        }
+      },
+      {
         id: "swasthiq",
+        // files: [{ label: "Final deck", type: "ppt", url: "https://drive.google.com/file/d/…/view" }],
         kind: "live-project",
         title: "SwasthiQ: AI Preventive Healthcare",
         tagline: "Bringing AI-led preventive care to India through insurers and government",
@@ -534,6 +648,7 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "vivnovation",
+        // files: [{ label: "Final deck", type: "ppt", url: "https://drive.google.com/file/d/…/view" }],
         kind: "live-project",
         title: "Vivnovation Market Research",
         tagline: "Clinical education opportunities in Nepal, Vietnam & the Philippines",
@@ -549,6 +664,14 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "hy-contest",
+        showOnProjectsPage: true,
+        order: 11,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1uVPiPqqzx9PhY9JqjPqvvW3XMzLczk2A/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1YwfZg9G5Q7RzgtvEhQxxIy2Xbsikq5jC/view" },
+          { label: "Business case", type: "pdf", url: "https://drive.google.com/file/d/1TEpjg0lbOBaVSdnJlt48dD4V-uPeThyw/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1jb4_eDAv5rAy9eslM4jgsWoWptehI7JG" }
+        ],
         kind: "case-competition",
         year: "2019",
         title: "HY Contest 2019",
@@ -559,12 +682,20 @@ export const portfolioData: PortfolioData = {
         stats: { metric: "National 2nd Prize" },
         moreInfo: {
           problem: "Design a hydrogen refuelling station able to serve 100 buses a day in Delhi.",
-          action: "Designed the station and built its financial model and break-even analysis.",
+          action: "Designed a liquid-hydrogen station (central biomass supply, cryo-pump, Type-IV buffer tanks, cascade fill to SAE J2601) and built its financial model and break-even analysis. A later re-check of the model found a 6.5-year payback at 100 buses, and that the business lives or dies on the $/kg spread.",
           result: "National 2nd prize, and our team presented the work at the Hydrogen Conference in Mumbai in 2019."
         }
       },
       {
         id: "flipkart-grid",
+        showOnProjectsPage: true,
+        order: 12,
+        files: [
+          { label: "Case study", type: "pdf", url: "https://drive.google.com/file/d/1k_iDAUDA1ZGT4NgO_sHvoaiJNYou9mkO/view" },
+          { label: "PM deck", type: "ppt", url: "https://drive.google.com/file/d/1NRPESgxj9TCQijeMnlWgU1XTaLjeBt6b/view" },
+          { label: "Technical design", type: "pdf", url: "https://drive.google.com/file/d/1_I9bPo9pvgtA9u99nEJJJkNXjnYsXi7z/view" },
+          { label: "All PM documents", type: "link", url: "https://drive.google.com/drive/folders/1fXuYEZw6BSXI2WX0d0w0MRFystTkD-BR" }
+        ],
         kind: "engineering-competition",
         title: "Flipkart GRID 2.0: Intelligent Picking",
         tagline: "Automated warehouse sorting robot",
@@ -597,6 +728,7 @@ export const portfolioData: PortfolioData = {
       },
       {
         id: "cadathon",
+        // files: [{ label: "Final deck", type: "ppt", url: "https://drive.google.com/file/d/…/view" }],
         kind: "engineering-competition",
         title: "CADathon @ IIT Ropar",
         tagline: "Overnight design-and-pitch contest, as a first-year",

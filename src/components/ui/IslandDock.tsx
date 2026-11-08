@@ -60,12 +60,16 @@ export const IslandDock: React.FC<IslandDockProps> = ({ selectedIsland, onSelect
         ) : (
           <>
             <span className="hidden text-[14px] text-arcade-muted lg:inline">Drag to rotate · scroll to zoom · keys 1–6</span>
-            {/* phones & tablets: Trophy Room + CONTINUE? live here (desktop has them in the top bar) */}
-            <span className="arcade-stage-actions lg:hidden">
-              <button type="button" className="arcade-toggle min-w-[44px]" aria-label="Trophy room" onClick={onOpenTrophies}>
+            {/* Projects: here below 1280px wide (the top bar has it on wider screens).
+                Trophy Room + CONTINUE?: here on phones & tablets (desktop has them in the top bar). */}
+            <span className="arcade-stage-actions xl:hidden">
+              <a href="/projects?from=game" className="arcade-toggle min-w-[44px]" aria-label="Projects">
+                🚀<span className="hidden min-[420px]:inline"> Projects</span>
+              </a>
+              <button type="button" className="arcade-toggle min-w-[44px] lg:hidden" aria-label="Trophy room" onClick={onOpenTrophies}>
                 🏆<span className="hidden min-[420px]:inline"> Trophies</span>
               </button>
-              <button type="button" className="arcade-toggle min-w-[44px]" aria-label="Contact" onClick={onOpenContact}>
+              <button type="button" className="arcade-toggle min-w-[44px] lg:hidden" aria-label="Contact" onClick={onOpenContact}>
                 ✉️<span className="hidden min-[420px]:inline"> Contact</span>
               </button>
             </span>
